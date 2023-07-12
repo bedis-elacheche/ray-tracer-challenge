@@ -1,0 +1,8 @@
+{
+  "default": {
+    "parallel": 2,
+    "publishQuiet": true,
+    "name": ["tuples"],
+    "format": ["html:cucumber-report.html"]
+  }
+}
