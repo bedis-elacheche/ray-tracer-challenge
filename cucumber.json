@@ -2,7 +2,9 @@
   "default": {
     "parallel": 2,
     "publishQuiet": true,
-    "name": ["tuples"],
+    "tags": "@qa_ready",
+    "requireModule": ["ts-node/register"],
+    "require": ["support/**/*.ts"],
     "format": ["html:cucumber-report.html"]
   }
 }
