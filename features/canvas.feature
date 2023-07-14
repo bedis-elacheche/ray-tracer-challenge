@@ -1,4 +1,3 @@
-@qa_ready
 Feature: Canvas
 
 Scenario: Creating a canvas
