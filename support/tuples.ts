@@ -1,30 +1,7 @@
 import { expect } from "chai";
-import { Given, IWorld, Then, When } from "@cucumber/cucumber";
-import { Color, EPSILON, Point, Tuple, Vector } from "../../src";
-
-const getTuple = (world: IWorld, name: string) => {
-  const item = world[name];
-
-  expect(item).to.be.instanceOf(Tuple);
-
-  return item as Tuple;
-};
-
-const getVector = (world: IWorld, name: string) => {
-  const item = getTuple(world, name);
-
-  expect(item).to.be.instanceOf(Vector);
-
-  return item as Vector;
-};
-
-const getColor = (world: IWorld, name: string) => {
-  const item = world[name];
-
-  expect(item).to.be.instanceOf(Color);
-
-  return item as Color;
-};
+import { Given, Then, When } from "@cucumber/cucumber";
+import { Color, EPSILON, Point, Tuple, Vector } from "../src";
+import { getColor, getTuple, getVector } from "./utils";
 
 Given(
   "{word} ← tuple\\({float}, {float}, {float}, {float})",
@@ -60,13 +37,6 @@ When(
     const second = getVector(this, secondVarName);
 
     this[firstVarName] = second.normalize();
-  }
-);
-
-Then(
-  "{word}.{word} = {float}",
-  function (varName: string, key: string, value: number) {
-    expect(this[varName]?.[key]).to.eq(value);
   }
 );
 
