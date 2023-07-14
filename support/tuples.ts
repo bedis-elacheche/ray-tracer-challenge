@@ -109,6 +109,15 @@ Then(
 );
 
 Then(
+  "{word} = point\\({float}, {float}, {float})",
+  function (varName: string, x: number, y: number, z: number) {
+    const point = getTuple(this, varName);
+
+    expect(point.equals(new Point(x, y, z))).to.be.true;
+  }
+);
+
+Then(
   "{word} - {word} = vector\\({float}, {float}, {float})",
   function (
     firstVarName: string,

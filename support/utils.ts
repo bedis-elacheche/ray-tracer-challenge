@@ -1,6 +1,6 @@
 import { IWorld } from "@cucumber/cucumber";
 import { expect } from "chai";
-import { Canvas, Color, Tuple, Vector, Matrix } from "../src";
+import { Canvas, Color, Tuple, Vector, Matrix, Point } from "../src";
 
 export const getTuple = (world: IWorld, name: string) => {
   const item = world[name];
@@ -16,6 +16,14 @@ export const getVector = (world: IWorld, name: string) => {
   expect(item).to.be.instanceOf(Vector);
 
   return item as Vector;
+};
+
+export const getPoint = (world: IWorld, name: string) => {
+  const item = getTuple(world, name);
+
+  expect(item).to.be.instanceOf(Point);
+
+  return item as Point;
 };
 
 export const getColor = (world: IWorld, name: string) => {

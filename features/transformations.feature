@@ -1,4 +1,3 @@
-@todo
 Feature: Matrix Transformations
 
 Scenario: Multiplying by a translation matrix
@@ -42,27 +41,30 @@ Scenario: Rotating a point around the x axis
   Given p ← point(0, 1, 0)
     And half_quarter ← rotation_x(π / 4)
     And full_quarter ← rotation_x(π / 2)
-  Then half_quarter * p = point(0, √2/2, √2/2)
+    #                       point(0, √2/2   , √2/2)
+    Then half_quarter * p = point(0, 0.70711, 0.70711)
     And full_quarter * p = point(0, 0, 1)
 
 Scenario: The inverse of an x-rotation rotates in the opposite direction
   Given p ← point(0, 1, 0)
     And half_quarter ← rotation_x(π / 4)
     And inv ← inverse(half_quarter)
-  Then inv * p = point(0, √2/2, -√2/2)
+    Then inv * p = point(0, 0.70711, -0.70711)
 
 Scenario: Rotating a point around the y axis
   Given p ← point(0, 0, 1)
     And half_quarter ← rotation_y(π / 4)
     And full_quarter ← rotation_y(π / 2)
-  Then half_quarter * p = point(√2/2, 0, √2/2)
+    #                       point(√2/2   , 0, √2/2)
+    Then half_quarter * p = point(0.70711, 0, 0.70711)
     And full_quarter * p = point(1, 0, 0)
 
 Scenario: Rotating a point around the z axis
   Given p ← point(0, 1, 0)
     And half_quarter ← rotation_z(π / 4)
     And full_quarter ← rotation_z(π / 2)
-  Then half_quarter * p = point(-√2/2, √2/2, 0)
+    #                       point(-√2/2   , √2/2   , 0)
+    Then half_quarter * p = point(-0.70711, 0.70711, 0)
     And full_quarter * p = point(-1, 0, 0)
 
 Scenario: A shearing transformation moves x in proportion to y
@@ -117,28 +119,28 @@ Scenario: Chained transformations must be applied in reverse order
     And C ← translation(10, 5, 7)
   When T ← C * B * A
   Then T * p = point(15, 0, 7)
-
+@todo
 Scenario: The transformation matrix for the default orientation
   Given from ← point(0, 0, 0)
     And to ← point(0, 0, -1)
     And up ← vector(0, 1, 0)
   When t ← view_transform(from, to, up)
   Then t = identity_matrix
-
+@todo
 Scenario: A view transformation matrix looking in positive z direction
   Given from ← point(0, 0, 0)
     And to ← point(0, 0, 1)
     And up ← vector(0, 1, 0)
   When t ← view_transform(from, to, up)
   Then t = scaling(-1, 1, -1)
-
+@todo
 Scenario: The view transformation moves the world
   Given from ← point(0, 0, 8)
     And to ← point(0, 0, 0)
     And up ← vector(0, 1, 0)
   When t ← view_transform(from, to, up)
   Then t = translation(0, 0, -8)
-
+@todo
 Scenario: An arbitrary view transformation
   Given from ← point(1, 3, 2)
     And to ← point(4, -2, 8)

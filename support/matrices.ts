@@ -1,5 +1,5 @@
 import { DataTable, Given, Then } from "@cucumber/cucumber";
-import { getMatrix, getTuple } from "./utils";
+import { getMatrix, getPoint, getTuple } from "./utils";
 import { Matrix, Tuple } from "../src";
 import { expect } from "chai";
 
@@ -56,10 +56,36 @@ Given(
 );
 
 Then(
-  "{word} ← {word} * {word}",
+  /([A-Z]+) ← ([A-Z]+) \* ([A-Z]+) \* ([A-Z]+)/,
+  function (
+    firstVarName: string,
+    secondVarName: string,
+    thirdVarName: string,
+    fourthVarName: string
+  ) {
+    const second = getMatrix(this, secondVarName);
+    const third = getMatrix(this, thirdVarName);
+    const fourth = getMatrix(this, fourthVarName);
+
+    this[firstVarName] = second.multiply(third).multiply(fourth);
+  }
+);
+
+Then(
+  /([A-Z]+) ← ([A-Z]+) \* ([A-Z]+)$/,
   function (firstVarName: string, secondVarName: string, thirdVarName: string) {
     const second = getMatrix(this, secondVarName);
     const third = getMatrix(this, thirdVarName);
+
+    this[firstVarName] = second.multiply(third);
+  }
+);
+
+Then(
+  /([a-z]+\d*) ← ([A-Z]+\d*) \* ([a-z]+\d*)/,
+  function (firstVarName: string, secondVarName: string, thirdVarName: string) {
+    const second = getMatrix(this, secondVarName);
+    const third = getTuple(this, thirdVarName);
 
     this[firstVarName] = second.multiply(third);
   }
