@@ -23,10 +23,6 @@ export class Vector extends Tuple {
     );
   }
 
-  dot(vector: Vector) {
-    return this.x * vector.x + this.y * vector.y + this.z * vector.z;
-  }
-
   cross(vector: Vector) {
     return new Vector(
       this.y * vector.z - this.z * vector.y,

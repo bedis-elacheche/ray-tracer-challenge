@@ -1,6 +1,6 @@
 import { IWorld } from "@cucumber/cucumber";
 import { expect } from "chai";
-import { Canvas, Color, Tuple, Vector } from "../src";
+import { Canvas, Color, Tuple, Vector, Matrix } from "../src";
 
 export const getTuple = (world: IWorld, name: string) => {
   const item = world[name];
@@ -40,4 +40,12 @@ export const getString = (world: IWorld, name: string) => {
   expect(item).to.be.a.string;
 
   return item as string;
+};
+
+export const getMatrix = (world: IWorld, name: string) => {
+  const item = world[name];
+
+  expect(item).to.be.instanceOf(Matrix);
+
+  return item as Matrix;
 };

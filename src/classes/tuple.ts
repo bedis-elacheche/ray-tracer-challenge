@@ -71,7 +71,20 @@ export class Tuple {
     return this.multiply<T>(-1);
   }
 
+  dot<T extends Tuple>(vector: T) {
+    return (
+      this.x * vector.x +
+      this.y * vector.y +
+      this.z * vector.z +
+      this.w * vector.w
+    );
+  }
+
   equals(tuple: Tuple) {
+    if (tuple === this) {
+      return true;
+    }
+
     return (
       Math.abs(this.x - tuple.x) <= EPSILON &&
       Math.abs(this.y - tuple.y) <= EPSILON &&

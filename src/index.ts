@@ -8,3 +8,4 @@ export * from "./classes/canvas";
 export * from "./classes/environment";
 export * from "./classes/projectile";
 export * from "./classes/world";
+export * from "./classes/matrix";
