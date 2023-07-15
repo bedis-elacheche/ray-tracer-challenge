@@ -1,7 +1,7 @@
 import { expect } from "chai";
 import { Given, Then, When } from "@cucumber/cucumber";
 import { Color, EPSILON, Point, Tuple, Vector } from "../src";
-import { getColor, getTuple, getVector } from "./utils";
+import { float, getColor, getTuple, getVector, lowercase } from "./utils";
 
 Given(
   "{word} ← tuple\\({float}, {float}, {float}, {float})",
@@ -109,7 +109,9 @@ Then(
 );
 
 Then(
-  "{word} = point\\({float}, {float}, {float})",
+  new RegExp(
+    `^${lowercase.source} = point\\(${float.source}, ${float.source}, ${float.source}\\)$`
+  ),
   function (varName: string, x: number, y: number, z: number) {
     const point = getTuple(this, varName);
 

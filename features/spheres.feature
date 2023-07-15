@@ -1,4 +1,3 @@
-@todo
 Feature: Spheres
 
 Scenario: A ray intersects a sphere at two points
@@ -6,16 +5,16 @@ Scenario: A ray intersects a sphere at two points
     And s ← sphere()
   When xs ← intersect(s, r)
   Then xs.count = 2
-    And xs[0] = 4.0
-    And xs[1] = 6.0
+    And xs[0].t = 4.0
+    And xs[1].t = 6.0
 
 Scenario: A ray intersects a sphere at a tangent
   Given r ← ray(point(0, 1, -5), vector(0, 0, 1))
     And s ← sphere()
   When xs ← intersect(s, r)
   Then xs.count = 2
-    And xs[0] = 5.0
-    And xs[1] = 5.0
+    And xs[0].t = 5.0
+    And xs[1].t = 5.0
 
 Scenario: A ray misses a sphere
   Given r ← ray(point(0, 2, -5), vector(0, 0, 1))
@@ -28,16 +27,16 @@ Scenario: A ray originates inside a sphere
     And s ← sphere()
   When xs ← intersect(s, r)
   Then xs.count = 2
-    And xs[0] = -1.0
-    And xs[1] = 1.0
+    And xs[0].t = -1.0
+    And xs[1].t = 1.0
 
 Scenario: A sphere is behind a ray
   Given r ← ray(point(0, 0, 5), vector(0, 0, 1))
     And s ← sphere()
   When xs ← intersect(s, r)
   Then xs.count = 2
-    And xs[0] = -6.0
-    And xs[1] = -4.0
+    And xs[0].t = -6.0
+    And xs[1].t = -4.0
 
 Scenario: Intersect sets the object on the intersection
   Given r ← ray(point(0, 0, -5), vector(0, 0, 1))
@@ -72,57 +71,57 @@ Scenario: Intersecting a translated sphere with a ray
   When set_transform(s, translation(5, 0, 0))
     And xs ← intersect(s, r)
   Then xs.count = 0
-
+@todo
 Scenario: The normal on a sphere at a point on the x axis
   Given s ← sphere()
   When n ← normal_at(s, point(1, 0, 0))
   Then n = vector(1, 0, 0)
-
+@todo
 Scenario: The normal on a sphere at a point on the y axis
   Given s ← sphere()
   When n ← normal_at(s, point(0, 1, 0))
   Then n = vector(0, 1, 0)
-
+@todo
 Scenario: The normal on a sphere at a point on the z axis
   Given s ← sphere()
   When n ← normal_at(s, point(0, 0, 1))
   Then n = vector(0, 0, 1)
-
+@todo
 Scenario: The normal on a sphere at a nonaxial point
   Given s ← sphere()
   When n ← normal_at(s, point(√3/3, √3/3, √3/3))
   Then n = vector(√3/3, √3/3, √3/3)
-
+@todo
 Scenario: The normal is a normalized vector
   Given s ← sphere()
   When n ← normal_at(s, point(√3/3, √3/3, √3/3))
   Then n = normalize(n)
-
+@todo
 Scenario: Computing the normal on a translated sphere
   Given s ← sphere()
     And set_transform(s, translation(0, 1, 0))
   When n ← normal_at(s, point(0, 1.70711, -0.70711))
   Then n = vector(0, 0.70711, -0.70711)
-
+@todo
 Scenario: Computing the normal on a transformed sphere
   Given s ← sphere()
     And m ← scaling(1, 0.5, 1) * rotation_z(π/5)
     And set_transform(s, m)
   When n ← normal_at(s, point(0, √2/2, -√2/2))
   Then n = vector(0, 0.97014, -0.24254)
-
+@todo
 Scenario: A sphere has a default material
   Given s ← sphere()
   When m ← s.material
   Then m = material()
-
+@todo
 Scenario: A sphere may be assigned a material
   Given s ← sphere()
     And m ← material()
     And m.ambient ← 1
   When s.material ← m
   Then s.material = m
-
+@todo
 Scenario: A helper for producing a sphere with a glassy material
   Given s ← glass_sphere()
   Then s.transform = identity_matrix

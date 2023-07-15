@@ -8,6 +8,10 @@ import {
   Canvas,
   Color,
   Transformations,
+  Sphere,
+  Ray,
+  Intersection,
+  Matrix,
 } from "./src";
 import { writeFileSync } from "fs";
 
@@ -67,5 +71,53 @@ const drawClock = () => {
   writeFileSync("./photos/clock.ppm", canvas.toPPM());
 };
 
-drawProjectile();
-drawClock();
+const drawSphere = (prefix: string, transform?: Matrix) => {
+  const canvas = new Canvas(100, 100);
+  const rayOrigin = new Point(0, 0, -5);
+  const wallZ = 10;
+  const wallSize = 10;
+
+  const pixelSize = wallSize / 100;
+  const half = wallSize / 2;
+  const color = new Color(1, 0, 0);
+  const shape = new Sphere();
+
+  if (transform) {
+    shape.transform = transform;
+  }
+
+  for (let y = 0; y < canvas.height; y++) {
+    const worldY = half - pixelSize * y;
+    for (let x = 0; x < canvas.width; x++) {
+      const worldX = -half + pixelSize * x;
+
+      const position = new Point(worldX, worldY, wallZ);
+      const ray = new Ray(rayOrigin, position.subtract(rayOrigin).normalize());
+      const xs = ray.intersect(shape);
+
+      if (Intersection.hit(xs)) {
+        canvas.writePixel(x, y, color);
+      }
+    }
+  }
+
+  writeFileSync(`./photos/${prefix}-sphere.ppm`, canvas.toPPM());
+};
+
+// drawProjectile();
+// drawClock();
+drawSphere("default");
+drawSphere("x-axis-shrink", Transformations.scale(0.5, 1, 1));
+drawSphere("y-axis-shrink", Transformations.scale(1, 0.5, 1));
+drawSphere(
+  "shrinked-rotated",
+  Transformations.rotateZ(Math.PI / 4).multiply(
+    Transformations.scale(0.5, 1, 1)
+  )
+);
+drawSphere(
+  "shrinked-skewd",
+  Transformations.skew(1, 0, 0, 0, 0, 0).multiply(
+    Transformations.scale(0.5, 1, 1)
+  )
+);

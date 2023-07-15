@@ -1,46 +1,47 @@
 import { IWorld } from "@cucumber/cucumber";
 import { expect } from "chai";
-import { Canvas, Color, Tuple, Vector, Matrix, Point } from "../src";
+import {
+  Canvas,
+  Color,
+  Tuple,
+  Vector,
+  Matrix,
+  Point,
+  Ray,
+  Intersection,
+  Sphere,
+} from "../src";
+import { Shape } from "../src/classes/shape";
 
-export const getTuple = (world: IWorld, name: string) => {
-  const item = world[name];
+export const int = /([+-]?[0-9]+)/;
+export const float = /([+-]?[0-9]*[.]?[0-9]+)/;
+export const lowercase = /([a-z]+\d*)/;
+export const uppercase = /([A-Z]+\d*)/;
 
-  expect(item).to.be.instanceOf(Tuple);
+interface Type<T> extends Function {
+  new (...args: any[]): T;
+}
 
-  return item as Tuple;
-};
+const getInstance =
+  <TInstance>(Instance: Type<TInstance>) =>
+  (world: IWorld, name: string) => {
+    const item = world[name];
 
-export const getVector = (world: IWorld, name: string) => {
-  const item = getTuple(world, name);
+    expect(item).to.be.instanceOf(Instance);
 
-  expect(item).to.be.instanceOf(Vector);
+    return item as TInstance;
+  };
 
-  return item as Vector;
-};
-
-export const getPoint = (world: IWorld, name: string) => {
-  const item = getTuple(world, name);
-
-  expect(item).to.be.instanceOf(Point);
-
-  return item as Point;
-};
-
-export const getColor = (world: IWorld, name: string) => {
-  const item = world[name];
-
-  expect(item).to.be.instanceOf(Color);
-
-  return item as Color;
-};
-
-export const getCanvas = (world: IWorld, name: string) => {
-  const item = world[name];
-
-  expect(item).to.be.instanceOf(Canvas);
-
-  return item as Canvas;
-};
+export const getTuple = getInstance(Tuple);
+export const getVector = getInstance(Vector);
+export const getPoint = getInstance(Point);
+export const getColor = getInstance(Color);
+export const getCanvas = getInstance(Canvas);
+export const getMatrix = getInstance(Matrix);
+export const getRay = getInstance(Ray);
+export const getShape = getInstance(Shape);
+export const getSphere = getInstance(Sphere);
+export const getIntersection = getInstance(Intersection);
 
 export const getString = (world: IWorld, name: string) => {
   const item = world[name];
@@ -50,10 +51,15 @@ export const getString = (world: IWorld, name: string) => {
   return item as string;
 };
 
-export const getMatrix = (world: IWorld, name: string) => {
+export const getArray = <TInstance>(
+  world: IWorld,
+  name: string,
+  Instance: Type<TInstance>
+) => {
   const item = world[name];
 
-  expect(item).to.be.instanceOf(Matrix);
+  expect(item).to.be.an("array");
+  expect(item[0]).to.be.instanceOf(Instance);
 
-  return item as Matrix;
+  return item as TInstance[];
 };

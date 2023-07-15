@@ -34,14 +34,12 @@ export class Tuple {
     );
   }
 
-  subtract<T extends Tuple>(this: T, tuple: Tuple) {
-    return <T>(
-      new Tuple(
-        this.x - tuple.x,
-        this.y - tuple.y,
-        this.z - tuple.z,
-        this.w - tuple.w
-      )
+  subtract(tuple: Tuple) {
+    return new Tuple(
+      this.x - tuple.x,
+      this.y - tuple.y,
+      this.z - tuple.z,
+      this.w - tuple.w
     );
   }
 

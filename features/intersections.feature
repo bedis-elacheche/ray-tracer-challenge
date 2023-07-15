@@ -1,4 +1,3 @@
-@todo
 Feature: Intersections
 
 Scenario: An intersection encapsulates t and object
@@ -6,7 +5,7 @@ Scenario: An intersection encapsulates t and object
   When i ← intersection(3.5, s)
   Then i.t = 3.5
     And i.object = s
-
+@todo
 Scenario: Precomputing the state of an intersection
   Given r ← ray(point(0, 0, -5), vector(0, 0, 1))
     And shape ← sphere()
@@ -17,21 +16,21 @@ Scenario: Precomputing the state of an intersection
     And comps.point = point(0, 0, -1)
     And comps.eyev = vector(0, 0, -1)
     And comps.normalv = vector(0, 0, -1)
-
+@todo
 Scenario: Precomputing the reflection vector
   Given shape ← plane()
     And r ← ray(point(0, 1, -1), vector(0, -√2/2, √2/2)) 
     And i ← intersection(√2, shape)                      
   When comps ← prepare_computations(i, r)
   Then comps.reflectv = vector(0, √2/2, √2/2)                
-
+@todo
 Scenario: The hit, when an intersection occurs on the outside
   Given r ← ray(point(0, 0, -5), vector(0, 0, 1))
     And shape ← sphere()
     And i ← intersection(4, shape)
   When comps ← prepare_computations(i, r)
   Then comps.inside = false
-
+@todo
 Scenario: The hit, when an intersection occurs on the inside
   Given r ← ray(point(0, 0, 0), vector(0, 0, 1))
     And shape ← sphere()
@@ -42,7 +41,7 @@ Scenario: The hit, when an intersection occurs on the inside
     And comps.inside = true
       # normal would have been (0, 0, 1), but is inverted!
     And comps.normalv = vector(0, 0, -1)
-
+@todo
 Scenario: The hit should offset the point
   Given r ← ray(point(0, 0, -5), vector(0, 0, 1))
     And shape ← sphere() with:
@@ -51,7 +50,7 @@ Scenario: The hit should offset the point
   When comps ← prepare_computations(i, r)
   Then comps.over_point.z < -EPSILON/2
     And comps.point.z > comps.over_point.z
-
+@todo
 Scenario: The under point is offset below the surface
   Given r ← ray(point(0, 0, -5), vector(0, 0, 1))
     And shape ← glass_sphere() with:
@@ -104,7 +103,7 @@ Scenario: The hit is always the lowest nonnegative intersection
   And xs ← intersections(i1, i2, i3, i4)
 When i ← hit(xs)
 Then i = i4
-
+@todo
 Scenario Outline: Finding n1 and n2 at various intersections
   Given A ← glass_sphere() with:
       | transform                 | scaling(2, 2, 2) |
@@ -129,7 +128,7 @@ Scenario Outline: Finding n1 and n2 at various intersections
     | 3     | 2.5 | 2.5 |
     | 4     | 2.5 | 1.5 |
     | 5     | 1.5 | 1.0 |
-
+@todo
 Scenario: The Schlick approximation under total internal reflection
   Given shape ← glass_sphere()
     And r ← ray(point(0, 0, √2/2), vector(0, 1, 0))
@@ -137,7 +136,7 @@ Scenario: The Schlick approximation under total internal reflection
   When comps ← prepare_computations(xs[1], r, xs)
     And reflectance ← schlick(comps)
   Then reflectance = 1.0
-
+@todo
 Scenario: The Schlick approximation with a perpendicular viewing angle
   Given shape ← glass_sphere()
     And r ← ray(point(0, 0, 0), vector(0, 1, 0))
@@ -145,7 +144,7 @@ Scenario: The Schlick approximation with a perpendicular viewing angle
   When comps ← prepare_computations(xs[1], r, xs)
     And reflectance ← schlick(comps)
   Then reflectance = 0.04
-
+@todo
 Scenario: The Schlick approximation with small angle and n2 > n1
   Given shape ← glass_sphere()
     And r ← ray(point(0, 0.99, -2), vector(0, 0, 1))
@@ -153,7 +152,7 @@ Scenario: The Schlick approximation with small angle and n2 > n1
   When comps ← prepare_computations(xs[0], r, xs)
     And reflectance ← schlick(comps)
   Then reflectance = 0.48873
-
+@todo
 Scenario: An intersection can encapsulate `u` and `v`
   Given s ← triangle(point(0, 1, 0), point(-1, 0, 0), point(1, 0, 0))
   When i ← intersection_with_uv(3.5, s, 0.2, 0.4)

@@ -9,6 +9,12 @@ export class Vector extends Tuple {
     return tuple.w === 0;
   }
 
+  subtract(t: Tuple) {
+    const { x, y, z } = super.subtract(t);
+
+    return new Vector(x, y, z);
+  }
+
   magnitude() {
     return Math.sqrt(this.x ** 2 + this.y ** 2 + this.z ** 2);
   }

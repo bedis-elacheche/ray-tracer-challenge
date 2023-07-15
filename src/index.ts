@@ -10,3 +10,6 @@ export * from "./classes/projectile";
 export * from "./classes/world";
 export * from "./classes/matrix";
 export * from "./classes/transformations";
+export * from "./classes/ray";
+export * from "./classes/sphere";
+export * from "./classes/intersection";
