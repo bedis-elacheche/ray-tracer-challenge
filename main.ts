@@ -74,12 +74,12 @@ const drawClock = () => {
 };
 
 const drawSphere = (prefix: string, transform?: Matrix) => {
-  const canvas = new Canvas(100, 100);
+  const canvas = new Canvas(300, 300);
   const rayOrigin = new Point(0, 0, -5);
   const wallZ = 10;
   const wallSize = 10;
 
-  const pixelSize = wallSize / 100;
+  const pixelSize = wallSize / canvas.height;
   const half = wallSize / 2;
   const color = new Color(1, 0, 0);
   const shape = new Sphere();
@@ -107,12 +107,12 @@ const drawSphere = (prefix: string, transform?: Matrix) => {
 };
 
 const draw3DSphere = (prefix: string, transform?: Matrix) => {
-  const canvas = new Canvas(100, 100);
+  const canvas = new Canvas(300, 300);
   const rayOrigin = new Point(0, 0, -5);
   const wallZ = 10;
   const wallSize = 10;
 
-  const pixelSize = wallSize / 100;
+  const pixelSize = wallSize / canvas.height;
   const half = wallSize / 2;
   const color = new Color(1, 0.2, 1);
   const material = new Material();
@@ -153,23 +153,23 @@ const draw3DSphere = (prefix: string, transform?: Matrix) => {
   writeFileSync(`./photos/${prefix}-3d-sphere.ppm`, canvas.toPPM());
 };
 
-// drawProjectile();
-// drawClock();
-// drawSphere("default");
-// drawSphere("x-axis-shrink", Transformations.scale(0.5, 1, 1));
-// drawSphere("y-axis-shrink", Transformations.scale(1, 0.5, 1));
-// drawSphere(
-//   "shrinked-rotated",
-//   Transformations.rotateZ(Math.PI / 4).multiply(
-//     Transformations.scale(0.5, 1, 1)
-//   )
-// );
-// drawSphere(
-//   "shrinked-skewd",
-//   Transformations.skew(1, 0, 0, 0, 0, 0).multiply(
-//     Transformations.scale(0.5, 1, 1)
-//   )
-// );
+drawProjectile();
+drawClock();
+drawSphere("default");
+drawSphere("x-axis-shrink", Transformations.scale(0.5, 1, 1));
+drawSphere("y-axis-shrink", Transformations.scale(1, 0.5, 1));
+drawSphere(
+  "shrinked-rotated",
+  Transformations.rotateZ(Math.PI / 4).multiply(
+    Transformations.scale(0.5, 1, 1)
+  )
+);
+drawSphere(
+  "shrinked-skewd",
+  Transformations.skew(1, 0, 0, 0, 0, 0).multiply(
+    Transformations.scale(0.5, 1, 1)
+  )
+);
 draw3DSphere("default");
 draw3DSphere("x-axis-shrink", Transformations.scale(0.5, 1, 1));
 draw3DSphere("y-axis-shrink", Transformations.scale(1, 0.5, 1));
