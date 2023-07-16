@@ -41,8 +41,8 @@ Scenario: Intersecting a translated shape with a ray
 Scenario: Computing the normal on a translated shape
   Given s ← test_shape()
   When set_transform(s, translation(0, 1, 0))
-    And n ← normal_at(s, point(0, 1.70711, -0.70711))
-  Then n = vector(0, 0.70711, -0.70711)
+    And n ← normal_at(s, point(0, 1.70711, -0.7071067811865476))
+    Then n = vector(0, 0.7071067811865476, -0.7071067811865476)
 
 Scenario: Computing the normal on a transformed shape
   Given s ← test_shape()

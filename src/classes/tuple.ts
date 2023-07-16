@@ -65,8 +65,8 @@ export class Tuple {
     );
   }
 
-  negate<T extends Tuple>(this: T) {
-    return this.multiply<T>(-1);
+  negate() {
+    return new Tuple(0, 0, 0, 0).subtract(this);
   }
 
   dot<T extends Tuple>(vector: T) {

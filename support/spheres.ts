@@ -1,5 +1,5 @@
 import { Given, Then, When } from "@cucumber/cucumber";
-import { Matrix, Sphere, Transformations } from "../src";
+import { Matrix, Point, Sphere, Transformations } from "../src";
 import { getMatrix, getSphere } from "./utils";
 import { expect } from "chai";
 
@@ -35,8 +35,18 @@ When(
   }
 );
 
-Then("{word}.transform = identity_matrix", function (varName: string) {
-  const sphere = getSphere(this, varName);
+When(
+  "{word} ← normal_at\\({word}, point\\({float}, {float}, {float}))",
+  function (
+    normalVarName: string,
+    sphereVarName: string,
+    x: number,
+    y: number,
+    z: number
+  ) {
+    const sphere = getSphere(this, sphereVarName);
 
-  expect(sphere.transform.equals(Matrix.identity(4))).to.be.true;
-});
+    this[normalVarName] = sphere.normalAt(new Point(x, y, z));
+  }
+);
+

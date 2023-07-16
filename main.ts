@@ -12,6 +12,8 @@ import {
   Ray,
   Intersection,
   Matrix,
+  Material,
+  Light,
 } from "./src";
 import { writeFileSync } from "fs";
 
@@ -104,18 +106,80 @@ const drawSphere = (prefix: string, transform?: Matrix) => {
   writeFileSync(`./photos/${prefix}-sphere.ppm`, canvas.toPPM());
 };
 
+const draw3DSphere = (prefix: string, transform?: Matrix) => {
+  const canvas = new Canvas(100, 100);
+  const rayOrigin = new Point(0, 0, -5);
+  const wallZ = 10;
+  const wallSize = 10;
+
+  const pixelSize = wallSize / 100;
+  const half = wallSize / 2;
+  const color = new Color(1, 0.2, 1);
+  const material = new Material();
+  material.color = color;
+  const shape = new Sphere();
+  shape.material = material;
+  const light = new Light(new Point(-10, 10, -10), new Color(1, 1, 1));
+
+  if (transform) {
+    shape.transform = transform;
+  }
+
+  for (let y = 0; y < canvas.height; y++) {
+    const worldY = half - pixelSize * y;
+    for (let x = 0; x < canvas.width; x++) {
+      const worldX = -half + pixelSize * x;
+
+      const position = new Point(worldX, worldY, wallZ);
+      const ray = new Ray(rayOrigin, position.subtract(rayOrigin).normalize());
+      const eye = ray.direction.negate();
+      const xs = ray.intersect(shape);
+      const hit = Intersection.hit(xs);
+
+      if (hit) {
+        const point = ray.position(hit.t);
+        const normal = hit.object.normalAt(point);
+        const castedColor = light.apply(
+          hit.object.material,
+          point,
+          eye,
+          normal
+        );
+        canvas.writePixel(x, y, castedColor);
+      }
+    }
+  }
+
+  writeFileSync(`./photos/${prefix}-3d-sphere.ppm`, canvas.toPPM());
+};
+
 // drawProjectile();
 // drawClock();
-drawSphere("default");
-drawSphere("x-axis-shrink", Transformations.scale(0.5, 1, 1));
-drawSphere("y-axis-shrink", Transformations.scale(1, 0.5, 1));
-drawSphere(
+// drawSphere("default");
+// drawSphere("x-axis-shrink", Transformations.scale(0.5, 1, 1));
+// drawSphere("y-axis-shrink", Transformations.scale(1, 0.5, 1));
+// drawSphere(
+//   "shrinked-rotated",
+//   Transformations.rotateZ(Math.PI / 4).multiply(
+//     Transformations.scale(0.5, 1, 1)
+//   )
+// );
+// drawSphere(
+//   "shrinked-skewd",
+//   Transformations.skew(1, 0, 0, 0, 0, 0).multiply(
+//     Transformations.scale(0.5, 1, 1)
+//   )
+// );
+draw3DSphere("default");
+draw3DSphere("x-axis-shrink", Transformations.scale(0.5, 1, 1));
+draw3DSphere("y-axis-shrink", Transformations.scale(1, 0.5, 1));
+draw3DSphere(
   "shrinked-rotated",
   Transformations.rotateZ(Math.PI / 4).multiply(
     Transformations.scale(0.5, 1, 1)
   )
 );
-drawSphere(
+draw3DSphere(
   "shrinked-skewd",
   Transformations.skew(1, 0, 0, 0, 0, 0).multiply(
     Transformations.scale(0.5, 1, 1)

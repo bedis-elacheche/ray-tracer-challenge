@@ -13,3 +13,5 @@ export * from "./classes/transformations";
 export * from "./classes/ray";
 export * from "./classes/sphere";
 export * from "./classes/intersection";
+export * from "./classes/light";
+export * from "./classes/material";

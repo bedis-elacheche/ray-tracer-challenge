@@ -32,6 +32,15 @@ Given(
 );
 
 Given(
+  "{word} ← scaling\\({float}, {float}, {float}) * rotation_z\\(π \\/ {float})",
+  function (varName: string, x: number, y: number, z: number, divisor: number) {
+    this[varName] = Transformations.scale(x, y, z).multiply(
+      Transformations.rotateZ(Math.PI / divisor)
+    );
+  }
+);
+
+Given(
   "{word} ← rotation_z\\(π \\/ {float})",
   function (varName: string, divisor: number) {
     this[varName] = Transformations.rotateZ(Math.PI / divisor);

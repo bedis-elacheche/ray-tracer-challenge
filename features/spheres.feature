@@ -71,50 +71,54 @@ Scenario: Intersecting a translated sphere with a ray
   When set_transform(s, translation(5, 0, 0))
     And xs ← intersect(s, r)
   Then xs.count = 0
-@todo
+
 Scenario: The normal on a sphere at a point on the x axis
   Given s ← sphere()
   When n ← normal_at(s, point(1, 0, 0))
   Then n = vector(1, 0, 0)
-@todo
+
 Scenario: The normal on a sphere at a point on the y axis
   Given s ← sphere()
   When n ← normal_at(s, point(0, 1, 0))
   Then n = vector(0, 1, 0)
-@todo
+
 Scenario: The normal on a sphere at a point on the z axis
   Given s ← sphere()
   When n ← normal_at(s, point(0, 0, 1))
   Then n = vector(0, 0, 1)
-@todo
+
 Scenario: The normal on a sphere at a nonaxial point
   Given s ← sphere()
-  When n ← normal_at(s, point(√3/3, √3/3, √3/3))
-  Then n = vector(√3/3, √3/3, √3/3)
-@todo
+    #                     point(√3/3   ,    √3/3, √3/3)
+    When n ← normal_at(s, point(0.5773502691896257, 0.5773502691896257, 0.5773502691896257))
+    #        vector(√3/3   ,    √3/3, √3/3)
+    Then n = vector(0.5773502691896257, 0.5773502691896257, 0.5773502691896257)
+
 Scenario: The normal is a normalized vector
   Given s ← sphere()
-  When n ← normal_at(s, point(√3/3, √3/3, √3/3))
+    #                     point(√3/3   ,    √3/3, √3/3)
+    When n ← normal_at(s, point(0.5773502691896257, 0.5773502691896257, 0.5773502691896257))
   Then n = normalize(n)
-@todo
+
 Scenario: Computing the normal on a translated sphere
   Given s ← sphere()
     And set_transform(s, translation(0, 1, 0))
-  When n ← normal_at(s, point(0, 1.70711, -0.70711))
-  Then n = vector(0, 0.70711, -0.70711)
-@todo
+    When n ← normal_at(s, point(0, 1.70711, -0.7071067811865476))
+    Then n = vector(0, 0.7071067811865476, -0.7071067811865476)
+
 Scenario: Computing the normal on a transformed sphere
   Given s ← sphere()
-    And m ← scaling(1, 0.5, 1) * rotation_z(π/5)
+    And m ← scaling(1, 0.5, 1) * rotation_z(π / 5)
     And set_transform(s, m)
-  When n ← normal_at(s, point(0, √2/2, -√2/2))
+    #                     point(0,    √2/2, -√2/2)
+    When n ← normal_at(s, point(0, 0.70710, -0.70710))
   Then n = vector(0, 0.97014, -0.24254)
-@todo
+
 Scenario: A sphere has a default material
   Given s ← sphere()
   When m ← s.material
   Then m = material()
-@todo
+
 Scenario: A sphere may be assigned a material
   Given s ← sphere()
     And m ← material()

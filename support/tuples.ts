@@ -40,6 +40,16 @@ When(
   }
 );
 
+When(
+  "{word} ← reflect\\({word}, {word})",
+  function (firstVarName: string, secondVarName: string, thirdVarName: string) {
+    const second = getVector(this, secondVarName);
+    const third = getVector(this, thirdVarName);
+
+    this[firstVarName] = second.reflect(third);
+  }
+);
+
 Then("{word} is a point", function (varName: string) {
   const tuple = getTuple(this, varName);
 
@@ -105,17 +115,6 @@ Then(
     const second = getTuple(this, secondVarName);
 
     expect(first.subtract(second).equals(new Point(x, y, z))).to.be.true;
-  }
-);
-
-Then(
-  new RegExp(
-    `^${lowercase.source} = point\\(${float.source}, ${float.source}, ${float.source}\\)$`
-  ),
-  function (varName: string, x: number, y: number, z: number) {
-    const point = getTuple(this, varName);
-
-    expect(point.equals(new Point(x, y, z))).to.be.true;
   }
 );
 
@@ -219,6 +218,16 @@ Then(
     const vector = getVector(this, varName);
 
     expect(vector.normalize().equals(new Vector(x, y, z))).to.be.true;
+  }
+);
+
+Then(
+  "{word} = normalize\\({word})",
+  function (firstVarName: string, secondVarName: string) {
+    const first = getVector(this, firstVarName);
+    const second = getVector(this, secondVarName);
+
+    expect(first.equals(second.normalize())).to.be.true;
   }
 );
 

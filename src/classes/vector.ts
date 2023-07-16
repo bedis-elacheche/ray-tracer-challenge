@@ -19,6 +19,10 @@ export class Vector extends Tuple {
     return Math.sqrt(this.x ** 2 + this.y ** 2 + this.z ** 2);
   }
 
+  negate() {
+    return new Vector(0, 0, 0).subtract(this);
+  }
+
   normalize() {
     const magnitude = this.magnitude();
 
@@ -35,5 +39,9 @@ export class Vector extends Tuple {
       this.z * vector.x - this.x * vector.z,
       this.x * vector.y - this.y * vector.x
     );
+  }
+
+  reflect(normal: Vector) {
+    return this.subtract(normal.multiply(2 * this.dot(normal)));
   }
 }
