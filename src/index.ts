@@ -15,3 +15,4 @@ export * from "./classes/sphere";
 export * from "./classes/intersection";
 export * from "./classes/light";
 export * from "./classes/material";
+export * from "./classes/camera";

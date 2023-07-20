@@ -9,6 +9,10 @@ export class Vector extends Tuple {
     return tuple.w === 0;
   }
 
+  static from(tuple: Tuple) {
+    return new Vector(tuple.x, tuple.y, tuple.z);
+  }
+
   subtract(t: Tuple) {
     const { x, y, z } = super.subtract(t);
 

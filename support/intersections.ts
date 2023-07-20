@@ -24,7 +24,6 @@ When(
   "{word} ← intersection\\({float}, {word})",
   function (intersectionVarName: string, t: number, shapeVarName: string) {
     const shape = getShape(this, shapeVarName);
-
     this[intersectionVarName] = new Intersection(t, shape);
   }
 );

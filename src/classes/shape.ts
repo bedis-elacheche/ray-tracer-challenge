@@ -8,10 +8,14 @@ export class Shape {
   public origin: Point;
   public material: Material;
 
-  constructor() {
-    this.origin = new Point(0, 0, 0);
-    this.transform = Matrix.identity(4);
-    this.material = new Material();
+  constructor(
+    origin = new Point(0, 0, 0),
+    transform = Matrix.identity(4),
+    material = new Material()
+  ) {
+    this.origin = origin;
+    this.transform = transform;
+    this.material = material;
   }
 
   normalAt(worldPoint: Point) {

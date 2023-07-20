@@ -5,7 +5,7 @@ Scenario: An intersection encapsulates t and object
   When i ← intersection(3.5, s)
   Then i.t = 3.5
     And i.object = s
-@todo
+
 Scenario: Precomputing the state of an intersection
   Given r ← ray(point(0, 0, -5), vector(0, 0, 1))
     And shape ← sphere()
@@ -23,14 +23,14 @@ Scenario: Precomputing the reflection vector
     And i ← intersection(√2, shape)                      
   When comps ← prepare_computations(i, r)
   Then comps.reflectv = vector(0, √2/2, √2/2)                
-@todo
+
 Scenario: The hit, when an intersection occurs on the outside
   Given r ← ray(point(0, 0, -5), vector(0, 0, 1))
     And shape ← sphere()
     And i ← intersection(4, shape)
   When comps ← prepare_computations(i, r)
   Then comps.inside = false
-@todo
+
 Scenario: The hit, when an intersection occurs on the inside
   Given r ← ray(point(0, 0, 0), vector(0, 0, 1))
     And shape ← sphere()

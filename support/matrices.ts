@@ -1,5 +1,13 @@
 import { DataTable, Given, Then } from "@cucumber/cucumber";
-import { getMatrix, getPoint, getTuple } from "./utils";
+import {
+  float,
+  getMatrix,
+  getPoint,
+  getTuple,
+  int,
+  lowercase,
+  uppercase,
+} from "./utils";
 import { Matrix, Tuple } from "../src";
 import { expect } from "chai";
 
@@ -56,7 +64,9 @@ Given(
 );
 
 Then(
-  /([A-Z]+) ← ([A-Z]+) \* ([A-Z]+) \* ([A-Z]+)/,
+  new RegExp(
+    `^${uppercase.source} ← ${uppercase.source} \\* ${uppercase.source} \\* ${uppercase.source}$`
+  ),
   function (
     firstVarName: string,
     secondVarName: string,
@@ -72,7 +82,9 @@ Then(
 );
 
 Then(
-  /([A-Z]+) ← ([A-Z]+) \* ([A-Z]+)$/,
+  new RegExp(
+    `^${uppercase.source} ← ${uppercase.source} \\* ${uppercase.source}$`
+  ),
   function (firstVarName: string, secondVarName: string, thirdVarName: string) {
     const second = getMatrix(this, secondVarName);
     const third = getMatrix(this, thirdVarName);
@@ -82,7 +94,9 @@ Then(
 );
 
 Then(
-  /([a-z]+\d*) ← ([A-Z]+\d*) \* ([a-z]+\d*)/,
+  new RegExp(
+    `^${lowercase.source} ← ${uppercase.source} \\* ${lowercase.source}$`
+  ),
   function (firstVarName: string, secondVarName: string, thirdVarName: string) {
     const second = getMatrix(this, secondVarName);
     const third = getTuple(this, thirdVarName);
@@ -101,20 +115,26 @@ Then(
 );
 
 Then(
-  /([A-Z]+) = ([A-Z]+|identity_matrix)/,
+  new RegExp(`^${uppercase.source} = identity_matrix$`),
+  function (firstVarName: string) {
+    const first = getMatrix(this, firstVarName);
+
+    expect(first.equals(Matrix.identity(first.rows))).to.be.true;
+  }
+);
+
+Then(
+  new RegExp(`^${uppercase.source} = ${uppercase.source}$`),
   function (firstVarName: string, secondVarName: string) {
     const first = getMatrix(this, firstVarName);
-    const second =
-      secondVarName === "identity_matrix"
-        ? Matrix.identity(first.rows)
-        : getMatrix(this, secondVarName);
+    const second = getMatrix(this, secondVarName);
 
     expect(first.equals(second)).to.be.true;
   }
 );
 
 Then(
-  /([A-Z]+) != ([A-Z]+)/,
+  new RegExp(`^${uppercase.source} != ${uppercase.source}$`),
   function (firstVarName: string, secondVarName: string) {
     const first = getMatrix(this, firstVarName);
     const second = getMatrix(this, secondVarName);
@@ -124,7 +144,9 @@ Then(
 );
 
 Then(
-  "{word} * {word} is the following {int}x{int} matrix:",
+  new RegExp(
+    `^${uppercase.source} \\* ${uppercase.source} is the following ${int.source}x${int.source} matrix:$`
+  ),
   function (
     firstVarName: string,
     secondVarName: string,
@@ -147,7 +169,9 @@ Then(
 );
 
 Then(
-  /([A-Z]+) \* ([a-z]+) = tuple\(([+-]?[0-9]*[.]?[0-9]+), ([+-]?[0-9]*[.]?[0-9]+), ([+-]?[0-9]*[.]?[0-9]+), ([+-]?[0-9]*[.]?[0-9]+)\)/,
+  new RegExp(
+    `^${uppercase.source} \\* ${lowercase.source} = tuple\\(${float.source}, ${float.source}, ${float.source}, ${float.source}\\)$`
+  ),
   function (
     matrixVarName: string,
     tupleVarName: string,
@@ -204,6 +228,24 @@ Then(
     });
 
     expect(matrix.transpose().equals(expected)).to.be.true;
+  }
+);
+
+Then(
+  new RegExp(
+    `^${lowercase.source} is the following ${int.source}x${int.source} matrix:$`
+  ),
+  function (varName: string, r: number, c: number, dataTable: DataTable) {
+    const matrix = getMatrix(this, varName);
+    const expected = new Matrix(r, c);
+
+    dataTable.raw().forEach((row, y) => {
+      row.forEach((item, x) => {
+        expected.set(y, x, parseFloat(item));
+      });
+    });
+
+    expect(matrix.equals(expected)).to.be.true;
   }
 );
 
@@ -270,7 +312,9 @@ Then("{word} is not invertible", function (varName: string) {
 });
 
 Then(
-  "inverse\\({word}) is the following {int}x{int} matrix:",
+  new RegExp(
+    `^inverse\\(${uppercase.source}\\) is the following ${int.source}x${int.source} matrix:$`
+  ),
   function (varName: string, r: number, c: number, dataTable: DataTable) {
     const matrix = getMatrix(this, varName);
     const expected = new Matrix(r, c);

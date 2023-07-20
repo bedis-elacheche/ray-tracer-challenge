@@ -1,4 +1,3 @@
-@todo
 Feature: Camera
 
 Scenario: Constructing a camera
@@ -35,8 +34,9 @@ Scenario: Constructing a ray when the camera is transformed
   Given c ← camera(201, 101, π/2)
   When c.transform ← rotation_y(π/4) * translation(0, -2, 5)
     And r ← ray_for_pixel(c, 100, 50)
-  Then r.origin = point(0, 2, -5)
-    And r.direction = vector(√2/2, 0, -√2/2)
+    Then r.origin = point(0, 2, -5)
+    #                 vector(√2/2              , 0, -√2/2)
+    And r.direction = vector(0.7071067811865476, 0, -0.7071067811865476)
 
 Scenario: Rendering a world with a camera
   Given w ← default_world()

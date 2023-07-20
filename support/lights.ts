@@ -1,19 +1,53 @@
 import { When } from "@cucumber/cucumber";
-import { getColor, getLight, getMaterial, getPoint, getVector } from "./utils";
+import {
+  float,
+  getColor,
+  getLight,
+  getMaterial,
+  getPoint,
+  getVector,
+  lowercase,
+} from "./utils";
 import { Color, Light, Point } from "../src";
 
 When(
-  "{word} ← point_light\\(point\\({float}, {float}, {float}), color\\({float}, {float}, {float}))",
+  new RegExp(
+    `^${lowercase.source} ← point_light\\(point\\(${float.source}, ${float.source}, ${float.source}\\), color\\(${float.source}, ${float.source}, ${float.source}\\)\\)$`
+  ),
   function (
     varName: string,
-    x: number,
-    y: number,
-    z: number,
-    r: number,
-    g: number,
-    b: number
+    x: string,
+    y: string,
+    z: string,
+    r: string,
+    g: string,
+    b: string
   ) {
-    this[varName] = new Light(new Point(x, y, z), new Color(r, g, b));
+    this[varName] = new Light(
+      new Point(parseFloat(x), parseFloat(y), parseFloat(z)),
+      new Color(parseFloat(r), parseFloat(g), parseFloat(b))
+    );
+  }
+);
+
+When(
+  new RegExp(
+    `^${lowercase.source}\\.${lowercase.source} ← point_light\\(point\\(${float.source}, ${float.source}, ${float.source}\\), color\\(${float.source}, ${float.source}, ${float.source}\\)\\)$`
+  ),
+  function (
+    varName: string,
+    key: string,
+    x: string,
+    y: string,
+    z: string,
+    r: string,
+    g: string,
+    b: string
+  ) {
+    this[varName][key] = new Light(
+      new Point(parseFloat(x), parseFloat(y), parseFloat(z)),
+      new Color(parseFloat(r), parseFloat(g), parseFloat(b))
+    );
   }
 );
 

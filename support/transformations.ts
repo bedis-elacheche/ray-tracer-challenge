@@ -1,7 +1,7 @@
-import { Given, Then } from "@cucumber/cucumber";
+import { Given, Then, When } from "@cucumber/cucumber";
 import { Point, Transformations, Vector } from "../src";
 import { expect } from "chai";
-import { getMatrix, getPoint, getTuple, getVector } from "./utils";
+import { getMatrix, getPoint, getTuple, getVector, lowercase } from "./utils";
 
 Given(
   "{word} ← translation\\({float}, {float}, {float})",
@@ -62,12 +62,84 @@ Given(
   }
 );
 
-Then(
+Given(
   "{word} ← inverse\\({word})",
   function (firstVarName: string, secondVarName: string) {
     const matrix = getMatrix(this, secondVarName);
 
     this[firstVarName] = matrix.inverse();
+  }
+);
+
+When(
+  "^{word} ← scaling\\({float}, {float}, {float})$",
+  function (varName: string, x: number, y: number, z: number) {
+    this[varName] = Transformations.scale(x, y, z);
+  }
+);
+
+When(
+  new RegExp(
+    `^${lowercase.source} ← view_transform\\(${lowercase.source}, ${lowercase.source}, ${lowercase.source}\\)$`
+  ),
+  function (
+    varName: string,
+    firstVarName: string,
+    secondVarName: string,
+    thirdVarName: string
+  ) {
+    const from = getPoint(this, firstVarName);
+    const to = getPoint(this, secondVarName);
+    const up = getVector(this, thirdVarName);
+
+    this[varName] = Transformations.viewTransform(from, to, up);
+  }
+);
+
+When(
+  new RegExp(
+    `^${lowercase.source}\\.transform ← view_transform\\(${lowercase.source}, ${lowercase.source}, ${lowercase.source}\\)$`
+  ),
+  function (
+    varName: string,
+    firstVarName: string,
+    secondVarName: string,
+    thirdVarName: string
+  ) {
+    const from = getPoint(this, firstVarName);
+    const to = getPoint(this, secondVarName);
+    const up = getVector(this, thirdVarName);
+
+    this[varName].transform = Transformations.viewTransform(from, to, up);
+  }
+);
+
+When(
+  "{word}.transform ← rotation_y\\(π\\/{float}) * translation\\({float}, {float}, {float})",
+  function (varName: string, divisor: number, x: number, y: number, z: number) {
+    this[varName].transform = Transformations.rotateY(
+      Math.PI / divisor
+    ).multiply(Transformations.translation(x, y, z));
+  }
+);
+
+Then(
+  "{word} = translation\\({float}, {float}, {float})",
+  function (varName: string, x: number, y: number, z: number) {
+    const transformationMatrix = getMatrix(this, varName);
+
+    expect(transformationMatrix.equals(Transformations.translation(x, y, z))).to
+      .be.true;
+  }
+);
+
+Then(
+  "{word} = scaling\\({float}, {float}, {float})",
+  function (varName: string, x: number, y: number, z: number) {
+    const transformationMatrix = getMatrix(this, varName);
+
+    expect(transformationMatrix.equals(Transformations.scale(x, y, z))).to.be
+      .true;
   }
 );
 

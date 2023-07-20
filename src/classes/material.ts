@@ -11,15 +11,33 @@ export class Material {
   public transparency: number;
   public reflective: number;
 
-  constructor() {
-    this.color = new Color(1, 1, 1);
-    this.ambient = 0.1;
-    this.diffuse = 0.9;
-    this.specular = 0.9;
-    this.shininess = 200;
-    this.reflective = 0.0;
-    this.transparency = 0.0;
-    this.refractiveIndex = 1.0;
+  constructor({
+    color = new Color(1, 1, 1),
+    ambient = 0.1,
+    diffuse = 0.9,
+    specular = 0.9,
+    shininess = 200,
+    reflective = 0.0,
+    transparency = 0.0,
+    refractiveIndex = 1.0,
+  }: {
+    color?: Color;
+    ambient?: number;
+    diffuse?: number;
+    specular?: number;
+    shininess?: number;
+    reflective?: number;
+    transparency?: number;
+    refractiveIndex?: number;
+  } = {}) {
+    this.color = color;
+    this.ambient = ambient;
+    this.diffuse = diffuse;
+    this.specular = specular;
+    this.shininess = shininess;
+    this.reflective = reflective;
+    this.transparency = transparency;
+    this.refractiveIndex = refractiveIndex;
   }
 
   equals(m: Material) {

@@ -12,6 +12,8 @@ import {
   Sphere,
   Material,
   Light,
+  World,
+  Camera,
 } from "../src";
 import { Shape } from "../src/classes/shape";
 
@@ -46,6 +48,8 @@ export const getSphere = getInstance(Sphere);
 export const getIntersection = getInstance(Intersection);
 export const getMaterial = getInstance(Material);
 export const getLight = getInstance(Light);
+export const getWorld = getInstance(World);
+export const getCamera = getInstance(Camera);
 
 export const getString = (world: IWorld, name: string) => {
   const item = world[name];
@@ -73,14 +77,17 @@ export const mapKey = (str: string) => {
     {
       count: "length",
       refractive_index: "refractiveIndex",
+      pixel_size: "pixelSize",
     }[str] || str
   );
 };
 
 export const mapValue = (world: IWorld, key: string) => {
-  return (
-    {
-      identity_matrix: Matrix.identity(4),
-    }[key] || world[key]
-  );
+  const dict: Record<string, unknown> = {
+    identity_matrix: Matrix.identity(4),
+    true: true,
+    false: false,
+  };
+
+  return Object.hasOwn(dict, key) ? dict[key] : world[key];
 };

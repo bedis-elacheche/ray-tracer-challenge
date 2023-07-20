@@ -119,28 +119,28 @@ Scenario: Chained transformations must be applied in reverse order
     And C ← translation(10, 5, 7)
   When T ← C * B * A
   Then T * p = point(15, 0, 7)
-@todo
+
 Scenario: The transformation matrix for the default orientation
   Given from ← point(0, 0, 0)
     And to ← point(0, 0, -1)
     And up ← vector(0, 1, 0)
   When t ← view_transform(from, to, up)
   Then t = identity_matrix
-@todo
+
 Scenario: A view transformation matrix looking in positive z direction
   Given from ← point(0, 0, 0)
     And to ← point(0, 0, 1)
     And up ← vector(0, 1, 0)
   When t ← view_transform(from, to, up)
   Then t = scaling(-1, 1, -1)
-@todo
+
 Scenario: The view transformation moves the world
   Given from ← point(0, 0, 8)
     And to ← point(0, 0, 0)
     And up ← vector(0, 1, 0)
   When t ← view_transform(from, to, up)
   Then t = translation(0, 0, -8)
-@todo
+
 Scenario: An arbitrary view transformation
   Given from ← point(1, 3, 2)
     And to ← point(4, -2, 8)

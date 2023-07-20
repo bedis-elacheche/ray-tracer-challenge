@@ -1,4 +1,6 @@
 import { Matrix } from "./matrix";
+import { Point } from "./point";
+import { Vector } from "./vector";
 
 export class Transformations {
   static translation(x: number, y: number, z: number) {
@@ -79,5 +81,29 @@ export class Transformations {
     matrix.set(2, 1, zy);
 
     return matrix;
+  }
+
+  static viewTransform(from: Point, to: Point, up: Vector) {
+    const matrix = Matrix.identity(4);
+
+    const forward = to.subtract(from).normalize();
+    const left = forward.cross(up.normalize());
+    const trueUp = left.cross(forward);
+
+    matrix.set(0, 0, left.x);
+    matrix.set(0, 1, left.y);
+    matrix.set(0, 2, left.z);
+
+    matrix.set(1, 0, trueUp.x);
+    matrix.set(1, 1, trueUp.y);
+    matrix.set(1, 2, trueUp.z);
+
+    matrix.set(2, 0, -forward.x);
+    matrix.set(2, 1, -forward.y);
+    matrix.set(2, 2, -forward.z);
+
+    return matrix.multiply(
+      Transformations.translation(-from.x, -from.y, -from.z)
+    );
   }
 }

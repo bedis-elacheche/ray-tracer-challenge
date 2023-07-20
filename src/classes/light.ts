@@ -39,4 +39,14 @@ export class Light {
 
     return ambient.add(diffuse).add(specular);
   }
+
+  equals(l: Light) {
+    if (this === l) {
+      return true;
+    }
+
+    return (
+      this.position.equals(l.position) && this.intensity.equals(l.intensity)
+    );
+  }
 }

@@ -10,6 +10,10 @@ export class Point extends Tuple {
     return tuple.w === 1;
   }
 
+  static from(tuple: Tuple) {
+    return new Point(tuple.x, tuple.y, tuple.z);
+  }
+
   subtract<T extends Tuple>(
     t: T
   ): T extends Point ? Vector : T extends Vector ? Point : Tuple {
