@@ -54,9 +54,15 @@ When(
 Then(
   new RegExp(`^${lowercase.source}\\.${lowercase.source} = ${float.source}$`),
   function (varName: string, key: string, value: string) {
-    expect(
-      Math.abs(this[varName][mapKey(key)] - parseFloat(value))
-    ).to.be.lessThanOrEqual(EPSILON);
+    const variable = this[varName];
+
+    if (Array.isArray(variable) && key === "count") {
+      expect(variable).to.have.length(parseInt(value, 10));
+    } else {
+      expect(
+        Math.abs(variable[mapKey(key)] - parseFloat(value))
+      ).to.be.lessThanOrEqual(EPSILON);
+    }
   }
 );
 

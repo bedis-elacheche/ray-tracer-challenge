@@ -37,7 +37,7 @@ When(
     const ray = getRay(this, rayVarName);
     const shape = getShape(this, shapeVarName);
 
-    this[varName] = ray.intersect(shape);
+    this[varName] = shape.intersect(ray);
   }
 );
 

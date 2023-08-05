@@ -1,6 +1,8 @@
+import { Intersection } from "./intersection";
 import { Material } from "./material";
 import { Matrix } from "./matrix";
 import { Point } from "./point";
+import { Ray } from "./ray";
 import { Vector } from "./vector";
 
 export class Shape {
@@ -18,15 +20,29 @@ export class Shape {
     this.material = material;
   }
 
-  normalAt(worldPoint: Point) {
+  normalAt(point: Point) {
     const invertedTransformation = this.transform.inverse();
-    const objectPoint = invertedTransformation.multiply(worldPoint);
-    const objectNormal = objectPoint.subtract(this.origin);
+    const localPoint = invertedTransformation.multiply(point);
+    const localNormal = this.localNormalAt(localPoint);
     const worldNormal = invertedTransformation
       .transpose()
-      .multiply(objectNormal);
+      .multiply(localNormal);
 
     return new Vector(worldNormal.x, worldNormal.y, worldNormal.z).normalize();
+  }
+
+  localNormalAt(localPoint: Point) {
+    return new Vector(localPoint.x, localPoint.y, localPoint.z);
+  }
+
+  intersect(r: Ray) {
+    const localRay = r.transform(this.transform.inverse());
+
+    return this.localIntersect(localRay);
+  }
+
+  localIntersect(localRay: Ray): Intersection[] {
+    return [];
   }
 
   equals(s: Shape) {

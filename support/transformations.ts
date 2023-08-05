@@ -1,7 +1,14 @@
 import { Given, Then, When } from "@cucumber/cucumber";
 import { Point, Transformations, Vector } from "../src";
 import { expect } from "chai";
-import { getMatrix, getPoint, getTuple, getVector, lowercase } from "./utils";
+import {
+  float,
+  getMatrix,
+  getPoint,
+  getTuple,
+  getVector,
+  lowercase,
+} from "./utils";
 
 Given(
   "{word} ← translation\\({float}, {float}, {float})",
@@ -124,12 +131,17 @@ When(
 );
 
 Then(
-  "{word} = translation\\({float}, {float}, {float})",
-  function (varName: string, x: number, y: number, z: number) {
+  new RegExp(
+    `^${lowercase.source} = translation\\(${float.source}, ${float.source}, ${float.source}\\)$`
+  ),
+  function (varName: string, x: string, y: string, z: string) {
     const transformationMatrix = getMatrix(this, varName);
 
-    expect(transformationMatrix.equals(Transformations.translation(x, y, z))).to
-      .be.true;
+    expect(
+      transformationMatrix.equals(
+        Transformations.translation(parseFloat(x), parseFloat(y), parseFloat(z))
+      )
+    ).to.be.true;
   }
 );
 

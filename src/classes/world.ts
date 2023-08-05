@@ -73,7 +73,7 @@ export class World {
   }
 
   intersect(ray: Ray) {
-    const xs = this.shapes.flatMap((shape) => ray.intersect(shape));
+    const xs = this.shapes.flatMap((shape) => shape.intersect(ray));
 
     return xs.filter(({ t }) => t > 0).sort((a, z) => a.t - z.t);
   }

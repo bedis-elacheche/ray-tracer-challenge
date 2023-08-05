@@ -1,4 +1,3 @@
-@todo
 Feature: Planes
 
 Scenario: The normal of a plane is constant everywhere

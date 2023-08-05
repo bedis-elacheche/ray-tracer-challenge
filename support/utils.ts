@@ -14,6 +14,7 @@ import {
   Light,
   World,
   Camera,
+  Plane,
 } from "../src";
 import { Shape } from "../src/classes/shape";
 
@@ -50,6 +51,7 @@ export const getMaterial = getInstance(Material);
 export const getLight = getInstance(Light);
 export const getWorld = getInstance(World);
 export const getCamera = getInstance(Camera);
+export const getPlane = getInstance(Plane);
 
 export const getString = (world: IWorld, name: string) => {
   const item = world[name];
@@ -73,7 +75,10 @@ export const getArray = <TInstance>(
   const item = world[name];
 
   expect(item).to.be.an("array");
-  expect(item[0]).to.be.instanceOf(Instance);
+
+  if (item.length) {
+    expect(item[0]).to.be.instanceOf(Instance);
+  }
 
   return item as TInstance[];
 };

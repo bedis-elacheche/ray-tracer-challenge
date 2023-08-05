@@ -1,10 +1,10 @@
 import { Shape } from "./shape";
 
-export class Intersection {
+export class Intersection<T extends Shape = Shape> {
   public t: number;
-  public object: Shape;
+  public object: T;
 
-  constructor(t: number, object: Shape) {
+  constructor(t: number, object: T) {
     this.t = t;
     this.object = object;
   }
