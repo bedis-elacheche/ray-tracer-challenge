@@ -144,7 +144,8 @@ const draw3DSphere = (prefix: string, transform?: Matrix) => {
           hit.object.material,
           point,
           eye,
-          normal
+          normal,
+          false
         );
         canvas.writePixel(x, y, castedColor);
       }
@@ -236,7 +237,8 @@ const drawScene = () => {
 
   const canvas = camera.render(world);
 
-  writeFileSync("./photos/3d-scene.ppm", canvas.toPPM());
+  // writeFileSync("./photos/3d-scene.ppm", canvas.toPPM());
+  writeFileSync("./photos/3d-scene-with-shadows.ppm", canvas.toPPM());
 };
 
 // drawProjectile();

@@ -1,3 +1,4 @@
+import { EPSILON } from "../constants";
 import { Color } from "./color";
 import { Environment } from "./environment";
 import { Intersection } from "./intersection";
@@ -56,12 +57,17 @@ export class World {
       eyev: ray.direction.negate(),
       normalv: intersection.object.normalAt(point),
       inside: false,
+      overPoint: null as Point,
     };
 
     if (computation.normalv.dot(computation.eyev) < 0) {
       computation.inside = true;
       computation.normalv = computation.normalv.negate();
     }
+
+    computation.overPoint = computation.point.add(
+      computation.normalv.multiply(EPSILON)
+    );
 
     return computation;
   }
@@ -77,7 +83,8 @@ export class World {
       computation.object.material,
       computation.point,
       computation.eyev,
-      computation.normalv
+      computation.normalv,
+      this.isShadowed(computation.overPoint)
     );
   }
 
@@ -89,5 +96,16 @@ export class World {
     }
 
     return this.shadeHit(World.prepareComputations(hit, ray));
+  }
+
+  isShadowed(point: Point) {
+    const vector = this.light.position.subtract(point);
+    const distance = vector.magnitude();
+    const direction = vector.normalize();
+    const ray = new Ray(point, direction);
+    const intersections = this.intersect(ray);
+    const hit = Intersection.hit(intersections);
+
+    return hit ? hit.t < distance : false;
   }
 }

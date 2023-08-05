@@ -1,5 +1,5 @@
 import { Given, Then, When } from "@cucumber/cucumber";
-import { getIntersection, getRay, getShape, getWorld } from "./utils";
+import { getIntersection, getPoint, getRay, getShape, getWorld } from "./utils";
 import { expect } from "chai";
 import { World } from "../src";
 
@@ -22,6 +22,16 @@ Given(
     const world = getWorld(this, worldVarName);
 
     this[varName] = world.shapes[1];
+  }
+);
+
+Given(
+  "{word} is added to {word}",
+  function (varName: string, worldVarName: string) {
+    const world = getWorld(this, worldVarName);
+    const shape = getShape(this, varName);
+
+    world.shapes.push(shape);
   }
 );
 
@@ -91,5 +101,15 @@ Then(
     const shape = getShape(this, shapeVarName);
 
     expect(world.shapes.find((item) => item.equals(shape))).to.be.not.undefined;
+  }
+);
+
+Then(
+  "is_shadowed\\({word}, {word}) is {word}",
+  function (worldVarName: string, pointVarName: string, value: string) {
+    const world = getWorld(this, worldVarName);
+    const point = getPoint(this, pointVarName);
+
+    expect(world.isShadowed(point)).to.eq(value === "true");
   }
 );

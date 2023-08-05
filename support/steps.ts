@@ -11,6 +11,13 @@ Given(
 );
 
 Given(
+  new RegExp(`^${lowercase.source} ← (true|false)$`),
+  function (varName: string, value: string) {
+    this[varName] = value === "true";
+  }
+);
+
+Given(
   new RegExp(`^${lowercase.source}\\.${lowercase.source} ← ${float.source}$`),
   function (firstVarName: string, key: string, value: string) {
     this[firstVarName][key] = parseFloat(value);
@@ -208,3 +215,37 @@ Then(
 Then("{word} is nothing", function (varName: string) {
   expect(this[varName]).to.be.null;
 });
+
+Then(
+  new RegExp(
+    `^${lowercase.source}\\.${lowercase.source}\.${lowercase.source} < -EPSILON\\/${float.source}$`
+  ),
+  function (varName: string, key: string, subKey: string, divisor: string) {
+    const value = parseFloat(this[varName][mapKey(key)][mapKey(subKey)]);
+
+    expect(value).to.be.lessThan(-EPSILON / parseFloat(divisor));
+  }
+);
+
+Then(
+  new RegExp(
+    `^${lowercase.source}\\.${lowercase.source}\.${lowercase.source} > ${lowercase.source}\\.${lowercase.source}\.${lowercase.source}$`
+  ),
+  function (
+    firstVarName: string,
+    firstKey: string,
+    firstSubKey: string,
+    secondVarName: string,
+    secondKey: string,
+    secondSubKey: string
+  ) {
+    const firstValue = parseFloat(
+      this[firstVarName][mapKey(firstKey)][mapKey(firstSubKey)]
+    );
+    const secondValue = parseFloat(
+      this[secondVarName][mapKey(secondKey)][mapKey(secondSubKey)]
+    );
+
+    expect(firstValue).to.be.greaterThan(secondValue);
+  }
+);

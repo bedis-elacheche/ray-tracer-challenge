@@ -40,7 +40,8 @@ Given(
               sphere.transform = Transformations.scale(x, y, z);
               break;
             }
-            case value.startsWith("translate("): {
+            case value.startsWith("translate("):
+            case value.startsWith("translation("): {
               const [x, y, z] = getNumericParameters(value);
               sphere.transform = Transformations.translation(x, y, z);
               break;

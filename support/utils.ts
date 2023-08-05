@@ -59,6 +59,12 @@ export const getString = (world: IWorld, name: string) => {
   return item as string;
 };
 
+export const getBoolean = (world: IWorld, name: string) => {
+  const item = world[name];
+
+  return item as boolean;
+};
+
 export const getArray = <TInstance>(
   world: IWorld,
   name: string,
@@ -78,6 +84,7 @@ export const mapKey = (str: string) => {
       count: "length",
       refractive_index: "refractiveIndex",
       pixel_size: "pixelSize",
+      over_point: "overPoint",
     }[str] || str
   );
 };

@@ -1,6 +1,7 @@
 import { When } from "@cucumber/cucumber";
 import {
   float,
+  getBoolean,
   getColor,
   getLight,
   getMaterial,
@@ -62,21 +63,23 @@ When(
 );
 
 When(
-  "{word} ← lighting\\({word}, {word}, {word}, {word}, {word})",
+  "{word} ← lighting\\({word}, {word}, {word}, {word}, {word}, {word})",
   function (
     varName: string,
     materialName: string,
     lightName: string,
     positionName: string,
     eyeName: string,
-    normalName: string
+    normalName: string,
+    inShadowName: string
   ) {
     const material = getMaterial(this, materialName);
     const light = getLight(this, lightName);
     const position = getPoint(this, positionName);
     const eye = getVector(this, eyeName);
     const normal = getVector(this, normalName);
+    const inShadow = getBoolean(this, inShadowName);
 
-    this[varName] = light.apply(material, position, eye, normal);
+    this[varName] = light.apply(material, position, eye, normal, inShadow);
   }
 );

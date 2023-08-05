@@ -12,7 +12,13 @@ export class Light {
     this.intensity = intensity;
   }
 
-  apply(material: Material, point: Point, eye: Vector, normal: Vector) {
+  apply(
+    material: Material,
+    point: Point,
+    eye: Vector,
+    normal: Vector,
+    inShadow: boolean
+  ) {
     const effectiveColor = material.color.multiply(this.intensity);
     const lightVector = this.position.subtract(point).normalize();
     const ambient = effectiveColor.multiply(material.ambient);
@@ -37,7 +43,7 @@ export class Light {
       }
     }
 
-    return ambient.add(diffuse).add(specular);
+    return inShadow ? ambient : ambient.add(diffuse).add(specular);
   }
 
   equals(l: Light) {
