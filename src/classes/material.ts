@@ -1,8 +1,10 @@
 import { EPSILON } from "../constants";
 import { Color } from "./color";
+import { Pattern } from "./patterns";
 
 export class Material {
   public color: Color;
+  public pattern: Pattern;
   public ambient: number;
   public diffuse: number;
   public specular: number;
@@ -13,6 +15,7 @@ export class Material {
 
   constructor({
     color = new Color(1, 1, 1),
+    pattern = null,
     ambient = 0.1,
     diffuse = 0.9,
     specular = 0.9,
@@ -25,6 +28,7 @@ export class Material {
     ambient?: number;
     diffuse?: number;
     specular?: number;
+    pattern?: Pattern;
     shininess?: number;
     reflective?: number;
     transparency?: number;
@@ -33,6 +37,7 @@ export class Material {
     this.color = color;
     this.ambient = ambient;
     this.diffuse = diffuse;
+    this.pattern = pattern;
     this.specular = specular;
     this.shininess = shininess;
     this.reflective = reflective;

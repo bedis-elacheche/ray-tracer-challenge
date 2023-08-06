@@ -81,6 +81,7 @@ export class World {
   shadeHit(computation: ReturnType<typeof World.prepareComputations>) {
     return this.light.apply(
       computation.object.material,
+      computation.object,
       computation.point,
       computation.eyev,
       computation.normalv,

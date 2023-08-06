@@ -6,6 +6,7 @@ import {
   getLight,
   getMaterial,
   getPoint,
+  getShape,
   getVector,
   lowercase,
 } from "./utils";
@@ -63,10 +64,11 @@ When(
 );
 
 When(
-  "{word} ← lighting\\({word}, {word}, {word}, {word}, {word}, {word})",
+  "{word} ← lighting\\({word}, {word}, {word}, {word}, {word}, {word}, {word})",
   function (
     varName: string,
     materialName: string,
+    shapeName: string,
     lightName: string,
     positionName: string,
     eyeName: string,
@@ -76,10 +78,48 @@ When(
     const material = getMaterial(this, materialName);
     const light = getLight(this, lightName);
     const position = getPoint(this, positionName);
+    const shape = getShape(this, shapeName);
     const eye = getVector(this, eyeName);
     const normal = getVector(this, normalName);
     const inShadow = getBoolean(this, inShadowName);
 
-    this[varName] = light.apply(material, position, eye, normal, inShadow);
+    this[varName] = light.apply(
+      material,
+      shape,
+      position,
+      eye,
+      normal,
+      inShadow
+    );
+  }
+);
+
+When(
+  "{word} ← lighting\\({word}, {word}, {word}, point\\({float}, {float}, {float}), {word}, {word}, false)",
+  function (
+    varName: string,
+    materialName: string,
+    shapeName: string,
+    lightName: string,
+    x: number,
+    y: number,
+    z: number,
+    eyeName: string,
+    normalName: string
+  ) {
+    const material = getMaterial(this, materialName);
+    const shape = getShape(this, shapeName);
+    const light = getLight(this, lightName);
+    const eye = getVector(this, eyeName);
+    const normal = getVector(this, normalName);
+
+    this[varName] = light.apply(
+      material,
+      shape,
+      new Point(x, y, z),
+      eye,
+      normal,
+      false
+    );
   }
 );

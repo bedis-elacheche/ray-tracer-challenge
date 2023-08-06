@@ -18,3 +18,4 @@ export * from "./classes/intersection";
 export * from "./classes/light";
 export * from "./classes/material";
 export * from "./classes/camera";
+export * from "./classes/patterns";

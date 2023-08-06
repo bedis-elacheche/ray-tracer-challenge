@@ -1,6 +1,7 @@
 import { Color } from "./color";
 import { Material } from "./material";
 import { Point } from "./point";
+import { Shape } from "./shape";
 import { Vector } from "./vector";
 
 export class Light {
@@ -14,12 +15,16 @@ export class Light {
 
   apply(
     material: Material,
+    object: Shape,
     point: Point,
     eye: Vector,
     normal: Vector,
     inShadow: boolean
   ) {
-    const effectiveColor = material.color.multiply(this.intensity);
+    const color = material.pattern
+      ? material.pattern.colorAt(point, object)
+      : material.color;
+    const effectiveColor = color.multiply(this.intensity);
     const lightVector = this.position.subtract(point).normalize();
     const ambient = effectiveColor.multiply(material.ambient);
     const lightDotNormal = lightVector.dot(normal);

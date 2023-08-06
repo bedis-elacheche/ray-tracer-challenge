@@ -26,7 +26,8 @@ Feature: Materials
     And normalv ← vector(0, 0, -1)
     And light ← point_light(point(0, 0, -10), color(1, 1, 1))
     And in_shadow ← false
-    When result ← lighting(m, light, position, eyev, normalv, in_shadow)
+    And object ← sphere()
+    When result ← lighting(m, object, light, position, eyev, normalv, in_shadow)
     Then result = color(1.9, 1.9, 1.9)
 
   Scenario: Lighting with the eye between light and surface, eye offset 45°
@@ -34,16 +35,18 @@ Feature: Materials
     Given eyev ← vector(0, 0.7071067811865476, -0.7071067811865476)
     And normalv ← vector(0, 0, -1)
     And light ← point_light(point(0, 0, -10), color(1, 1, 1))
+    And object ← sphere()
     And in_shadow ← false
-    When result ← lighting(m, light, position, eyev, normalv, in_shadow)
+    When result ← lighting(m, object, light, position, eyev, normalv, in_shadow)
     Then result = color(1.0, 1.0, 1.0)
 
   Scenario: Lighting with eye opposite surface, light offset 45°
     Given eyev ← vector(0, 0, -1)
     And normalv ← vector(0, 0, -1)
     And light ← point_light(point(0, 10, -10), color(1, 1, 1))
+    And object ← sphere()
     And in_shadow ← false
-    When result ← lighting(m, light, position, eyev, normalv, in_shadow)
+    When result ← lighting(m, object, light, position, eyev, normalv, in_shadow)
     Then result = color(0.7364, 0.7364, 0.7364)
 
   Scenario: Lighting with eye in the path of the reflection vector
@@ -51,16 +54,18 @@ Feature: Materials
     Given eyev ← vector(0, -0.7071067811865476, -0.7071067811865476)
     And normalv ← vector(0, 0, -1)
     And light ← point_light(point(0, 10, -10), color(1, 1, 1))
+    And object ← sphere()
     And in_shadow ← false
-    When result ← lighting(m, light, position, eyev, normalv, in_shadow)
+    When result ← lighting(m, object, light, position, eyev, normalv, in_shadow)
     Then result = color(1.6364, 1.6364, 1.6364)
 
   Scenario: Lighting with the light behind the surface
     Given eyev ← vector(0, 0, -1)
     And normalv ← vector(0, 0, -1)
     And light ← point_light(point(0, 0, 10), color(1, 1, 1))
+    And object ← sphere()
     And in_shadow ← false
-    When result ← lighting(m, light, position, eyev, normalv, in_shadow)
+    When result ← lighting(m, object, light, position, eyev, normalv, in_shadow)
     Then result = color(0.1, 0.1, 0.1)
 
 
@@ -68,11 +73,11 @@ Feature: Materials
     Given eyev ← vector(0, 0, -1)
     And normalv ← vector(0, 0, -1)
     And light ← point_light(point(0, 0, -10), color(1, 1, 1))
+    And object ← sphere()
     And in_shadow ← true
-    When result ← lighting(m, light, position, eyev, normalv, in_shadow)
+    When result ← lighting(m, object, light, position, eyev, normalv, in_shadow)
     Then result = color(0.1, 0.1, 0.1)
 
-  @todo
   Scenario: Lighting with a pattern applied
     Given m.pattern ← stripe_pattern(color(1, 1, 1), color(0, 0, 0))
     And m.ambient ← 1
@@ -81,7 +86,8 @@ Feature: Materials
     And eyev ← vector(0, 0, -1)
     And normalv ← vector(0, 0, -1)
     And light ← point_light(point(0, 0, -10), color(1, 1, 1))
-    When c1 ← lighting(m, light, point(0.9, 0, 0), eyev, normalv, false)
-    And c2 ← lighting(m, light, point(1.1, 0, 0), eyev, normalv, false)
+    And object ← sphere()
+    When c1 ← lighting(m, object, light, point(0.9, 0, 0), eyev, normalv, false)
+    And c2 ← lighting(m, object, light, point(1.1, 0, 0), eyev, normalv, false)
     Then c1 = color(1, 1, 1)
     And c2 = color(0, 0, 0)
