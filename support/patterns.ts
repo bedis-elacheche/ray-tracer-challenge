@@ -7,10 +7,12 @@ import {
   getStripe,
 } from "./utils";
 import {
+  Checkers,
   Color,
   Gradient,
   Pattern,
   Point,
+  Ring,
   Stripe,
   Transformations,
 } from "../src";
@@ -37,6 +39,26 @@ Given(
     const secondColor = getColor(this, secondColorName);
 
     this[varName] = new Gradient(firstColor, secondColor);
+  }
+);
+
+Given(
+  "{word} ← ring_pattern\\({word}, {word})",
+  function (varName: string, firstColorName: string, secondColorName: string) {
+    const firstColor = getColor(this, firstColorName);
+    const secondColor = getColor(this, secondColorName);
+
+    this[varName] = new Ring(firstColor, secondColor);
+  }
+);
+
+Given(
+  "{word} ← checkers_pattern\\({word}, {word})",
+  function (varName: string, firstColorName: string, secondColorName: string) {
+    const firstColor = getColor(this, firstColorName);
+    const secondColor = getColor(this, secondColorName);
+
+    this[varName] = new Checkers(firstColor, secondColor);
   }
 );
 
