@@ -1,7 +1,8 @@
 import { Given, Then, When } from "@cucumber/cucumber";
+import { expect } from "chai";
+
 import { Intersection, Plane, Point } from "../src";
 import { getArray, getPlane, getRay } from "./utils";
-import { expect } from "chai";
 
 Given("{word} ← plane\\()", function (varName: string) {
   this[varName] = new Plane();
@@ -14,12 +15,12 @@ When(
     planeName: string,
     x: number,
     y: number,
-    z: number
+    z: number,
   ) {
     const plane = getPlane(this, planeName);
 
     this[varName] = plane.normalAt(new Point(x, y, z));
-  }
+  },
 );
 
 When(
@@ -29,7 +30,7 @@ When(
     const ray = getRay(this, rayName);
 
     this[varName] = plane.localIntersect(ray);
-  }
+  },
 );
 
 Then("{word} is empty", function (varName: string) {

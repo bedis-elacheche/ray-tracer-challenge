@@ -1,7 +1,8 @@
 import { Given, Then, When } from "@cucumber/cucumber";
-import { getMatrix, getPoint, getRay, getShape, getVector } from "./utils";
-import { Point, Ray, Vector } from "../src";
 import { expect } from "chai";
+
+import { Point, Ray, Vector } from "../src";
+import { getMatrix, getPoint, getRay, getShape, getVector } from "./utils";
 
 Given(
   "{word} ← ray\\(point\\({float}, {float}, {float}), vector\\({float}, {float}, {float}))",
@@ -12,13 +13,13 @@ Given(
     pz: number,
     vx: number,
     vy: number,
-    vz: number
+    vz: number,
   ) {
     const point = new Point(px, py, pz);
     const vector = new Vector(vx, vy, vz);
 
     this[varName] = new Ray(point, vector);
-  }
+  },
 );
 
 When(
@@ -28,7 +29,7 @@ When(
     const vector = getVector(this, vectorVarName);
 
     this[rayVarName] = new Ray(point, vector);
-  }
+  },
 );
 
 When(
@@ -38,7 +39,7 @@ When(
     const shape = getShape(this, shapeVarName);
 
     this[varName] = shape.intersect(ray);
-  }
+  },
 );
 
 Given(
@@ -48,7 +49,7 @@ Given(
     const matrix = getMatrix(this, matrixName);
 
     this[varName] = ray.transform(matrix);
-  }
+  },
 );
 
 Then(
@@ -57,5 +58,5 @@ Then(
     const ray = getRay(this, varName);
 
     expect(ray.position(t).equals(new Point(x, y, z)));
-  }
+  },
 );

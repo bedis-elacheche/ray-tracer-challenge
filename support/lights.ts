@@ -1,4 +1,6 @@
 import { When } from "@cucumber/cucumber";
+
+import { Color, Light, Point } from "../src";
 import {
   float,
   getBoolean,
@@ -10,11 +12,10 @@ import {
   getVector,
   lowercase,
 } from "./utils";
-import { Color, Light, Point } from "../src";
 
 When(
   new RegExp(
-    `^${lowercase.source} ← point_light\\(point\\(${float.source}, ${float.source}, ${float.source}\\), color\\(${float.source}, ${float.source}, ${float.source}\\)\\)$`
+    `^${lowercase.source} ← point_light\\(point\\(${float.source}, ${float.source}, ${float.source}\\), color\\(${float.source}, ${float.source}, ${float.source}\\)\\)$`,
   ),
   function (
     varName: string,
@@ -23,18 +24,18 @@ When(
     z: string,
     r: string,
     g: string,
-    b: string
+    b: string,
   ) {
     this[varName] = new Light(
       new Point(parseFloat(x), parseFloat(y), parseFloat(z)),
-      new Color(parseFloat(r), parseFloat(g), parseFloat(b))
+      new Color(parseFloat(r), parseFloat(g), parseFloat(b)),
     );
-  }
+  },
 );
 
 When(
   new RegExp(
-    `^${lowercase.source}\\.${lowercase.source} ← point_light\\(point\\(${float.source}, ${float.source}, ${float.source}\\), color\\(${float.source}, ${float.source}, ${float.source}\\)\\)$`
+    `^${lowercase.source}\\.${lowercase.source} ← point_light\\(point\\(${float.source}, ${float.source}, ${float.source}\\), color\\(${float.source}, ${float.source}, ${float.source}\\)\\)$`,
   ),
   function (
     varName: string,
@@ -44,13 +45,13 @@ When(
     z: string,
     r: string,
     g: string,
-    b: string
+    b: string,
   ) {
     this[varName][key] = new Light(
       new Point(parseFloat(x), parseFloat(y), parseFloat(z)),
-      new Color(parseFloat(r), parseFloat(g), parseFloat(b))
+      new Color(parseFloat(r), parseFloat(g), parseFloat(b)),
     );
-  }
+  },
 );
 
 When(
@@ -58,9 +59,9 @@ When(
   function (firstVarName: string, secondVarName: string, thirdVarName: string) {
     this[firstVarName] = new Light(
       getPoint(this, secondVarName),
-      getColor(this, thirdVarName)
+      getColor(this, thirdVarName),
     );
-  }
+  },
 );
 
 When(
@@ -73,7 +74,7 @@ When(
     positionName: string,
     eyeName: string,
     normalName: string,
-    inShadowName: string
+    inShadowName: string,
   ) {
     const material = getMaterial(this, materialName);
     const light = getLight(this, lightName);
@@ -89,9 +90,9 @@ When(
       position,
       eye,
       normal,
-      inShadow
+      inShadow,
     );
-  }
+  },
 );
 
 When(
@@ -105,7 +106,7 @@ When(
     y: number,
     z: number,
     eyeName: string,
-    normalName: string
+    normalName: string,
   ) {
     const material = getMaterial(this, materialName);
     const shape = getShape(this, shapeName);
@@ -119,7 +120,7 @@ When(
       new Point(x, y, z),
       eye,
       normal,
-      false
+      false,
     );
-  }
+  },
 );

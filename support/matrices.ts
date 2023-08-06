@@ -1,15 +1,8 @@
 import { DataTable, Given, Then } from "@cucumber/cucumber";
-import {
-  float,
-  getMatrix,
-  getPoint,
-  getTuple,
-  int,
-  lowercase,
-  uppercase,
-} from "./utils";
-import { Matrix, Tuple } from "../src";
 import { expect } from "chai";
+
+import { Matrix, Tuple } from "../src";
+import { float, getMatrix, getTuple, int, lowercase, uppercase } from "./utils";
 
 Given(
   "the following {int}x{int} matrix {word}:",
@@ -23,7 +16,7 @@ Given(
     });
 
     this[varName] = matrix;
-  }
+  },
 );
 
 Given(
@@ -39,7 +32,7 @@ Given(
     });
 
     this[varName] = matrix;
-  }
+  },
 );
 
 Given(
@@ -51,7 +44,7 @@ Given(
         : getMatrix(this, secondVarName);
 
     this[firstVarName] = matrix;
-  }
+  },
 );
 
 Given(
@@ -60,49 +53,49 @@ Given(
     const matrix = getMatrix(this, secondVarName);
 
     this[firstVarName] = matrix.submatrix(r, c);
-  }
+  },
 );
 
 Then(
   new RegExp(
-    `^${uppercase.source} ← ${uppercase.source} \\* ${uppercase.source} \\* ${uppercase.source}$`
+    `^${uppercase.source} ← ${uppercase.source} \\* ${uppercase.source} \\* ${uppercase.source}$`,
   ),
   function (
     firstVarName: string,
     secondVarName: string,
     thirdVarName: string,
-    fourthVarName: string
+    fourthVarName: string,
   ) {
     const second = getMatrix(this, secondVarName);
     const third = getMatrix(this, thirdVarName);
     const fourth = getMatrix(this, fourthVarName);
 
     this[firstVarName] = second.multiply(third).multiply(fourth);
-  }
+  },
 );
 
 Then(
   new RegExp(
-    `^${uppercase.source} ← ${uppercase.source} \\* ${uppercase.source}$`
+    `^${uppercase.source} ← ${uppercase.source} \\* ${uppercase.source}$`,
   ),
   function (firstVarName: string, secondVarName: string, thirdVarName: string) {
     const second = getMatrix(this, secondVarName);
     const third = getMatrix(this, thirdVarName);
 
     this[firstVarName] = second.multiply(third);
-  }
+  },
 );
 
 Then(
   new RegExp(
-    `^${lowercase.source} ← ${uppercase.source} \\* ${lowercase.source}$`
+    `^${lowercase.source} ← ${uppercase.source} \\* ${lowercase.source}$`,
   ),
   function (firstVarName: string, secondVarName: string, thirdVarName: string) {
     const second = getMatrix(this, secondVarName);
     const third = getTuple(this, thirdVarName);
 
     this[firstVarName] = second.multiply(third);
-  }
+  },
 );
 
 Then(
@@ -111,7 +104,7 @@ Then(
     const matrix = getMatrix(this, varName);
 
     expect(matrix.get(y, x)).to.eql(value);
-  }
+  },
 );
 
 Then(
@@ -120,7 +113,7 @@ Then(
     const first = getMatrix(this, firstVarName);
 
     expect(first.equals(Matrix.identity(first.rows))).to.be.true;
-  }
+  },
 );
 
 Then(
@@ -130,7 +123,7 @@ Then(
     const second = getMatrix(this, secondVarName);
 
     expect(first.equals(second)).to.be.true;
-  }
+  },
 );
 
 Then(
@@ -140,19 +133,19 @@ Then(
     const second = getMatrix(this, secondVarName);
 
     expect(first.equals(second)).to.be.false;
-  }
+  },
 );
 
 Then(
   new RegExp(
-    `^${uppercase.source} \\* ${uppercase.source} is the following ${int.source}x${int.source} matrix:$`
+    `^${uppercase.source} \\* ${uppercase.source} is the following ${int.source}x${int.source} matrix:$`,
   ),
   function (
     firstVarName: string,
     secondVarName: string,
     r: number,
     c: number,
-    dataTable: DataTable
+    dataTable: DataTable,
   ) {
     const first = getMatrix(this, firstVarName);
     const second = getMatrix(this, secondVarName);
@@ -165,12 +158,12 @@ Then(
     });
 
     expect(first.multiply(second).equals(expected)).to.be.true;
-  }
+  },
 );
 
 Then(
   new RegExp(
-    `^${uppercase.source} \\* ${lowercase.source} = tuple\\(${float.source}, ${float.source}, ${float.source}, ${float.source}\\)$`
+    `^${uppercase.source} \\* ${lowercase.source} = tuple\\(${float.source}, ${float.source}, ${float.source}, ${float.source}\\)$`,
   ),
   function (
     matrixVarName: string,
@@ -178,7 +171,7 @@ Then(
     x: string,
     y: string,
     z: string,
-    w: string
+    w: string,
   ) {
     const matrix = getMatrix(this, matrixVarName);
     const tuple = getTuple(this, tupleVarName);
@@ -187,10 +180,10 @@ Then(
       matrix
         .multiply(tuple)
         .equals(
-          new Tuple(parseFloat(x), parseFloat(y), parseFloat(z), parseFloat(w))
-        )
+          new Tuple(parseFloat(x), parseFloat(y), parseFloat(z), parseFloat(w)),
+        ),
     ).to.be.true;
-  }
+  },
 );
 
 Then(
@@ -201,7 +194,7 @@ Then(
 
     expect(first.multiply(Matrix.identity(first.rows)).equals(second)).to.be
       .true;
-  }
+  },
 );
 
 Then(
@@ -211,7 +204,7 @@ Then(
     const second = getTuple(this, secondVarName);
 
     expect(Matrix.identity(4).multiply(first).equals(second)).to.be.true;
-  }
+  },
 );
 
 Then(
@@ -228,12 +221,12 @@ Then(
     });
 
     expect(matrix.transpose().equals(expected)).to.be.true;
-  }
+  },
 );
 
 Then(
   new RegExp(
-    `^${lowercase.source} is the following ${int.source}x${int.source} matrix:$`
+    `^${lowercase.source} is the following ${int.source}x${int.source} matrix:$`,
   ),
   function (varName: string, r: number, c: number, dataTable: DataTable) {
     const matrix = getMatrix(this, varName);
@@ -246,7 +239,7 @@ Then(
     });
 
     expect(matrix.equals(expected)).to.be.true;
-  }
+  },
 );
 
 Then(
@@ -255,7 +248,7 @@ Then(
     const matrix = getMatrix(this, varName);
 
     expect(matrix.determinant()).to.eql(value);
-  }
+  },
 );
 
 Then(
@@ -266,7 +259,7 @@ Then(
     c: number,
     subR: number,
     subC: number,
-    dataTable: DataTable
+    dataTable: DataTable,
   ) {
     const matrix = getMatrix(this, varName);
     const expected = new Matrix(subR, subC);
@@ -278,7 +271,7 @@ Then(
     });
 
     expect(matrix.submatrix(r, c).equals(expected)).to.be.true;
-  }
+  },
 );
 
 Then(
@@ -287,7 +280,7 @@ Then(
     const matrix = getMatrix(this, varName);
 
     expect(matrix.minor(r, c)).to.eql(value);
-  }
+  },
 );
 
 Then(
@@ -296,7 +289,7 @@ Then(
     const matrix = getMatrix(this, varName);
 
     expect(matrix.cofactor(r, c)).to.eql(value);
-  }
+  },
 );
 
 Then("{word} is invertible", function (varName: string) {
@@ -313,7 +306,7 @@ Then("{word} is not invertible", function (varName: string) {
 
 Then(
   new RegExp(
-    `^inverse\\(${uppercase.source}\\) is the following ${int.source}x${int.source} matrix:$`
+    `^inverse\\(${uppercase.source}\\) is the following ${int.source}x${int.source} matrix:$`,
   ),
   function (varName: string, r: number, c: number, dataTable: DataTable) {
     const matrix = getMatrix(this, varName);
@@ -327,7 +320,7 @@ Then(
 
     expect(matrix.isInvertible()).to.be.true;
     expect(matrix.inverse().equals(expected)).to.be.true;
-  }
+  },
 );
 
 Then(
@@ -339,5 +332,5 @@ Then(
 
     expect(second.isInvertible()).to.be.true;
     expect(first.multiply(second.inverse()).equals(third)).to.be.true;
-  }
+  },
 );

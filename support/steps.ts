@@ -1,54 +1,55 @@
 import { Given, Then, When } from "@cucumber/cucumber";
 import { expect } from "chai";
-import { float, getTuple, int, lowercase, mapKey, mapValue } from "./utils";
-import { Color, EPSILON, Matrix, Point, Vector } from "../src";
+
+import { Color, EPSILON, Point, Vector } from "../src";
+import { float, int, lowercase, mapKey, mapValue } from "./utils";
 
 Given(
   new RegExp(`^${lowercase.source} ← ${float.source}$`),
   function (varName: string, value: string) {
     this[varName] = parseFloat(value);
-  }
+  },
 );
 
 Given(
   new RegExp(`^${lowercase.source} ← (true|false)$`),
   function (varName: string, value: string) {
     this[varName] = value === "true";
-  }
+  },
 );
 
 Given(
   new RegExp(`^${lowercase.source}\\.${lowercase.source} ← ${float.source}$`),
   function (firstVarName: string, key: string, value: string) {
     this[firstVarName][key] = parseFloat(value);
-  }
+  },
 );
 
 Given(
   new RegExp(
-    `^${lowercase.source}\\.${lowercase.source}\\.${lowercase.source} ← ${float.source}$`
+    `^${lowercase.source}\\.${lowercase.source}\\.${lowercase.source} ← ${float.source}$`,
   ),
   function (firstVarName: string, key: string, subKey: string, value: string) {
     this[firstVarName][key][subKey] = parseFloat(value);
-  }
+  },
 );
 
 When(
   new RegExp(
-    `^${lowercase.source}\\.${lowercase.source} ← ${lowercase.source}$`
+    `^${lowercase.source}\\.${lowercase.source} ← ${lowercase.source}$`,
   ),
   function (firstVarName: string, key: string, secondVarName: string) {
     this[firstVarName][key] = this[secondVarName];
-  }
+  },
 );
 
 When(
   new RegExp(
-    `^${lowercase.source} ← ${lowercase.source}\\.${lowercase.source}$`
+    `^${lowercase.source} ← ${lowercase.source}\\.${lowercase.source}$`,
   ),
   function (firstVarName: string, secondVarName: string, key: string) {
     this[firstVarName] = this[secondVarName][key];
-  }
+  },
 );
 
 Then(
@@ -60,10 +61,10 @@ Then(
       expect(variable).to.have.length(parseInt(value, 10));
     } else {
       expect(
-        Math.abs(variable[mapKey(key)] - parseFloat(value))
+        Math.abs(variable[mapKey(key)] - parseFloat(value)),
       ).to.be.lessThanOrEqual(EPSILON);
     }
-  }
+  },
 );
 
 Then(
@@ -71,42 +72,42 @@ Then(
   function (varName: string, index: string, value: string) {
     expect(this[varName]).to.be.an("array");
     expect(
-      Math.abs(this[varName][index] - parseFloat(value))
+      Math.abs(this[varName][index] - parseFloat(value)),
     ).to.be.lessThanOrEqual(EPSILON);
-  }
+  },
 );
 
 Then(
   new RegExp(
-    `^${lowercase.source}\\[${int.source}\\]\\.${lowercase.source} = ${float.source}$`
+    `^${lowercase.source}\\[${int.source}\\]\\.${lowercase.source} = ${float.source}$`,
   ),
   function (varName: string, index: string, key: string, value: string) {
     expect(this[varName]).to.be.an("array");
     expect(
-      Math.abs(this[varName][index][key] - parseFloat(value))
+      Math.abs(this[varName][index][key] - parseFloat(value)),
     ).to.be.lessThanOrEqual(EPSILON);
-  }
+  },
 );
 
 Then(
   new RegExp(
-    `^${lowercase.source}\\[${int.source}\\]\\.${lowercase.source} = ${lowercase.source}$`
+    `^${lowercase.source}\\[${int.source}\\]\\.${lowercase.source} = ${lowercase.source}$`,
   ),
   function (varName: string, index: string, key: string, value: string) {
     expect(this[varName]).to.be.an("array");
     expect(this[varName][index][key].equals(this[value])).to.be.true;
-  }
+  },
 );
 
 Then(
   new RegExp(
-    `^${lowercase.source} = ${lowercase.source}\\.${lowercase.source}\\.${lowercase.source}$`
+    `^${lowercase.source} = ${lowercase.source}\\.${lowercase.source}\\.${lowercase.source}$`,
   ),
   function (
     firstVarName: string,
     secondVarName: string,
     key: string,
-    subKey: string
+    subKey: string,
   ) {
     const first = this[firstVarName];
     const second = this[secondVarName][key][subKey];
@@ -116,12 +117,12 @@ Then(
     } else {
       expect(first.equals(second)).to.be.true;
     }
-  }
+  },
 );
 
 Then(
   new RegExp(
-    `^${lowercase.source}\\.${lowercase.source} = ${lowercase.source}$`
+    `^${lowercase.source}\\.${lowercase.source} = ${lowercase.source}$`,
   ),
   function (varName: string, key: string, value: string) {
     const first = this[varName][key];
@@ -132,18 +133,18 @@ Then(
     } else {
       expect(first.equals(second)).to.be.true;
     }
-  }
+  },
 );
 
 Then(
   new RegExp(
-    `^${lowercase.source}\\.${lowercase.source} = ${lowercase.source}\\.${lowercase.source}$`
+    `^${lowercase.source}\\.${lowercase.source} = ${lowercase.source}\\.${lowercase.source}$`,
   ),
   function (
     firstVarName: string,
     firstKey: string,
     secondVarName: string,
-    secondKey: string
+    secondKey: string,
   ) {
     const first = this[firstVarName][firstKey];
     const second = this[secondVarName][secondKey];
@@ -153,7 +154,7 @@ Then(
     } else {
       expect(first.equals(second)).to.be.true;
     }
-  }
+  },
 );
 
 Then(
@@ -163,19 +164,19 @@ Then(
     const second = mapValue(this, secondVarName);
 
     expect(first.equals(second)).to.be.true;
-  }
+  },
 );
 
 Then(
   new RegExp(
-    `^${lowercase.source} = (point|vector|color)\\(${float.source}, ${float.source}, ${float.source}\\)$`
+    `^${lowercase.source} = (point|vector|color)\\(${float.source}, ${float.source}, ${float.source}\\)$`,
   ),
   function (
     varName: string,
     instanceType: "point" | "vector" | "color",
     x: string,
     y: string,
-    z: string
+    z: string,
   ) {
     const parsed = [x, y, z].map(parseFloat) as [number, number, number];
     switch (instanceType) {
@@ -188,12 +189,12 @@ Then(
       case "vector":
         expect(this[varName].equals(new Vector(...parsed))).to.be.true;
     }
-  }
+  },
 );
 
 Then(
   new RegExp(
-    `^${lowercase.source}\\.${lowercase.source} = (point|vector|color)\\(${float.source}, ${float.source}, ${float.source}\\)$`
+    `^${lowercase.source}\\.${lowercase.source} = (point|vector|color)\\(${float.source}, ${float.source}, ${float.source}\\)$`,
   ),
   function (
     varName: string,
@@ -201,7 +202,7 @@ Then(
     instanceType: "point" | "vector" | "color",
     x: string,
     y: string,
-    z: string
+    z: string,
   ) {
     const parsed = [x, y, z].map(parseFloat) as [number, number, number];
 
@@ -215,7 +216,7 @@ Then(
       case "vector":
         expect(this[varName][key].equals(new Vector(...parsed))).to.be.true;
     }
-  }
+  },
 );
 
 Then("{word} is nothing", function (varName: string) {
@@ -224,18 +225,18 @@ Then("{word} is nothing", function (varName: string) {
 
 Then(
   new RegExp(
-    `^${lowercase.source}\\.${lowercase.source}\.${lowercase.source} < -EPSILON\\/${float.source}$`
+    `^${lowercase.source}\\.${lowercase.source}\\.${lowercase.source} < -EPSILON\\/${float.source}$`,
   ),
   function (varName: string, key: string, subKey: string, divisor: string) {
     const value = parseFloat(this[varName][mapKey(key)][mapKey(subKey)]);
 
     expect(value).to.be.lessThan(-EPSILON / parseFloat(divisor));
-  }
+  },
 );
 
 Then(
   new RegExp(
-    `^${lowercase.source}\\.${lowercase.source}\.${lowercase.source} > ${lowercase.source}\\.${lowercase.source}\.${lowercase.source}$`
+    `^${lowercase.source}\\.${lowercase.source}\\.${lowercase.source} > ${lowercase.source}\\.${lowercase.source}\\.${lowercase.source}$`,
   ),
   function (
     firstVarName: string,
@@ -243,15 +244,15 @@ Then(
     firstSubKey: string,
     secondVarName: string,
     secondKey: string,
-    secondSubKey: string
+    secondSubKey: string,
   ) {
     const firstValue = parseFloat(
-      this[firstVarName][mapKey(firstKey)][mapKey(firstSubKey)]
+      this[firstVarName][mapKey(firstKey)][mapKey(firstSubKey)],
     );
     const secondValue = parseFloat(
-      this[secondVarName][mapKey(secondKey)][mapKey(secondSubKey)]
+      this[secondVarName][mapKey(secondKey)][mapKey(secondSubKey)],
     );
 
     expect(firstValue).to.be.greaterThan(secondValue);
-  }
+  },
 );

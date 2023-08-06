@@ -1,13 +1,14 @@
 import { Given, Then, When } from "@cucumber/cucumber";
-import { Canvas, Color } from "../src";
 import { expect } from "chai";
+
+import { Canvas, Color } from "../src";
 import { getCanvas, getColor, getString } from "./utils";
 
 Given(
   "{word} ← canvas\\({float}, {float})",
   function (varName: string, w: number, h: number) {
     this[varName] = new Canvas(w, h);
-  }
+  },
 );
 
 When(
@@ -17,7 +18,7 @@ When(
     const color = getColor(this, colorVarName);
 
     canvas.writePixel(x, y, color);
-  }
+  },
 );
 
 When(
@@ -31,7 +32,7 @@ When(
         canvas.writePixel(x, y, color);
       }
     }
-  }
+  },
 );
 
 When(
@@ -40,7 +41,7 @@ When(
     const canvas = getCanvas(this, canvasVarName);
 
     this[varName] = canvas.toPPM();
-  }
+  },
 );
 
 Then(
@@ -54,7 +55,7 @@ Then(
         expect(canvas.pixelAt(x, y).equals(color)).to.be.true;
       }
     }
-  }
+  },
 );
 
 Then(
@@ -64,7 +65,7 @@ Then(
     const color = getColor(this, colorVarName);
 
     expect(canvas.pixelAt(x, y).equals(color)).to.be.true;
-  }
+  },
 );
 
 Then(
@@ -73,7 +74,7 @@ Then(
     from: number,
     to: number,
     varName: string,
-    expectedContent: string
+    expectedContent: string,
   ) {
     const file = getString(this, varName);
 
@@ -81,9 +82,9 @@ Then(
       file
         .split("\n")
         .slice(from - 1, to)
-        .join("\n")
+        .join("\n"),
     ).to.eql(expectedContent);
-  }
+  },
 );
 
 Then("{word} ends with a newline character", function (varName: string) {

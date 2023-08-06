@@ -1,19 +1,20 @@
 import { Given, Then, When } from "@cucumber/cucumber";
+import { expect } from "chai";
+
 import { Camera, Color, EPSILON } from "../src";
 import { float, getCamera, getCanvas, getWorld, lowercase } from "./utils";
-import { expect } from "chai";
 
 Given(
   new RegExp(
-    `${lowercase.source} ← camera\\(${float.source}, ${float.source}, π\\/${float.source}\\)`
+    `${lowercase.source} ← camera\\(${float.source}, ${float.source}, π\\/${float.source}\\)`,
   ),
   function (varName: string, hsize: string, vsize: string, divisor: string) {
     this[varName] = new Camera(
       parseFloat(hsize),
       parseFloat(vsize),
-      Math.PI / parseFloat(divisor)
+      Math.PI / parseFloat(divisor),
     );
-  }
+  },
 );
 
 Given("{word} ← π\\/{float}", function (varName: string, divisor: number) {
@@ -22,16 +23,16 @@ Given("{word} ← π\\/{float}", function (varName: string, divisor: number) {
 
 Given(
   new RegExp(
-    `${lowercase.source} ← camera\\(${lowercase.source}, ${lowercase.source}, ${lowercase.source}\\)`
+    `${lowercase.source} ← camera\\(${lowercase.source}, ${lowercase.source}, ${lowercase.source}\\)`,
   ),
   function (
     varName: string,
     hsizeVar: string,
     vsizeVar: string,
-    fovVar: string
+    fovVar: string,
   ) {
     this[varName] = new Camera(this[hsizeVar], this[vsizeVar], this[fovVar]);
-  }
+  },
 );
 
 When(
@@ -40,7 +41,7 @@ When(
     const camera = getCamera(this, cameraVarName);
 
     this[rayVarName] = camera.rayForPixel(x, y);
-  }
+  },
 );
 
 When(
@@ -50,7 +51,7 @@ When(
     const world = getWorld(this, worldVarName);
 
     this[varName] = camera.render(world);
-  }
+  },
 );
 
 Then(
@@ -59,9 +60,9 @@ Then(
     const camera = getCamera(this, varName);
 
     expect(Math.abs(camera.fov - Math.PI / divisor)).to.be.lessThanOrEqual(
-      EPSILON
+      EPSILON,
     );
-  }
+  },
 );
 
 Then(
@@ -72,10 +73,10 @@ Then(
     y: number,
     r: number,
     g: number,
-    b: number
+    b: number,
   ) {
     const canvas = getCanvas(this, varName);
 
     expect(canvas.pixelAt(x, y).equals(new Color(r, g, b))).to.be.true;
-  }
+  },
 );

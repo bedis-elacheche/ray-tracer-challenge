@@ -1,4 +1,5 @@
 import { Given, When } from "@cucumber/cucumber";
+
 import { Intersection } from "../src";
 import { getArray, getIntersection, getShape } from "./utils";
 
@@ -9,7 +10,7 @@ Given(
     firstIntersectionVarName: string,
     secondIntersectionVarName: string,
     thirdIntersectionVarName: string,
-    fourthIntersectionVarName: string
+    fourthIntersectionVarName: string,
   ) {
     const first = getIntersection(this, firstIntersectionVarName);
     const second = getIntersection(this, secondIntersectionVarName);
@@ -17,7 +18,7 @@ Given(
     const fourth = getIntersection(this, fourthIntersectionVarName);
 
     this[arrayName] = [first, second, third, fourth];
-  }
+  },
 );
 
 When(
@@ -25,7 +26,7 @@ When(
   function (intersectionVarName: string, t: number, shapeVarName: string) {
     const shape = getShape(this, shapeVarName);
     this[intersectionVarName] = new Intersection(t, shape);
-  }
+  },
 );
 
 When(
@@ -33,13 +34,13 @@ When(
   function (
     arrayName: string,
     firstIntersectionVarName: string,
-    secondIntersectionVarName: string
+    secondIntersectionVarName: string,
   ) {
     const first = getIntersection(this, firstIntersectionVarName);
     const second = getIntersection(this, secondIntersectionVarName);
 
     this[arrayName] = [first, second];
-  }
+  },
 );
 
 When(
@@ -48,5 +49,5 @@ When(
     const array = getArray(this, intersectionsArrayName, Intersection);
 
     this[varName] = Intersection.hit(array);
-  }
+  },
 );

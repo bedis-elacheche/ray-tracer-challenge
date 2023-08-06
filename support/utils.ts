@@ -1,32 +1,34 @@
 import { IWorld } from "@cucumber/cucumber";
 import { expect } from "chai";
+
 import {
+  Camera,
   Canvas,
   Color,
-  Tuple,
-  Vector,
+  Intersection,
+  Light,
+  Material,
   Matrix,
+  Pattern,
+  Plane,
   Point,
   Ray,
-  Intersection,
+  Shape,
   Sphere,
-  Material,
-  Light,
-  World,
-  Camera,
-  Plane,
   Stripe,
-  Pattern,
+  Tuple,
+  Vector,
+  World,
 } from "../src";
-import { Shape } from "../src/classes/shape";
 
 export const int = /([+-]?[0-9]+)/;
 export const float = /([+-]?[0-9]*[.]?[0-9]+)/;
 export const lowercase = /([a-z_]+\d*)/;
 export const uppercase = /([A-Z]+\d*)/;
 
+// eslint-disable-next-line @typescript-eslint/ban-types
 interface Type<T> extends Function {
-  new (...args: any[]): T;
+  new (...args: unknown[]): T;
 }
 
 const getInstance =
@@ -74,7 +76,7 @@ export const getBoolean = (world: IWorld, name: string) => {
 export const getArray = <TInstance>(
   world: IWorld,
   name: string,
-  Instance: Type<TInstance>
+  Instance: Type<TInstance>,
 ) => {
   const item = world[name];
 

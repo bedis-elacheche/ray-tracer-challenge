@@ -1,7 +1,8 @@
 import { Given, Then, When } from "@cucumber/cucumber";
-import { getIntersection, getPoint, getRay, getShape, getWorld } from "./utils";
 import { expect } from "chai";
+
 import { World } from "../src";
+import { getIntersection, getPoint, getRay, getShape, getWorld } from "./utils";
 
 Given("{word} ← world\\()", function (varName: string) {
   this[varName] = new World();
@@ -13,7 +14,7 @@ Given(
     const world = getWorld(this, worldVarName);
 
     this[varName] = world.shapes[0];
-  }
+  },
 );
 
 Given(
@@ -22,7 +23,7 @@ Given(
     const world = getWorld(this, worldVarName);
 
     this[varName] = world.shapes[1];
-  }
+  },
 );
 
 Given(
@@ -32,7 +33,7 @@ Given(
     const shape = getShape(this, varName);
 
     world.shapes.push(shape);
-  }
+  },
 );
 
 When("{word} ← default_world\\()", function (varName: string) {
@@ -46,7 +47,7 @@ When(
     const ray = getRay(this, rayVarName);
 
     this[varName] = world.intersect(ray);
-  }
+  },
 );
 
 When(
@@ -56,7 +57,7 @@ When(
     const ray = getRay(this, rayVarName);
 
     this[varName] = world.colorAt(ray);
-  }
+  },
 );
 
 When(
@@ -66,7 +67,7 @@ When(
     const ray = getRay(this, rayVarName);
 
     this[varName] = World.prepareComputations(intersection, ray);
-  }
+  },
 );
 
 When(
@@ -74,12 +75,12 @@ When(
   function (
     varName: string,
     worldVarName: string,
-    computationsVarName: string
+    computationsVarName: string,
   ) {
     const world = getWorld(this, worldVarName);
 
     this[varName] = world.shadeHit(this[computationsVarName]);
-  }
+  },
 );
 
 Then("{word} contains no objects", function (varName: string) {
@@ -101,7 +102,7 @@ Then(
     const shape = getShape(this, shapeVarName);
 
     expect(world.shapes.find((item) => item.equals(shape))).to.be.not.undefined;
-  }
+  },
 );
 
 Then(
@@ -111,5 +112,5 @@ Then(
     const point = getPoint(this, pointVarName);
 
     expect(world.isShadowed(point)).to.eq(value === "true");
-  }
+  },
 );

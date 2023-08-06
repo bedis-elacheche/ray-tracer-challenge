@@ -1,11 +1,6 @@
 import { Given, Then, When } from "@cucumber/cucumber";
-import {
-  getColor,
-  getMaterial,
-  getPattern,
-  getShape,
-  getStripe,
-} from "./utils";
+import { expect } from "chai";
+
 import {
   Checkers,
   Color,
@@ -16,7 +11,13 @@ import {
   Stripe,
   Transformations,
 } from "../src";
-import { expect } from "chai";
+import {
+  getColor,
+  getMaterial,
+  getPattern,
+  getShape,
+  getStripe,
+} from "./utils";
 
 Given("{word} ← test_pattern\\()", function (varName: string) {
   this[varName] = new Pattern();
@@ -29,7 +30,7 @@ Given(
     const secondColor = getColor(this, secondColorName);
 
     this[varName] = new Stripe(firstColor, secondColor);
-  }
+  },
 );
 
 Given(
@@ -39,7 +40,7 @@ Given(
     const secondColor = getColor(this, secondColorName);
 
     this[varName] = new Gradient(firstColor, secondColor);
-  }
+  },
 );
 
 Given(
@@ -49,7 +50,7 @@ Given(
     const secondColor = getColor(this, secondColorName);
 
     this[varName] = new Ring(firstColor, secondColor);
-  }
+  },
 );
 
 Given(
@@ -59,7 +60,7 @@ Given(
     const secondColor = getColor(this, secondColorName);
 
     this[varName] = new Checkers(firstColor, secondColor);
-  }
+  },
 );
 
 Given(
@@ -71,12 +72,12 @@ Given(
     ba: number,
     rb: number,
     gb: number,
-    bb: number
+    bb: number,
   ) {
     const material = getMaterial(this, varName);
 
     material.pattern = new Stripe(new Color(ra, ga, ba), new Color(rb, gb, bb));
-  }
+  },
 );
 
 Given(
@@ -85,7 +86,7 @@ Given(
     const pattern = getPattern(this, patternVarName);
 
     pattern.transform = Transformations.scale(x, y, z);
-  }
+  },
 );
 
 Given(
@@ -94,7 +95,7 @@ Given(
     const pattern = getPattern(this, patternVarName);
 
     pattern.transform = Transformations.translation(x, y, z);
-  }
+  },
 );
 
 When(
@@ -105,13 +106,13 @@ When(
     shapeVarName: string,
     x: number,
     y: number,
-    z: number
+    z: number,
   ) {
     const stripe = getStripe(this, patternVarName);
     const shape = getShape(this, shapeVarName);
 
     this[varName] = stripe.colorAt(new Point(x, y, z), shape);
-  }
+  },
 );
 
 When(
@@ -122,13 +123,13 @@ When(
     shapeVarName: string,
     x: number,
     y: number,
-    z: number
+    z: number,
   ) {
     const pattern = getPattern(this, patternVarName);
     const shape = getShape(this, shapeVarName);
 
     this[varName] = pattern.colorAt(new Point(x, y, z), shape);
-  }
+  },
 );
 
 Then(
@@ -138,14 +139,14 @@ Then(
     x: number,
     y: number,
     z: number,
-    colorName: string
+    colorName: string,
   ) {
     const stripe = getStripe(this, varName);
     const color = getColor(this, colorName);
     const point = new Point(x, y, z);
 
     expect(stripe.colorAt(point).equals(color)).to.be.true;
-  }
+  },
 );
 
 Then(
@@ -155,14 +156,14 @@ Then(
     x: number,
     y: number,
     z: number,
-    colorName: string
+    colorName: string,
   ) {
     const pattern = getPattern(this, varName);
     const color = getColor(this, colorName);
     const point = new Point(x, y, z);
 
     expect(pattern.colorAt(point).equals(color)).to.be.true;
-  }
+  },
 );
 
 Then(
@@ -174,12 +175,12 @@ Then(
     z: number,
     r: number,
     g: number,
-    b: number
+    b: number,
   ) {
     const pattern = getPattern(this, varName);
     const point = new Point(x, y, z);
     const color = new Color(r, g, b);
 
     expect(pattern.colorAt(point).equals(color)).to.be.true;
-  }
+  },
 );

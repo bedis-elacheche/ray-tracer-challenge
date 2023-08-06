@@ -1,27 +1,29 @@
-import {
-  Point,
-  Vector,
-  Projectile,
-  Environment,
-  World,
-  EPSILON,
-  Canvas,
-  Color,
-  Transformations,
-  Sphere,
-  Ray,
-  Intersection,
-  Matrix,
-  Material,
-  Light,
-  Camera,
-  Plane,
-  Stripe,
-  Gradient,
-  Ring,
-  Checkers,
-} from "./src";
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import { writeFileSync } from "fs";
+
+import {
+  Camera,
+  Canvas,
+  Checkers,
+  Color,
+  Environment,
+  EPSILON,
+  Gradient,
+  Intersection,
+  Light,
+  Material,
+  Matrix,
+  Plane,
+  Point,
+  Projectile,
+  Ray,
+  Ring,
+  Sphere,
+  Stripe,
+  Transformations,
+  Vector,
+  World,
+} from "./src";
 
 const drawProjectile = () => {
   const position = new Point(0, 1, 0);
@@ -40,7 +42,7 @@ const drawProjectile = () => {
     canvas.writePixel(
       Math.round(projectile.position.x),
       canvas.height - Math.round(projectile.position.y),
-      color
+      color,
     );
   }
 
@@ -54,12 +56,12 @@ const drawClock = () => {
   const translateToCenter = Transformations.translation(
     canvas.width / 2,
     canvas.height / 2,
-    0
+    0,
   );
   const translateFromCenter = Transformations.translation(
     canvas.width / 2.5,
     0,
-    0
+    0,
   );
 
   for (let i = 1; i < 13; i++) {
@@ -72,7 +74,7 @@ const drawClock = () => {
     canvas.writePixel(
       Math.round(point.x),
       Math.round(point.y),
-      i % 3 ? white : red
+      i % 3 ? white : red,
     );
   }
 
@@ -151,7 +153,7 @@ const draw3DSphere = (prefix: string, transform?: Matrix) => {
           point,
           eye,
           normal,
-          false
+          false,
         );
         canvas.writePixel(x, y, castedColor);
       }
@@ -168,7 +170,7 @@ const drawScene = () => {
     new Material({
       color: new Color(1, 0.9, 0.9),
       specular: 0,
-    })
+    }),
   );
 
   const leftWall = new Sphere(
@@ -177,7 +179,7 @@ const drawScene = () => {
       .multiply(Transformations.rotateY(-Math.PI / 4))
       .multiply(Transformations.rotateX(Math.PI / 2))
       .multiply(Transformations.scale(10, 0.01, 10)),
-    floor.material
+    floor.material,
   );
 
   const rightWall = new Sphere(
@@ -186,7 +188,7 @@ const drawScene = () => {
       .multiply(Transformations.rotateY(Math.PI / 4))
       .multiply(Transformations.rotateX(Math.PI / 2))
       .multiply(Transformations.scale(10, 0.01, 10)),
-    floor.material
+    floor.material,
   );
 
   const middle = new Sphere(
@@ -196,38 +198,38 @@ const drawScene = () => {
       color: new Color(0.1, 1, 0.5),
       diffuse: 0.7,
       specular: 0.3,
-    })
+    }),
   );
 
   const right = new Sphere(
     undefined,
     Transformations.translation(1.5, 0.5, -0.5).multiply(
-      Transformations.scale(0.5, 0.5, 0.5)
+      Transformations.scale(0.5, 0.5, 0.5),
     ),
     new Material({
       color: new Color(0.5, 1, 0.1),
       diffuse: 0.7,
       specular: 0.3,
-    })
+    }),
   );
 
   const left = new Sphere(
     undefined,
     Transformations.translation(-1.5, 0.33, -0.75).multiply(
-      Transformations.scale(0.33, 0.33, 0.33)
+      Transformations.scale(0.33, 0.33, 0.33),
     ),
     new Material({
       color: new Color(1, 0.8, 0.1),
       diffuse: 0.7,
       specular: 0.3,
-    })
+    }),
   );
 
   const light = new Light(new Point(-10, 10, -10), new Color(1, 1, 1));
 
   const world = new World(
     [floor, leftWall, rightWall, middle, left, right],
-    light
+    light,
   );
 
   const camera = new Camera(
@@ -237,8 +239,8 @@ const drawScene = () => {
     Transformations.viewTransform(
       new Point(0, 1.5, -5),
       new Point(0, 1, 0),
-      new Vector(0, 1, 0)
-    )
+      new Vector(0, 1, 0),
+    ),
   );
 
   const canvas = camera.render(world);
@@ -254,7 +256,7 @@ const drawSceneWithPlane = () => {
     new Material({
       color: new Color(1, 0.9, 0.9),
       specular: 0,
-    })
+    }),
   );
 
   const middle = new Sphere(
@@ -264,31 +266,31 @@ const drawSceneWithPlane = () => {
       color: new Color(0.1, 1, 0.5),
       diffuse: 0.7,
       specular: 0.3,
-    })
+    }),
   );
 
   const right = new Sphere(
     undefined,
     Transformations.translation(1.5, 0.5, -0.5).multiply(
-      Transformations.scale(0.5, 0.5, 0.5)
+      Transformations.scale(0.5, 0.5, 0.5),
     ),
     new Material({
       color: new Color(0.5, 1, 0.1),
       diffuse: 0.7,
       specular: 0.3,
-    })
+    }),
   );
 
   const left = new Sphere(
     undefined,
     Transformations.translation(-1.5, 0.33, -0.75).multiply(
-      Transformations.scale(0.33, 0.33, 0.33)
+      Transformations.scale(0.33, 0.33, 0.33),
     ),
     new Material({
       color: new Color(1, 0.8, 0.1),
       diffuse: 0.7,
       specular: 0.3,
-    })
+    }),
   );
 
   const light = new Light(new Point(-10, 10, -10), new Color(1, 1, 1));
@@ -302,8 +304,8 @@ const drawSceneWithPlane = () => {
     Transformations.viewTransform(
       new Point(0, 1.5, -5),
       new Point(0, 1, 0),
-      new Vector(0, 1, 0)
-    )
+      new Vector(0, 1, 0),
+    ),
   );
 
   const canvas = camera.render(world);
@@ -315,7 +317,7 @@ const drawStrippedScene = () => {
   const pattern = new Stripe(
     new Color(1, 0, 0.2),
     new Color(1, 1, 1),
-    Transformations.scale(0.05, 1, 1)
+    Transformations.scale(0.05, 1, 1),
   );
   const floor = new Sphere(
     undefined,
@@ -323,7 +325,7 @@ const drawStrippedScene = () => {
     new Material({
       pattern,
       specular: 0,
-    })
+    }),
   );
 
   const leftWall = new Sphere(
@@ -332,7 +334,7 @@ const drawStrippedScene = () => {
       .multiply(Transformations.rotateY(-Math.PI / 4))
       .multiply(Transformations.rotateX(Math.PI / 2))
       .multiply(Transformations.scale(10, 0.01, 10)),
-    floor.material
+    floor.material,
   );
 
   const rightWall = new Sphere(
@@ -341,15 +343,15 @@ const drawStrippedScene = () => {
       .multiply(Transformations.rotateY(Math.PI / 4))
       .multiply(Transformations.rotateX(Math.PI / 2))
       .multiply(Transformations.scale(10, 0.01, 10)),
-    floor.material
+    floor.material,
   );
 
   const spherePattern = new Stripe(
     new Color(0.2, 0, 1),
     new Color(1, 1, 1),
     Transformations.rotateZ(Math.PI / 2).multiply(
-      Transformations.scale(0.15, 1, 1)
-    )
+      Transformations.scale(0.15, 1, 1),
+    ),
   );
 
   const middle = new Sphere(
@@ -359,38 +361,38 @@ const drawStrippedScene = () => {
       pattern: spherePattern,
       diffuse: 0.7,
       specular: 0.3,
-    })
+    }),
   );
 
   const right = new Sphere(
     undefined,
     Transformations.translation(1.5, 0.5, -0.5).multiply(
-      Transformations.scale(0.5, 0.5, 0.5)
+      Transformations.scale(0.5, 0.5, 0.5),
     ),
     new Material({
       pattern: spherePattern,
       diffuse: 0.7,
       specular: 0.3,
-    })
+    }),
   );
 
   const left = new Sphere(
     undefined,
     Transformations.translation(-1.5, 0.33, -0.75).multiply(
-      Transformations.scale(0.33, 0.33, 0.33)
+      Transformations.scale(0.33, 0.33, 0.33),
     ),
     new Material({
       pattern: spherePattern,
       diffuse: 0.7,
       specular: 0.3,
-    })
+    }),
   );
 
   const light = new Light(new Point(-10, 10, -10), new Color(1, 1, 1));
 
   const world = new World(
     [floor, leftWall, rightWall, middle, left, right],
-    light
+    light,
   );
 
   const camera = new Camera(
@@ -400,8 +402,8 @@ const drawStrippedScene = () => {
     Transformations.viewTransform(
       new Point(0, 1.5, -5),
       new Point(0, 1, 0),
-      new Vector(0, 1, 0)
-    )
+      new Vector(0, 1, 0),
+    ),
   );
 
   const canvas = camera.render(world);
@@ -417,17 +419,17 @@ const drawSceneWithPatterns = () => {
       pattern: new Checkers(
         new Color(1, 0, 0.2),
         new Color(1, 1, 1),
-        Transformations.scale(0.25, 0.25, 0.25)
+        Transformations.scale(0.25, 0.25, 0.25),
       ),
       specular: 0,
-    })
+    }),
   );
 
   const wallMaterial = new Material({
     pattern: new Stripe(
       new Color(1, 0, 0.2),
       new Color(1, 1, 1),
-      Transformations.scale(0.05, 1, 1)
+      Transformations.scale(0.05, 1, 1),
     ),
     specular: 0,
   });
@@ -438,7 +440,7 @@ const drawSceneWithPatterns = () => {
       .multiply(Transformations.rotateY(-Math.PI / 4))
       .multiply(Transformations.rotateX(Math.PI / 2))
       .multiply(Transformations.scale(10, 0.01, 10)),
-    wallMaterial
+    wallMaterial,
   );
 
   const rightWall = new Sphere(
@@ -447,7 +449,7 @@ const drawSceneWithPatterns = () => {
       .multiply(Transformations.rotateY(Math.PI / 4))
       .multiply(Transformations.rotateX(Math.PI / 2))
       .multiply(Transformations.scale(10, 0.01, 10)),
-    wallMaterial
+    wallMaterial,
   );
 
   const middle = new Sphere(
@@ -458,47 +460,47 @@ const drawSceneWithPatterns = () => {
         new Color(0.2, 0, 1),
         new Color(1, 1, 1),
         Transformations.rotateZ(Math.PI / 2).multiply(
-          Transformations.scale(0.15, 1, 1)
-        )
+          Transformations.scale(0.15, 1, 1),
+        ),
       ),
       diffuse: 0.7,
       specular: 0.3,
-    })
+    }),
   );
 
   const right = new Sphere(
     undefined,
     Transformations.translation(1.5, 0.5, -0.5).multiply(
-      Transformations.scale(0.5, 0.5, 0.5)
+      Transformations.scale(0.5, 0.5, 0.5),
     ),
     new Material({
       pattern: new Gradient(new Color(1, 0, 1), new Color(1, 1, 1)),
       diffuse: 0.7,
       specular: 0.3,
-    })
+    }),
   );
 
   const left = new Sphere(
     undefined,
     Transformations.translation(-1.5, 0.33, -0.75).multiply(
-      Transformations.scale(0.33, 0.33, 0.33)
+      Transformations.scale(0.33, 0.33, 0.33),
     ),
     new Material({
       pattern: new Ring(
         new Color(0, 1, 1),
         new Color(0, 0, 0),
-        Transformations.scale(0.25, 1, 0.25)
+        Transformations.scale(0.25, 1, 0.25),
       ),
       diffuse: 0.7,
       specular: 0.3,
-    })
+    }),
   );
 
   const light = new Light(new Point(-10, 10, -10), new Color(1, 1, 1));
 
   const world = new World(
     [floor, leftWall, rightWall, middle, left, right],
-    light
+    light,
   );
 
   const camera = new Camera(
@@ -508,8 +510,8 @@ const drawSceneWithPatterns = () => {
     Transformations.viewTransform(
       new Point(0, 1.5, -5),
       new Point(0, 1, 0),
-      new Vector(0, 1, 0)
-    )
+      new Vector(0, 1, 0),
+    ),
   );
 
   const canvas = camera.render(world);

@@ -1,4 +1,5 @@
 import { DataTable, Given } from "@cucumber/cucumber";
+
 import { Color, Sphere, Transformations } from "../src";
 
 Given("{word} ← sphere\\()", function (varName: string) {
@@ -56,5 +57,5 @@ Given(
     }
 
     this[varName] = sphere;
-  }
+  },
 );

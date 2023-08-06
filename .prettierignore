@@ -1,0 +1,7 @@
+/dist
+/.husky
+/node_modules
+pnpm-lock.yaml
+.eslintrc.json
+cucumber-report.html
+cucumber.json

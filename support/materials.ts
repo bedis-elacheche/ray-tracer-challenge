@@ -1,6 +1,7 @@
 import { Given, Then } from "@cucumber/cucumber";
-import { Material } from "../src";
 import { expect } from "chai";
+
+import { Material } from "../src";
 import { getMaterial } from "./utils";
 
 Given("{word} ← material\\()", function (varName: string) {

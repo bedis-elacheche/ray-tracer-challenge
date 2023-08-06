@@ -1,7 +1,8 @@
 import { Given, Then, When } from "@cucumber/cucumber";
+import { expect } from "chai";
+
 import { Point, Shape, Transformations } from "../src";
 import { getMatrix, getShape } from "./utils";
-import { expect } from "chai";
 
 Given("{word} ← test_shape\\()", function (varName: string) {
   this[varName] = new Shape();
@@ -14,7 +15,7 @@ When(
     const matrix = getMatrix(this, matrixVarName);
 
     shape.transform = matrix;
-  }
+  },
 );
 
 When(
@@ -23,7 +24,7 @@ When(
     const shape = getShape(this, shapeVarName);
 
     shape.transform = Transformations.translation(x, y, z);
-  }
+  },
 );
 
 When(
@@ -32,7 +33,7 @@ When(
     const shape = getShape(this, shapeVarName);
 
     shape.transform = Transformations.scale(x, y, z);
-  }
+  },
 );
 
 When(
@@ -42,19 +43,19 @@ When(
     shapeVarName: string,
     x: number,
     y: number,
-    z: number
+    z: number,
   ) {
     const shape = getShape(this, shapeVarName);
 
     this[normalVarName] = shape.normalAt(new Point(x, y, z));
-  }
+  },
 );
 
 Then(
   "{word}.transform = translation\\({float}, {float}, {float})",
   function (shapeVarName: string, x: number, y: number, z: number) {
     expect(
-      this[shapeVarName].transform.equals(Transformations.translation(x, y, z))
+      this[shapeVarName].transform.equals(Transformations.translation(x, y, z)),
     ).to.be.true;
-  }
+  },
 );

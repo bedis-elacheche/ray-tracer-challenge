@@ -1,34 +1,35 @@
-import { expect } from "chai";
 import { Given, Then, When } from "@cucumber/cucumber";
+import { expect } from "chai";
+
 import { Color, EPSILON, Point, Tuple, Vector } from "../src";
-import { float, getColor, getTuple, getVector, lowercase } from "./utils";
+import { getColor, getTuple, getVector } from "./utils";
 
 Given(
   "{word} ← tuple\\({float}, {float}, {float}, {float})",
   function (varName: string, x: number, y: number, z: number, w: number) {
     this[varName] = new Tuple(x, y, z, w);
-  }
+  },
 );
 
 Given(
   "{word} ← point\\({float}, {float}, {float})",
   function (varName: string, x: number, y: number, z: number) {
     this[varName] = new Point(x, y, z);
-  }
+  },
 );
 
 Given(
   "{word} ← color\\({float}, {float}, {float})",
   function (varName: string, r: number, g: number, b: number) {
     this[varName] = new Color(r, g, b);
-  }
+  },
 );
 
 Given(
   "{word} ← vector\\({float}, {float}, {float})",
   function (varName: string, x: number, y: number, z: number) {
     this[varName] = new Vector(x, y, z);
-  }
+  },
 );
 
 When(
@@ -37,7 +38,7 @@ When(
     const second = getVector(this, secondVarName);
 
     this[firstVarName] = second.normalize();
-  }
+  },
 );
 
 When(
@@ -47,7 +48,7 @@ When(
     const third = getVector(this, thirdVarName);
 
     this[firstVarName] = second.reflect(third);
-  }
+  },
 );
 
 Then("{word} is a point", function (varName: string) {
@@ -82,7 +83,7 @@ Then(
       : getTuple(this, varName);
 
     expect(tuple.equals(new Tuple(x, y, z, w))).to.be.true;
-  }
+  },
 );
 
 Then(
@@ -93,13 +94,13 @@ Then(
     x: number,
     y: number,
     z: number,
-    w: number
+    w: number,
   ) {
     const first = getTuple(this, firstVarName);
     const second = getTuple(this, secondVarName);
 
     expect(first.add(second).equals(new Tuple(x, y, z, w))).to.be.true;
-  }
+  },
 );
 
 Then(
@@ -109,13 +110,13 @@ Then(
     secondVarName: string,
     x: number,
     y: number,
-    z: number
+    z: number,
   ) {
     const first = getTuple(this, firstVarName);
     const second = getTuple(this, secondVarName);
 
     expect(first.subtract(second).equals(new Point(x, y, z))).to.be.true;
-  }
+  },
 );
 
 Then(
@@ -125,13 +126,13 @@ Then(
     secondVarName: string,
     x: number,
     y: number,
-    z: number
+    z: number,
   ) {
     const first = getTuple(this, firstVarName);
     const second = getTuple(this, secondVarName);
 
     expect(first.subtract(second).equals(new Vector(x, y, z))).to.be.true;
-  }
+  },
 );
 
 Then(
@@ -142,12 +143,12 @@ Then(
     x: number,
     y: number,
     z: number,
-    w: number
+    w: number,
   ) {
     const tuple = getTuple(this, varName);
 
     expect(tuple.multiply(scalar).equals(new Tuple(x, y, z, w))).to.be.true;
-  }
+  },
 );
 
 Then(
@@ -158,12 +159,12 @@ Then(
     x: number,
     y: number,
     z: number,
-    w: number
+    w: number,
   ) {
     const tuple = getTuple(this, varName);
 
     expect(tuple.divide(scalar).equals(new Tuple(x, y, z, w))).to.be.true;
-  }
+  },
 );
 
 Then(
@@ -172,7 +173,7 @@ Then(
     const vector = getVector(this, varName);
 
     expect(vector.magnitude()).to.eql(magnitude);
-  }
+  },
 );
 
 Then(
@@ -181,9 +182,9 @@ Then(
     const vector = getVector(this, varName);
 
     expect(vector.magnitude() - Math.sqrt(magnitude)).to.be.lessThanOrEqual(
-      EPSILON
+      EPSILON,
     );
-  }
+  },
 );
 
 Then(
@@ -193,7 +194,7 @@ Then(
     const second = getVector(this, secondVarName);
 
     expect(first.dot(second)).to.eql(dotProduct);
-  }
+  },
 );
 
 Then(
@@ -203,13 +204,13 @@ Then(
     secondVarName: string,
     x: number,
     y: number,
-    z: number
+    z: number,
   ) {
     const first = getVector(this, firstVarName);
     const second = getVector(this, secondVarName);
 
     expect(first.cross(second).equals(new Vector(x, y, z))).to.be.true;
-  }
+  },
 );
 
 Then(
@@ -218,7 +219,7 @@ Then(
     const vector = getVector(this, varName);
 
     expect(vector.normalize().equals(new Vector(x, y, z))).to.be.true;
-  }
+  },
 );
 
 Then(
@@ -228,7 +229,7 @@ Then(
     const second = getVector(this, secondVarName);
 
     expect(first.equals(second.normalize())).to.be.true;
-  }
+  },
 );
 
 Then(
@@ -237,7 +238,7 @@ Then(
     const vector = getVector(this, varName);
 
     expect(vector.normalize().equals(new Vector(x, y, z))).to.be.true;
-  }
+  },
 );
 
 Then(
@@ -247,13 +248,13 @@ Then(
     secondVarName: string,
     r: number,
     g: number,
-    b: number
+    b: number,
   ) {
     const first = getColor(this, firstVarName);
     const second = getColor(this, secondVarName);
 
     expect(first.add(second).equals(new Color(r, g, b))).to.be.true;
-  }
+  },
 );
 
 Then(
@@ -263,13 +264,13 @@ Then(
     secondVarName: string,
     r: number,
     g: number,
-    b: number
+    b: number,
   ) {
     const first = getColor(this, firstVarName);
     const second = getColor(this, secondVarName);
 
     expect(first.subtract(second).equals(new Color(r, g, b))).to.be.true;
-  }
+  },
 );
 
 Then(
@@ -279,12 +280,12 @@ Then(
     secondVar: string,
     r: number,
     g: number,
-    b: number
+    b: number,
   ) {
     const first = getColor(this, firstVarName);
     const scalar = parseFloat(secondVar);
     const second = isNaN(scalar) ? getColor(this, secondVar) : scalar;
 
     expect(first.multiply(second).equals(new Color(r, g, b))).to.be.true;
-  }
+  },
 );
