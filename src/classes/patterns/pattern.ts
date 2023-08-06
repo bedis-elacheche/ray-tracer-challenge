@@ -3,8 +3,12 @@ import { Matrix } from "../matrix";
 import { Point } from "../point";
 import { Shape } from "../shape";
 
-export abstract class Pattern {
+export class Pattern {
   public transform: Matrix;
+
+  constructor(transform = Matrix.identity(4)) {
+    this.transform = transform;
+  }
 
   colorAt(p: Point, s?: Shape): Color {
     if (s) {
@@ -17,5 +21,7 @@ export abstract class Pattern {
     return this.localColorAt(p);
   }
 
-  abstract localColorAt(p: Point): Color;
+  localColorAt(p: Point) {
+    return new Color(p.x, p.y, p.z);
+  }
 }

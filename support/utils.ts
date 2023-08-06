@@ -16,6 +16,7 @@ import {
   Camera,
   Plane,
   Stripe,
+  Pattern,
 } from "../src";
 import { Shape } from "../src/classes/shape";
 
@@ -53,6 +54,7 @@ export const getLight = getInstance(Light);
 export const getWorld = getInstance(World);
 export const getCamera = getInstance(Camera);
 export const getPlane = getInstance(Plane);
+export const getPattern = getInstance(Pattern);
 export const getStripe = getInstance(Stripe);
 
 export const getString = (world: IWorld, name: string) => {

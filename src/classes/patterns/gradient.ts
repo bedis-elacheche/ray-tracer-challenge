@@ -3,7 +3,7 @@ import { Matrix } from "../matrix";
 import { Point } from "../point";
 import { Pattern } from "./pattern";
 
-export class Stripe extends Pattern {
+export class Gradient extends Pattern {
   public a: Color;
   public b: Color;
 
@@ -14,6 +14,9 @@ export class Stripe extends Pattern {
   }
 
   localColorAt(p: Point): Color {
-    return Math.floor(p.x) % 2 ? this.b : this.a;
+    const distance = this.b.subtract(this.a);
+    const fraction = p.x - Math.floor(p.x);
+
+    return this.a.add(distance.multiply(fraction));
   }
 }

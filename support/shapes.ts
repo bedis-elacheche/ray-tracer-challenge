@@ -53,9 +53,8 @@ When(
 Then(
   "{word}.transform = translation\\({float}, {float}, {float})",
   function (shapeVarName: string, x: number, y: number, z: number) {
-    const shape = getShape(this, shapeVarName);
-
-    expect(shape.transform.equals(Transformations.translation(x, y, z))).to.be
-      .true;
+    expect(
+      this[shapeVarName].transform.equals(Transformations.translation(x, y, z))
+    ).to.be.true;
   }
 );
