@@ -1,4 +1,4 @@
-import { IWorld } from "@cucumber/cucumber";
+import { DataTable, IWorld } from "@cucumber/cucumber";
 import { expect } from "chai";
 
 import {
@@ -16,6 +16,7 @@ import {
   Shape,
   Sphere,
   Stripe,
+  Transformations,
   Tuple,
   Vector,
   World,
@@ -96,6 +97,7 @@ export const mapKey = (str: string) => {
       refractive_index: "refractiveIndex",
       pixel_size: "pixelSize",
       over_point: "overPoint",
+      under_point: "underPoint",
     }[str] || str
   );
 };
@@ -108,4 +110,83 @@ export const mapValue = (world: IWorld, key: string) => {
   };
 
   return Object.hasOwn(dict, key) ? dict[key] : world[key];
+};
+
+export const getNumericParameters = (str: string) => {
+  return str
+    .slice(str.indexOf("(") + 1, str.indexOf(")"))
+    .split(", ")
+    .map(parseFloat);
+};
+
+export const customizeShapeWith = <T extends Shape>(
+  shape: T,
+  dataTable: DataTable,
+) => {
+  for (const [key, value] of Object.entries(dataTable.rowsHash())) {
+    switch (key) {
+      case "material.color": {
+        const [r, g, b] = getNumericParameters(value);
+        shape.material.color = new Color(r, g, b);
+        break;
+      }
+      case "material.diffuse": {
+        shape.material.diffuse = parseFloat(value);
+        break;
+      }
+      case "material.transparency": {
+        shape.material.transparency = parseFloat(value);
+        break;
+      }
+      case "material.reflective": {
+        shape.material.reflective = parseFloat(value);
+        break;
+      }
+      case "material.refractive_index": {
+        shape.material.refractiveIndex = parseFloat(value);
+        break;
+      }
+      case "material.specular": {
+        shape.material.specular = parseFloat(value);
+        break;
+      }
+      case "material.ambient": {
+        shape.material.ambient = parseFloat(value);
+        break;
+      }
+      case "material.pattern": {
+        switch (true) {
+          case value === "test_pattern()": {
+            shape.material.pattern = new Pattern();
+            break;
+          }
+          default:
+            throw `pattern ${value} setter not implemented`;
+        }
+        break;
+      }
+      case "transform": {
+        switch (true) {
+          case value.startsWith("scaling("): {
+            const [x, y, z] = getNumericParameters(value);
+            shape.transform = Transformations.scale(x, y, z);
+            break;
+          }
+          case value.startsWith("translate("):
+          case value.startsWith("translation("): {
+            const [x, y, z] = getNumericParameters(value);
+            shape.transform = Transformations.translation(x, y, z);
+            break;
+          }
+          default:
+            throw `transformation ${value} setter not implemented`;
+        }
+        break;
+      }
+      default:
+        throw `${key} setter not implemented`;
+    }
+  }
+
+  return shape;
 };

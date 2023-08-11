@@ -1,7 +1,7 @@
 import { DataTable, Given, Then } from "@cucumber/cucumber";
 import { expect } from "chai";
 
-import { Matrix, Tuple } from "../src";
+import { EPSILON, Matrix, Tuple } from "../src";
 import { float, getMatrix, getTuple, int, lowercase, uppercase } from "./utils";
 
 Given(
@@ -226,7 +226,25 @@ Then(
 
 Then(
   new RegExp(
-    `^${lowercase.source} is the following ${int.source}x${int.source} matrix:$`,
+    `^(${uppercase.source}) is the following ${int.source}x${int.source} matrix:$`,
+  ),
+  function (varName: string, r: number, c: number, dataTable: DataTable) {
+    const matrix = getMatrix(this, varName);
+    const expected = new Matrix(r, c);
+
+    dataTable.raw().forEach((row, y) => {
+      row.forEach((item, x) => {
+        expected.set(y, x, parseFloat(item));
+      });
+    });
+
+    expect(matrix.equals(expected)).to.be.true;
+  },
+);
+
+Then(
+  new RegExp(
+    `^(${lowercase.source}) is the following ${int.source}x${int.source} matrix:$`,
   ),
   function (varName: string, r: number, c: number, dataTable: DataTable) {
     const matrix = getMatrix(this, varName);
@@ -332,5 +350,22 @@ Then(
 
     expect(second.isInvertible()).to.be.true;
     expect(first.multiply(second.inverse()).equals(third)).to.be.true;
+  },
+);
+
+Then(
+  "{word}[{int},{int}] = {float}\\/{float}",
+  function (
+    VarName: string,
+    y: number,
+    x: number,
+    dividend: number,
+    divisor: number,
+  ) {
+    const matrix = getMatrix(this, VarName);
+
+    expect(
+      Math.abs(matrix.get(y, x) - dividend / divisor),
+    ).to.be.lessThanOrEqual(EPSILON);
   },
 );

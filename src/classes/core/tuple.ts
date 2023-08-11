@@ -43,38 +43,33 @@ export class Tuple {
     );
   }
 
-  multiply<T extends Tuple>(this: T, scalar: number) {
-    return <T>(
-      new Tuple(
-        this.x * scalar,
-        this.y * scalar,
-        this.z * scalar,
-        this.w * scalar,
-      )
+  multiply<T extends Tuple>(this: T, scalar: number): T {
+    // @ts-ignore
+    return new this.constructor(
+      this.x * scalar,
+      this.y * scalar,
+      this.z * scalar,
+      this.w * scalar,
     );
   }
 
-  divide<T extends Tuple>(this: T, scalar: number) {
-    return <T>(
-      new Tuple(
-        this.x / scalar,
-        this.y / scalar,
-        this.z / scalar,
-        this.w / scalar,
-      )
+  divide<T extends Tuple>(this: T, scalar: number): T {
+    // @ts-ignore
+    return new this.constructor(
+      this.x / scalar,
+      this.y / scalar,
+      this.z / scalar,
+      this.w / scalar,
     );
   }
 
   negate() {
-    return new Tuple(0, 0, 0, 0).subtract(this);
+    return this.multiply(-1);
   }
 
-  dot<T extends Tuple>(vector: T) {
+  dot(tuple: Tuple) {
     return (
-      this.x * vector.x +
-      this.y * vector.y +
-      this.z * vector.z +
-      this.w * vector.w
+      this.x * tuple.x + this.y * tuple.y + this.z * tuple.z + this.w * tuple.w
     );
   }
 

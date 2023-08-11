@@ -19,17 +19,16 @@ export class Point extends Tuple {
   ): T extends Point ? Vector : T extends Vector ? Point : Tuple {
     const tuple = super.subtract(t);
 
+    /* eslint-disable @typescript-eslint/no-explicit-any */
     if (Vector.isVector(t)) {
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       return new Point(tuple.x, tuple.y, tuple.z) as any;
     }
 
     if (Point.isPoint(t)) {
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       return new Vector(tuple.x, tuple.y, tuple.z) as any;
     }
 
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     return tuple as any;
+    /* eslint-enable @typescript-eslint/no-explicit-any */
   }
 }

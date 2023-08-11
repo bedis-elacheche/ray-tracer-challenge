@@ -45,6 +45,13 @@ export class Material {
     this.refractiveIndex = refractiveIndex;
   }
 
+  static Glass() {
+    return new Material({
+      transparency: 1,
+      refractiveIndex: 1.5,
+    });
+  }
+
   equals(m: Material) {
     return (
       this.color.equals(m.color) &&

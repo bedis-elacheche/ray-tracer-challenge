@@ -52,6 +52,18 @@ When(
   },
 );
 
+
+Then(
+  new RegExp(`^${lowercase.source} = ${float.source}$`),
+  function (varName: string, value: string) {
+    const variable = this[varName];
+
+    expect(Math.abs(variable - parseFloat(value))).to.be.lessThanOrEqual(
+      EPSILON,
+    );
+  },
+);
+
 Then(
   new RegExp(`^${lowercase.source}\\.${lowercase.source} = ${float.source}$`),
   function (varName: string, key: string, value: string) {
@@ -85,6 +97,20 @@ Then(
     expect(this[varName]).to.be.an("array");
     expect(
       Math.abs(this[varName][index][key] - parseFloat(value)),
+    ).to.be.lessThanOrEqual(EPSILON);
+  },
+);
+
+Then(
+  new RegExp(
+    `^${lowercase.source}\\.${lowercase.source}\\.${lowercase.source} = ${float.source}$`,
+  ),
+  function (varName: string, key: string, subKey: string, value: string) {
+    expect(
+      Math.abs(
+        parseFloat(this[varName][mapKey(key)][mapKey(subKey)]) -
+          parseFloat(value),
+      ),
     ).to.be.lessThanOrEqual(EPSILON);
   },
 );
@@ -236,6 +262,17 @@ Then(
 
 Then(
   new RegExp(
+    `^${lowercase.source}\\.${lowercase.source}\\.${lowercase.source} > EPSILON\\/${float.source}$`,
+  ),
+  function (varName: string, key: string, subKey: string, divisor: string) {
+    const value = parseFloat(this[varName][mapKey(key)][mapKey(subKey)]);
+
+    expect(value).to.be.greaterThan(EPSILON / parseFloat(divisor));
+  },
+);
+
+Then(
+  new RegExp(
     `^${lowercase.source}\\.${lowercase.source}\\.${lowercase.source} > ${lowercase.source}\\.${lowercase.source}\\.${lowercase.source}$`,
   ),
   function (
@@ -254,5 +291,28 @@ Then(
     );
 
     expect(firstValue).to.be.greaterThan(secondValue);
+  },
+);
+
+Then(
+  new RegExp(
+    `^${lowercase.source}\\.${lowercase.source}\\.${lowercase.source} < ${lowercase.source}\\.${lowercase.source}\\.${lowercase.source}$`,
+  ),
+  function (
+    firstVarName: string,
+    firstKey: string,
+    firstSubKey: string,
+    secondVarName: string,
+    secondKey: string,
+    secondSubKey: string,
+  ) {
+    const firstValue = parseFloat(
+      this[firstVarName][mapKey(firstKey)][mapKey(firstSubKey)],
+    );
+    const secondValue = parseFloat(
+      this[secondVarName][mapKey(secondKey)][mapKey(secondSubKey)],
+    );
+
+    expect(firstValue).to.be.lessThan(secondValue);
   },
 );

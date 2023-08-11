@@ -196,7 +196,7 @@ Scenario: Testing a noninvertible matrix for invertibility
     |  0 |  0 |  0 |  0 |
   Then determinant(A) = 0
     And A is not invertible
-@todo
+
 Scenario: Calculating the inverse of a matrix
   Given the following 4x4 matrix A:
       | -5 |  2 |  6 | -8 |

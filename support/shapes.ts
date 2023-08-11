@@ -1,11 +1,17 @@
-import { Given, Then, When } from "@cucumber/cucumber";
+import { DataTable, Given, Then, When } from "@cucumber/cucumber";
 import { expect } from "chai";
 
 import { Point, Shape, Transformations } from "../src";
-import { getMatrix, getShape } from "./utils";
+import { customizeShapeWith, getMatrix, getShape } from "./utils";
 
 Given("{word} ← test_shape\\()", function (varName: string) {
   this[varName] = new Shape();
+});
+
+Given("{word} has:", function (varName: string, dataTable: DataTable) {
+  const shape = getShape(this, varName);
+
+  customizeShapeWith(shape, dataTable);
 });
 
 When(

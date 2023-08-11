@@ -125,7 +125,7 @@ Scenario: A sphere may be assigned a material
     And m.ambient ← 1
   When s.material ← m
   Then s.material = m
-@todo
+
 Scenario: A helper for producing a sphere with a glassy material
   Given s ← glass_sphere()
   Then s.transform = identity_matrix

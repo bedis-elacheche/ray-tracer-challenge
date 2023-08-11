@@ -1,12 +1,19 @@
-import { Given, Then, When } from "@cucumber/cucumber";
+import { DataTable, Given, Then, When } from "@cucumber/cucumber";
 import { expect } from "chai";
 
 import { Intersection, Plane, Point } from "../src";
-import { getArray, getPlane, getRay } from "./utils";
+import { customizeShapeWith, getArray, getPlane, getRay } from "./utils";
 
 Given("{word} ← plane\\()", function (varName: string) {
   this[varName] = new Plane();
 });
+
+Given(
+  "{word} ← plane\\() with:",
+  function (varName: string, dataTable: DataTable) {
+    this[varName] = customizeShapeWith(new Plane(), dataTable);
+  },
+);
 
 When(
   "{word} ← local_normal_at\\({word}, point\\({float}, {float}, {float}))",
