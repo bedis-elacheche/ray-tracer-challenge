@@ -1,4 +1,4 @@
-import { EPSILON, Point, Vector } from "../core";
+import { Point, Vector } from "../core";
 import { Intersection, Ray } from "../world";
 import { Shape } from "./shape";
 

@@ -1,4 +1,4 @@
-import { Given, When } from "@cucumber/cucumber";
+import { Given } from "@cucumber/cucumber";
 
 import { Cube } from "../src";
 

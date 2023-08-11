@@ -1,8 +1,8 @@
-import { DataTable, Given, Then, When } from "@cucumber/cucumber";
+import { DataTable, Given, Then } from "@cucumber/cucumber";
 import { expect } from "chai";
 
-import { Intersection, Plane, Point } from "../src";
-import { customizeShapeWith, getArray, getPlane, getRay } from "./utils";
+import { Intersection, Plane } from "../src";
+import { customizeShapeWith, getArray } from "./utils";
 
 Given("{word} ← plane\\()", function (varName: string) {
   this[varName] = new Plane();

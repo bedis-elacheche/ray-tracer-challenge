@@ -44,6 +44,7 @@ export class Tuple {
   }
 
   multiply<T extends Tuple>(this: T, scalar: number): T {
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
     // @ts-ignore
     return new this.constructor(
       this.x * scalar,
@@ -54,6 +55,7 @@ export class Tuple {
   }
 
   divide<T extends Tuple>(this: T, scalar: number): T {
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
     // @ts-ignore
     return new this.constructor(
       this.x / scalar,

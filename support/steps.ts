@@ -52,7 +52,6 @@ When(
   },
 );
 
-
 Then(
   new RegExp(`^${lowercase.source} = ${float.source}$`),
   function (varName: string, value: string) {
