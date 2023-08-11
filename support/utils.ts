@@ -5,6 +5,7 @@ import {
   Camera,
   Canvas,
   Color,
+  Cube,
   Intersection,
   Light,
   Material,
@@ -59,6 +60,7 @@ export const getCamera = getInstance(Camera);
 export const getPlane = getInstance(Plane);
 export const getPattern = getInstance(Pattern);
 export const getStripe = getInstance(Stripe);
+export const getCube = getInstance(Cube);
 
 export const getString = (world: IWorld, name: string) => {
   const item = world[name];

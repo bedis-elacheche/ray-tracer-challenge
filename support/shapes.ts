@@ -2,7 +2,13 @@ import { DataTable, Given, Then, When } from "@cucumber/cucumber";
 import { expect } from "chai";
 
 import { Point, Shape, Transformations } from "../src";
-import { customizeShapeWith, getMatrix, getShape } from "./utils";
+import {
+  customizeShapeWith,
+  getMatrix,
+  getPoint,
+  getRay,
+  getShape,
+} from "./utils";
 
 Given("{word} ← test_shape\\()", function (varName: string) {
   this[varName] = new Shape();
@@ -13,6 +19,41 @@ Given("{word} has:", function (varName: string, dataTable: DataTable) {
 
   customizeShapeWith(shape, dataTable);
 });
+
+When(
+  "{word} ← local_normal_at\\({word}, {word})",
+  function (varName: string, shapeName: string, pointName: string) {
+    const shape = getShape(this, shapeName);
+    const point = getPoint(this, pointName);
+
+    this[varName] = shape.localNormalAt(point);
+  },
+);
+
+When(
+  "{word} ← local_normal_at\\({word}, point\\({float}, {float}, {float}))",
+  function (
+    varName: string,
+    shapeName: string,
+    x: number,
+    y: number,
+    z: number,
+  ) {
+    const shape = getShape(this, shapeName);
+
+    this[varName] = shape.normalAt(new Point(x, y, z));
+  },
+);
+
+When(
+  "{word} ← local_intersect\\({word}, {word})",
+  function (varName: string, shapeName: string, rayName: string) {
+    const shape = getShape(this, shapeName);
+    const ray = getRay(this, rayName);
+
+    this[varName] = shape.localIntersect(ray);
+  },
+);
 
 When(
   "set_transform\\({word}, {word})",
