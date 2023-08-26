@@ -1,4 +1,3 @@
-@todo
 Feature: Cones
 
 Scenario Outline: Intersecting a cone with a ray
@@ -46,7 +45,8 @@ Scenario Outline: Computing the normal vector on a cone
   Then n = <normal>
 
   Examples:
-    | point             | normal                 |
-    | point(0, 0, 0)    | vector(0, 0, 0)        |
-    | point(1, 1, 1)    | vector(1, -√2, 1)      |
-    | point(-1, -1, 0)  | vector(-1, 1, 0)       |
+      | point            | normal                            |
+      | point(0, 0, 0)   | vector(0, 0, 0)                   |
+      #                    vector(1, -√2                , 1)
+      | point(1, 1, 1)   | vector(1, -1.4142135623730951, 1) |
+      | point(-1, -1, 0) | vector(-1, 1, 0)                  |

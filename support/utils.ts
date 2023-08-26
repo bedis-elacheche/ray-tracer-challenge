@@ -107,6 +107,7 @@ export const mapKey = (str: string) => {
 export const mapValue = (world: IWorld, key: string) => {
   const dict: Record<string, unknown> = {
     identity_matrix: Matrix.identity(4),
+    infinity: Infinity,
     true: true,
     false: false,
   };

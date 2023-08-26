@@ -32,6 +32,13 @@ Given(
   },
 );
 
+Given(
+  "{word} ← normalize\\(vector\\({float}, {float}, {float}))",
+  function (varName: string, x: number, y: number, z: number) {
+    this[varName] = new Vector(x, y, z).normalize();
+  },
+);
+
 When(
   "{word} ← normalize\\({word})",
   function (firstVarName: string, secondVarName: string) {

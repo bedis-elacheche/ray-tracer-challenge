@@ -241,7 +241,7 @@ Scenario: shade_hit() with a transparent material
   When comps ← prepare_computations(xs[0], r, xs)
     And color ← shade_hit(w, comps, 5)
   Then color = color(0.93642, 0.68642, 0.68642)
-
+@only
 Scenario: shade_hit() with a reflective, transparent material
   Given w ← default_world()
     #                            vector(0, -√2/2              , √2/2)

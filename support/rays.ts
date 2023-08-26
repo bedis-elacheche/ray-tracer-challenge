@@ -22,6 +22,22 @@ Given(
   },
 );
 
+Given(
+  "{word} ← ray\\(point\\({float}, {float}, {float}), {word})",
+  function (
+    varName: string,
+    px: number,
+    py: number,
+    pz: number,
+    vectorVarName: string,
+  ) {
+    const point = new Point(px, py, pz);
+    const vector = getVector(this, vectorVarName);
+
+    this[varName] = new Ray(point, vector);
+  },
+);
+
 When(
   "{word} ← ray\\({word}, {word})",
   function (rayVarName: string, pointVarName: string, vectorVarName: string) {

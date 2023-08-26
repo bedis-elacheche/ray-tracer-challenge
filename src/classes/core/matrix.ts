@@ -1,6 +1,8 @@
 import { EPSILON } from "./constants";
+import { Point } from "./point";
 import { Tuple } from "./tuple";
 import { clamp } from "./utils";
+import { Vector } from "./vector";
 
 export class Matrix {
   public rows: number;
@@ -71,20 +73,30 @@ export class Matrix {
     );
   }
 
-  multiply<T extends Matrix | Tuple>(item: T): T {
+  multiply<T extends Matrix | Point | Vector | Tuple>(item: T): T {
     if (item instanceof Tuple) {
       const dotProducts = this.items.map(([x, y, z, w]) =>
         new Tuple(x, y, z, w).dot(item),
       );
 
-      return <T>(
-        new Tuple(
-          dotProducts[0],
-          dotProducts[1],
-          dotProducts[2],
-          dotProducts[3],
-        )
+      const tuple = new Tuple(
+        dotProducts[0],
+        dotProducts[1],
+        dotProducts[2],
+        dotProducts[3],
       );
+
+      /* eslint-disable @typescript-eslint/no-explicit-any */
+      if (Point.isPoint(tuple)) {
+        return Point.from(tuple) as any;
+      }
+
+      if (Vector.isVector(tuple)) {
+        return Vector.from(tuple) as any;
+      }
+
+      return tuple as any;
+      /* eslint-enable @typescript-eslint/no-explicit-any */
     }
 
     const matrix = new Matrix(4, 4);

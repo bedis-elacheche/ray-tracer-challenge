@@ -41,7 +41,7 @@ When(
   ) {
     const shape = getShape(this, shapeName);
 
-    this[varName] = shape.normalAt(new Point(x, y, z));
+    this[varName] = shape.localNormalAt(new Point(x, y, z));
   },
 );
 

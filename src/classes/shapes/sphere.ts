@@ -20,8 +20,8 @@ export class Sphere extends Shape {
     }
 
     return [
-      new Intersection<Sphere>((-b - Math.sqrt(discriminant)) / (2 * a), this),
-      new Intersection<Sphere>((-b + Math.sqrt(discriminant)) / (2 * a), this),
+      new Intersection((-b - Math.sqrt(discriminant)) / (2 * a), this),
+      new Intersection((-b + Math.sqrt(discriminant)) / (2 * a), this),
     ];
   }
 }

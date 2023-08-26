@@ -12,9 +12,9 @@ Given(
 );
 
 Given(
-  new RegExp(`^${lowercase.source} ← (true|false)$`),
-  function (varName: string, value: string) {
-    this[varName] = value === "true";
+  new RegExp(`^${lowercase.source} ← ${lowercase.source}$`),
+  function (varName: string, secondVarName: string) {
+    this[varName] = mapValue(this, secondVarName);
   },
 );
 
@@ -39,7 +39,7 @@ When(
     `^${lowercase.source}\\.${lowercase.source} ← ${lowercase.source}$`,
   ),
   function (firstVarName: string, key: string, secondVarName: string) {
-    this[firstVarName][key] = this[secondVarName];
+    this[firstVarName][key] = mapValue(this, secondVarName);
   },
 );
 
@@ -136,6 +136,22 @@ Then(
   ) {
     const first = this[firstVarName];
     const second = this[secondVarName][key][subKey];
+
+    if (typeof first !== "object" && typeof second !== "object") {
+      expect(first).to.eql(second);
+    } else {
+      expect(first.equals(second)).to.be.true;
+    }
+  },
+);
+
+Then(
+  new RegExp(
+    `^${lowercase.source}\\.${lowercase.source} = -${lowercase.source}$`,
+  ),
+  function (varName: string, key: string, value: string) {
+    const first = this[varName][key];
+    const second = -mapValue(this, value);
 
     if (typeof first !== "object" && typeof second !== "object") {
       expect(first).to.eql(second);
