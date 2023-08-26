@@ -126,6 +126,22 @@ Then(
 
 Then(
   new RegExp(
+    `^${lowercase.source} = ${lowercase.source}\\.${lowercase.source}$`,
+  ),
+  function (firstVarName: string, secondVarName: string, key: string) {
+    const first = this[firstVarName];
+    const second = this[secondVarName][key];
+
+    if (typeof first !== "object" && typeof second !== "object") {
+      expect(first).to.eql(second);
+    } else {
+      expect(first.equals(second)).to.be.true;
+    }
+  },
+);
+
+Then(
+  new RegExp(
     `^${lowercase.source} = ${lowercase.source}\\.${lowercase.source}\\.${lowercase.source}$`,
   ),
   function (

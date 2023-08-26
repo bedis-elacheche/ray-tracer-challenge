@@ -1,4 +1,3 @@
-@todo
 Feature: Triangles
 
 Scenario: Constructing a triangle
