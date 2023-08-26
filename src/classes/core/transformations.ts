@@ -1,3 +1,4 @@
+import { Group, Shape } from "../shapes";
 import { Matrix } from "./matrix";
 import { Point } from "./point";
 import { Vector } from "./vector";
@@ -105,5 +106,25 @@ export class Transformations {
     return matrix.multiply(
       Transformations.translation(-from.x, -from.y, -from.z),
     );
+  }
+
+  static worldToObject(item: Shape | Group, point: Point) {
+    if (item.parent) {
+      point = Transformations.worldToObject(item.parent, point);
+    }
+
+    return item.transform.inverse().multiply(point);
+  }
+
+  static normalToWorld(item: Shape | Group, vector: Vector) {
+    let normal = Vector.from(
+      item.transform.inverse().transpose().multiply(vector),
+    ).normalize();
+
+    if (item.parent) {
+      normal = Transformations.normalToWorld(item.parent, normal);
+    }
+
+    return normal;
   }
 }

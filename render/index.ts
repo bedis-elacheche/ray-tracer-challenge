@@ -25,6 +25,7 @@ import {
   yAxisShrinked3dSphere,
   yAxisShrinkedSphere,
 } from "./scenes";
+import { hexagon } from "./scenes/hexagon";
 type Units = 0 | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9;
 type Chapter = Exclude<`${0 | 1}${Units}`, "00" | "18" | "19">;
 type SceneKey = `${Chapter}-${string}`;
@@ -52,6 +53,7 @@ const scenes: Record<SceneKey, Scene> = {
   "13-02-3d-scene-with-finite-cylinders": sceneWithFiniteCylinders,
   "13-03-3d-scene-with-finite-closed-cylinders": sceneWithFiniteClosedCylinders,
   "13-04-3d-scene-with-finite-cones": sceneWithFiniteCones,
+  "14-01-3d-group-hexagon": hexagon,
 };
 
 const getLastScene = (dict: Record<SceneKey, Scene>): string =>

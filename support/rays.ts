@@ -2,7 +2,7 @@ import { Given, Then, When } from "@cucumber/cucumber";
 import { expect } from "chai";
 
 import { Point, Ray, Vector } from "../src";
-import { getMatrix, getPoint, getRay, getShape, getVector } from "./utils";
+import { getMatrix, getPoint, getRay, getVector } from "./utils";
 
 Given(
   "{word} ← ray\\(point\\({float}, {float}, {float}), vector\\({float}, {float}, {float}))",
@@ -50,11 +50,10 @@ When(
 
 When(
   "{word} ← intersect\\({word}, {word})",
-  function (varName: string, shapeVarName: string, rayVarName: string) {
+  function (varName: string, shapeOrGroupVarName: string, rayVarName: string) {
     const ray = getRay(this, rayVarName);
-    const shape = getShape(this, shapeVarName);
 
-    this[varName] = shape.intersect(ray);
+    this[varName] = this[shapeOrGroupVarName].intersect(ray);
   },
 );
 

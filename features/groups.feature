@@ -1,4 +1,3 @@
-@todo
 Feature: Groups
 
 Scenario: Creating a new group

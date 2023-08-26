@@ -1,7 +1,7 @@
 import { Given, Then, When } from "@cucumber/cucumber";
 import { expect } from "chai";
 
-import { Color, EPSILON, Point, Vector } from "../src";
+import { Color, EPSILON, Group, Point, Vector } from "../src";
 import { float, int, lowercase, mapKey, mapValue } from "./utils";
 
 Given(
@@ -260,9 +260,45 @@ Then(
   },
 );
 
-Then("{word} is nothing", function (varName: string) {
-  expect(this[varName]).to.be.null;
+Then("{word} is empty", function (varName: string) {
+  const item = this[varName];
+
+  if (Array.isArray(item)) {
+    expect(item).to.be.empty;
+  } else if (item instanceof Group) {
+    expect(item.children).to.be.empty;
+  } else {
+    throw "Not implemented!";
+  }
 });
+
+Then("{word} is not empty", function (varName: string) {
+  const item = this[varName];
+
+  if (Array.isArray(item)) {
+    expect(item).not.to.be.empty;
+  } else if (item instanceof Group) {
+    expect(item.children).not.to.be.empty;
+  } else {
+    throw "Not implemented!";
+  }
+});
+
+Then(
+  new RegExp(`^${lowercase.source} is nothing$`),
+  function (varName: string) {
+    expect(this[varName]).to.be.null;
+  },
+);
+
+Then(
+  new RegExp(`^${lowercase.source}\\.${lowercase.source} is nothing`),
+  function (varName: string, key: string) {
+    const item = this[varName][mapKey(key)];
+
+    expect(item).to.be.null;
+  },
+);
 
 Then(
   new RegExp(

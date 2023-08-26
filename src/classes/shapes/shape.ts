@@ -1,31 +1,38 @@
-import { Matrix, Point, Vector } from "../core";
+import { Matrix, Point, Transformations, Vector } from "../core";
 import { Material } from "../materials";
 import { Intersection, Ray } from "../world";
+import { Group } from "./group";
+
+export type ShapeProps = {
+  origin?: Point;
+  transform?: Matrix;
+  material?: Material;
+  parent?: Group;
+};
 
 export class Shape {
   public transform: Matrix;
   public origin: Point;
   public material: Material;
+  public parent: Group | null;
 
-  constructor(
+  constructor({
     origin = new Point(0, 0, 0),
     transform = Matrix.identity(4),
     material = new Material(),
-  ) {
+    parent = null,
+  }: ShapeProps = {}) {
     this.origin = origin;
     this.transform = transform;
     this.material = material;
+    this.parent = parent;
   }
 
   normalAt(point: Point) {
-    const invertedTransformation = this.transform.inverse();
-    const localPoint = invertedTransformation.multiply(point);
+    const localPoint = Transformations.worldToObject(this, point);
     const localNormal = this.localNormalAt(localPoint);
-    const worldNormal = invertedTransformation
-      .transpose()
-      .multiply(localNormal);
 
-    return new Vector(worldNormal.x, worldNormal.y, worldNormal.z).normalize();
+    return Transformations.normalToWorld(this, localNormal);
   }
 
   localNormalAt(localPoint: Point) {
@@ -47,10 +54,18 @@ export class Shape {
       return true;
     }
 
+    const areParentsEqual =
+      this.parent === null && s.parent === null
+        ? true
+        : this.parent !== null &&
+          s.parent !== null &&
+          this.parent.equals(s.parent);
+
     return (
       this.transform.equals(s.transform) &&
       this.origin.equals(s.origin) &&
-      this.material.equals(s.material)
+      this.material.equals(s.material) &&
+      areParentsEqual
     );
   }
 }

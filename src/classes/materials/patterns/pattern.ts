@@ -1,4 +1,4 @@
-import { Matrix, Point } from "../../core";
+import { Matrix, Point, Transformations } from "../../core";
 import { Shape } from "../../shapes";
 import { Color } from "../color";
 
@@ -11,7 +11,7 @@ export class Pattern {
 
   colorAt(p: Point, s?: Shape): Color {
     if (s) {
-      const objectPoint = s.transform.inverse().multiply(p);
+      const objectPoint = Transformations.worldToObject(s, p);
       const patternPoint = this.transform.inverse().multiply(objectPoint);
 
       return this.localColorAt(patternPoint);

@@ -1,11 +1,14 @@
 import { Given, Then, When } from "@cucumber/cucumber";
 import { expect } from "chai";
 
-import { Point, Transformations, Vector } from "../src";
+import { Group, Point, Shape, Transformations, Vector } from "../src";
 import {
   float,
+  getGroup,
   getMatrix,
   getPoint,
+  getShape,
+  getShapeOrGroup,
   getTuple,
   getVector,
   lowercase,
@@ -128,6 +131,42 @@ When(
     this[varName].transform = Transformations.rotateY(
       Math.PI / divisor,
     ).multiply(Transformations.translation(x, y, z));
+  },
+);
+
+When(
+  "{word} ← world_to_object\\({word}, point\\({float}, {float}, {float}))",
+  function (
+    varName: string,
+    shapeName: string,
+    x: number,
+    y: number,
+    z: number,
+  ) {
+    let item: Group | Shape;
+
+    try {
+      item = getShape(this, shapeName);
+    } catch (e) {
+      item = getGroup(this, shapeName);
+    }
+
+    this[varName] = Transformations.worldToObject(item, new Point(x, y, z));
+  },
+);
+
+When(
+  "{word} ← normal_to_world\\({word}, vector\\({float}, {float}, {float}))",
+  function (
+    varName: string,
+    shapeName: string,
+    x: number,
+    y: number,
+    z: number,
+  ) {
+    const item = getShapeOrGroup(this, shapeName);
+
+    this[varName] = Transformations.normalToWorld(item, new Vector(x, y, z));
   },
 );
 

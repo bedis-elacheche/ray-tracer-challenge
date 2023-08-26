@@ -47,39 +47,40 @@ When(
 
 When(
   "{word} ← local_intersect\\({word}, {word})",
-  function (varName: string, shapeName: string, rayName: string) {
-    const shape = getShape(this, shapeName);
+  function (varName: string, itemName: string, rayName: string) {
     const ray = getRay(this, rayName);
 
-    this[varName] = shape.localIntersect(ray);
+    this[varName] = this[itemName].localIntersect(ray);
   },
 );
 
 When(
   "set_transform\\({word}, {word})",
-  function (shapeVarName: string, matrixVarName: string) {
-    const shape = getShape(this, shapeVarName);
+  function (varName: string, matrixVarName: string) {
     const matrix = getMatrix(this, matrixVarName);
 
-    shape.transform = matrix;
+    this[varName].transform = matrix;
+  },
+);
+
+When(
+  "set_transform\\({word}, rotation_y\\(π \\/ {float}))",
+  function (varName: string, divisor: number) {
+    this[varName].transform = Transformations.rotateY(Math.PI / divisor);
   },
 );
 
 When(
   "set_transform\\({word}, translation\\({float}, {float}, {float}))",
-  function (shapeVarName: string, x: number, y: number, z: number) {
-    const shape = getShape(this, shapeVarName);
-
-    shape.transform = Transformations.translation(x, y, z);
+  function (varName: string, x: number, y: number, z: number) {
+    this[varName].transform = Transformations.translation(x, y, z);
   },
 );
 
 When(
   "set_transform\\({word}, scaling\\({float}, {float}, {float}))",
-  function (shapeVarName: string, x: number, y: number, z: number) {
-    const shape = getShape(this, shapeVarName);
-
-    shape.transform = Transformations.scale(x, y, z);
+  function (varName: string, x: number, y: number, z: number) {
+    this[varName].transform = Transformations.scale(x, y, z);
   },
 );
 

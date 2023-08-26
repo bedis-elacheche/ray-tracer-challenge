@@ -1,7 +1,6 @@
-import { EPSILON, Matrix, Point, Vector } from "../core";
-import { Material } from "../materials";
+import { EPSILON, Point, Vector } from "../core";
 import { Intersection, Ray } from "../world";
-import { Shape } from "./shape";
+import { Shape, ShapeProps } from "./shape";
 
 export class Cone extends Shape {
   public maximum: number;
@@ -12,18 +11,16 @@ export class Cone extends Shape {
     origin,
     transform,
     material,
+    parent,
     minimum = -Infinity,
     maximum = Infinity,
     closed = false,
-  }: {
-    origin?: Point;
-    transform?: Matrix;
-    material?: Material;
+  }: ShapeProps & {
     minimum?: number;
     maximum?: number;
     closed?: boolean;
   } = {}) {
-    super(origin, transform, material);
+    super({ origin, transform, material, parent });
 
     this.minimum = minimum;
     this.maximum = maximum;

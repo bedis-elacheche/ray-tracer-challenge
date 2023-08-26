@@ -15,10 +15,9 @@ import {
 } from "../../src";
 
 export const sceneWithPatterns = () => {
-  const floor = new Sphere(
-    undefined,
-    Transformations.scale(10, 0.01, 10),
-    new Material({
+  const floor = new Sphere({
+    transform: Transformations.scale(10, 0.01, 10),
+    material: new Material({
       pattern: new Checkers(
         new Color(1, 0, 0.2),
         new Color(1, 1, 1),
@@ -26,7 +25,7 @@ export const sceneWithPatterns = () => {
       ),
       specular: 0,
     }),
-  );
+  });
 
   const wallMaterial = new Material({
     pattern: new Stripe(
@@ -37,28 +36,25 @@ export const sceneWithPatterns = () => {
     specular: 0,
   });
 
-  const leftWall = new Sphere(
-    undefined,
-    Transformations.translation(0, 0, 5)
+  const leftWall = new Sphere({
+    transform: Transformations.translation(0, 0, 5)
       .multiply(Transformations.rotateY(-Math.PI / 4))
       .multiply(Transformations.rotateX(Math.PI / 2))
       .multiply(Transformations.scale(10, 0.01, 10)),
-    wallMaterial,
-  );
+    material: wallMaterial,
+  });
 
-  const rightWall = new Sphere(
-    undefined,
-    Transformations.translation(0, 0, 5)
+  const rightWall = new Sphere({
+    transform: Transformations.translation(0, 0, 5)
       .multiply(Transformations.rotateY(Math.PI / 4))
       .multiply(Transformations.rotateX(Math.PI / 2))
       .multiply(Transformations.scale(10, 0.01, 10)),
-    wallMaterial,
-  );
+    material: wallMaterial,
+  });
 
-  const middle = new Sphere(
-    undefined,
-    Transformations.translation(-0.5, 1, 0.5),
-    new Material({
+  const middle = new Sphere({
+    transform: Transformations.translation(-0.5, 1, 0.5),
+    material: new Material({
       pattern: new Stripe(
         new Color(0.2, 0, 1),
         new Color(1, 1, 1),
@@ -69,26 +65,24 @@ export const sceneWithPatterns = () => {
       diffuse: 0.7,
       specular: 0.3,
     }),
-  );
+  });
 
-  const right = new Sphere(
-    undefined,
-    Transformations.translation(1.5, 0.5, -0.5).multiply(
+  const right = new Sphere({
+    transform: Transformations.translation(1.5, 0.5, -0.5).multiply(
       Transformations.scale(0.5, 0.5, 0.5),
     ),
-    new Material({
+    material: new Material({
       pattern: new Gradient(new Color(1, 0, 1), new Color(1, 1, 1)),
       diffuse: 0.7,
       specular: 0.3,
     }),
-  );
+  });
 
-  const left = new Sphere(
-    undefined,
-    Transformations.translation(-1.5, 0.33, -0.75).multiply(
+  const left = new Sphere({
+    transform: Transformations.translation(-1.5, 0.33, -0.75).multiply(
       Transformations.scale(0.33, 0.33, 0.33),
     ),
-    new Material({
+    material: new Material({
       pattern: new Ring(
         new Color(0, 1, 1),
         new Color(0, 0, 0),
@@ -97,7 +91,7 @@ export const sceneWithPatterns = () => {
       diffuse: 0.7,
       specular: 0.3,
     }),
-  );
+  });
 
   const light = new Light(new Point(-10, 10, -10), new Color(1, 1, 1));
 

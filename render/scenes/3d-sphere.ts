@@ -20,7 +20,7 @@ const makeScene = (transform?: Matrix) => () => {
   const half = wallSize / 2;
   const color = new Color(1, 0.2, 1);
   const material = new Material({ color });
-  const shape = new Sphere(undefined, transform, material);
+  const shape = new Sphere({ transform, material });
   const light = new Light(new Point(-10, 10, -10), new Color(1, 1, 1));
 
   for (let y = 0; y < canvas.height; y++) {

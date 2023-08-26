@@ -6,6 +6,7 @@ import {
   Canvas,
   Color,
   Cube,
+  Group,
   Intersection,
   Light,
   Material,
@@ -61,6 +62,14 @@ export const getPlane = getInstance(Plane);
 export const getPattern = getInstance(Pattern);
 export const getStripe = getInstance(Stripe);
 export const getCube = getInstance(Cube);
+export const getGroup = getInstance(Group);
+export const getShapeOrGroup = (world: IWorld, name: string) => {
+  try {
+    return getShape(world, name);
+  } catch (e) {
+    return getGroup(world, name);
+  }
+};
 
 export const getString = (world: IWorld, name: string) => {
   const item = world[name];

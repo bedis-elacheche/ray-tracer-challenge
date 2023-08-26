@@ -1,6 +1,6 @@
 import { EPSILON, Point, Transformations, Vector } from "../core";
 import { Color, Material } from "../materials";
-import { Shape, Sphere } from "../shapes";
+import { GroupChild, Shape, Sphere } from "../shapes";
 import { Environment } from "./environment";
 import { Intersection } from "./intersection";
 import { Light } from "./light";
@@ -11,34 +11,31 @@ type Computation = ReturnType<typeof World.prepareComputations>;
 
 export class World {
   public light: Light;
-  public shapes: Shape[];
+  public children: GroupChild[];
 
   constructor({
     shapes = [],
     light = null,
   }: {
-    shapes?: Shape[];
+    shapes?: GroupChild[];
     light?: Light;
   } = {}) {
-    this.shapes = shapes;
+    this.children = shapes;
     this.light = light;
   }
 
   static default() {
-    const s1 = new Sphere(
-      undefined,
-      undefined,
-      new Material({
+    const s1 = new Sphere({
+      material: new Material({
         color: new Color(0.8, 1, 0.6),
         diffuse: 0.7,
         specular: 0.2,
       }),
-    );
-    const s2 = new Sphere(
-      undefined,
-      Transformations.scale(0.5, 0.5, 0.5),
-      new Material(),
-    );
+    });
+    const s2 = new Sphere({
+      transform: Transformations.scale(0.5, 0.5, 0.5),
+      material: new Material(),
+    });
     const light = new Light(new Point(-10, 10, -10), new Color(1, 1, 1));
 
     return new World({ shapes: [s1, s2], light });
@@ -114,7 +111,7 @@ export class World {
   }
 
   intersect(ray: Ray) {
-    const xs = this.shapes.flatMap((shape) => shape.intersect(ray));
+    const xs = this.children.flatMap((shape) => shape.intersect(ray));
 
     return xs.filter(({ t }) => t > 0).sort((a, z) => a.t - z.t);
   }

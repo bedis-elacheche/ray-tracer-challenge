@@ -17,7 +17,7 @@ const makeScene = (transform?: Matrix) => () => {
   const pixelSize = wallSize / canvas.height;
   const half = wallSize / 2;
   const color = new Color(1, 0, 0);
-  const shape = new Sphere(undefined, transform);
+  const shape = new Sphere({ transform });
 
   for (let y = 0; y < canvas.height; y++) {
     const worldY = half - pixelSize * y;

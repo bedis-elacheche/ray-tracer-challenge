@@ -15,14 +15,14 @@ Given(
 );
 
 Given("{word} ← glass_sphere\\()", function (varName: string) {
-  this[varName] = new Sphere(undefined, undefined, Material.Glass());
+  this[varName] = new Sphere({ material: Material.Glass() });
 });
 
 Given(
   "{word} ← glass_sphere\\() with:",
   function (varName: string, dataTable: DataTable) {
     this[varName] = customizeShapeWith(
-      new Sphere(undefined, undefined, Material.Glass()),
+      new Sphere({ material: Material.Glass() }),
       dataTable,
     );
   },

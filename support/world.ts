@@ -1,13 +1,14 @@
 import { Given, Then, When } from "@cucumber/cucumber";
 import { expect } from "chai";
 
-import { Intersection, World } from "../src";
+import { Group, Intersection, Shape, World } from "../src";
 import {
   getArray,
   getIntersection,
   getPoint,
   getRay,
   getShape,
+  getShapeOrGroup,
   getWorld,
   int,
   lowercase,
@@ -22,7 +23,7 @@ Given(
   function (varName: string, worldVarName: string) {
     const world = getWorld(this, worldVarName);
 
-    this[varName] = world.shapes[0];
+    this[varName] = world.children[0];
   },
 );
 
@@ -31,7 +32,7 @@ Given(
   function (varName: string, worldVarName: string) {
     const world = getWorld(this, worldVarName);
 
-    this[varName] = world.shapes[1];
+    this[varName] = world.children[1];
   },
 );
 
@@ -41,7 +42,7 @@ Given(
     const world = getWorld(this, worldVarName);
     const shape = getShape(this, varName);
 
-    world.shapes.push(shape);
+    world.children.push(shape);
   },
 );
 
@@ -215,7 +216,7 @@ When(
 Then("{word} contains no objects", function (varName: string) {
   const world = getWorld(this, varName);
 
-  expect(world.shapes).to.be.an("array").that.is.empty;
+  expect(world.children).to.be.an("array").that.is.empty;
 });
 
 Then("{word} has no light source", function (varName: string) {
@@ -226,11 +227,23 @@ Then("{word} has no light source", function (varName: string) {
 
 Then(
   "{word} contains {word}",
-  function (worldVarName: string, shapeVarName: string) {
+  function (worldVarName: string, varName: string) {
     const world = getWorld(this, worldVarName);
-    const shape = getShape(this, shapeVarName);
+    const item = getShapeOrGroup(this, varName);
 
-    expect(world.shapes.find((item) => item.equals(shape))).to.be.not.undefined;
+    expect(
+      world.children.find((child) => {
+        if (child instanceof Group && item instanceof Group) {
+          return child.equals(item);
+        }
+
+        if (child instanceof Shape && item instanceof Shape) {
+          return child.equals(item);
+        }
+
+        return false;
+      }),
+    ).to.be.not.undefined;
   },
 );
 

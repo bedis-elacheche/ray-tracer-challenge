@@ -16,10 +16,9 @@ import {
 } from "../../src";
 
 export const sceneWithFiniteCones = () => {
-  const floor = new Plane(
-    undefined,
-    Transformations.scale(10, 0.01, 10),
-    new Material({
+  const floor = new Plane({
+    transform: Transformations.scale(10, 0.01, 10),
+    material: new Material({
       pattern: new Checkers(
         new Color(1, 0, 0.2),
         new Color(1, 1, 1),
@@ -27,7 +26,7 @@ export const sceneWithFiniteCones = () => {
       ),
       specular: 0,
     }),
-  );
+  });
 
   const wallMaterial = new Material({
     pattern: new Stripe(
@@ -38,23 +37,21 @@ export const sceneWithFiniteCones = () => {
     specular: 0,
   });
 
-  const leftWall = new Plane(
-    undefined,
-    Transformations.translation(0, 0, 5)
+  const leftWall = new Plane({
+    transform: Transformations.translation(0, 0, 5)
       .multiply(Transformations.rotateY(-Math.PI / 4))
       .multiply(Transformations.rotateX(Math.PI / 2))
       .multiply(Transformations.scale(10, 0.01, 10)),
-    wallMaterial,
-  );
+    material: wallMaterial,
+  });
 
-  const rightWall = new Plane(
-    undefined,
-    Transformations.translation(0, 0, 5)
+  const rightWall = new Plane({
+    transform: Transformations.translation(0, 0, 5)
       .multiply(Transformations.rotateY(Math.PI / 4))
       .multiply(Transformations.rotateX(Math.PI / 2))
       .multiply(Transformations.scale(10, 0.01, 10)),
-    wallMaterial,
-  );
+    material: wallMaterial,
+  });
 
   const middle = new Cone({
     transform: Transformations.translation(-0.5, 0, 0.5),
