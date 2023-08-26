@@ -73,8 +73,10 @@ export class Matrix {
     );
   }
 
-  multiply<T extends Matrix | Point | Vector | Tuple>(item: T): T {
-    if (item instanceof Tuple) {
+  multiply<T extends Tuple>(item: T): T;
+  multiply(item: Matrix): Matrix;
+  multiply(item: Matrix | Tuple | Point | Vector) {
+    if (!(item instanceof Matrix)) {
       const dotProducts = this.items.map(([x, y, z, w]) =>
         new Tuple(x, y, z, w).dot(item),
       );
@@ -86,17 +88,15 @@ export class Matrix {
         dotProducts[3],
       );
 
-      /* eslint-disable @typescript-eslint/no-explicit-any */
       if (Point.isPoint(tuple)) {
-        return Point.from(tuple) as any;
+        return Point.from(tuple);
       }
 
       if (Vector.isVector(tuple)) {
-        return Vector.from(tuple) as any;
+        return Vector.from(tuple);
       }
 
-      return tuple as any;
-      /* eslint-enable @typescript-eslint/no-explicit-any */
+      return tuple;
     }
 
     const matrix = new Matrix(4, 4);
@@ -120,7 +120,7 @@ export class Matrix {
       }
     }
 
-    return <T>matrix;
+    return matrix;
   }
 
   transpose() {

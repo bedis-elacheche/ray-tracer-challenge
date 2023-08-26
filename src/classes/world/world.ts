@@ -13,7 +13,13 @@ export class World {
   public light: Light;
   public shapes: Shape[];
 
-  constructor(shapes = [] as Shape[], light = null as Light) {
+  constructor({
+    shapes = [],
+    light = null,
+  }: {
+    shapes?: Shape[];
+    light?: Light;
+  } = {}) {
     this.shapes = shapes;
     this.light = light;
   }
@@ -35,7 +41,7 @@ export class World {
     );
     const light = new Light(new Point(-10, 10, -10), new Color(1, 1, 1));
 
-    return new World([s1, s2], light);
+    return new World({ shapes: [s1, s2], light });
   }
 
   static tick(env: Environment, proj: Projectile) {

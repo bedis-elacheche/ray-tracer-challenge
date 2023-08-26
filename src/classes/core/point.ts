@@ -14,21 +14,19 @@ export class Point extends Tuple {
     return new Point(tuple.x, tuple.y, tuple.z);
   }
 
-  subtract<T extends Tuple>(
-    t: T,
-  ): T extends Point ? Vector : T extends Vector ? Point : Tuple {
+  subtract(t: Point): Vector;
+  subtract(t: Vector): Point;
+  subtract(t: Tuple): Tuple {
     const tuple = super.subtract(t);
 
-    /* eslint-disable @typescript-eslint/no-explicit-any */
     if (Vector.isVector(t)) {
-      return new Point(tuple.x, tuple.y, tuple.z) as any;
+      return new Point(tuple.x, tuple.y, tuple.z);
     }
 
     if (Point.isPoint(t)) {
-      return new Vector(tuple.x, tuple.y, tuple.z) as any;
+      return new Vector(tuple.x, tuple.y, tuple.z);
     }
 
-    return tuple as any;
-    /* eslint-enable @typescript-eslint/no-explicit-any */
+    return tuple;
   }
 }
