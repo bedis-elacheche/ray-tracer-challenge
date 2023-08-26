@@ -7,7 +7,7 @@
     "preinstall": "npx only-allow pnpm",
     "prepare": "if [[ $NODE_ENV != \"production\" ]]; then husky install; fi",
     "test": "cucumber-js",
-    "start": "ts-node ./main.ts",
+    "render": "ts-node ./render/index.ts",
     "lint": "eslint --ext .ts .",
     "prettier": "prettier --check \"**/*.ts\""
   },
