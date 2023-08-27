@@ -11,6 +11,7 @@ import {
   Light,
   Material,
   Matrix,
+  OBJParserResult,
   Pattern,
   Plane,
   Point,
@@ -63,6 +64,7 @@ export const getPattern = getInstance(Pattern);
 export const getStripe = getInstance(Stripe);
 export const getCube = getInstance(Cube);
 export const getGroup = getInstance(Group);
+export const getOBJParserResult = getInstance(OBJParserResult);
 export const getShapeOrGroup = (world: IWorld, name: string) => {
   try {
     return getShape(world, name);
@@ -109,6 +111,7 @@ export const mapKey = (str: string) => {
       pixel_size: "pixelSize",
       over_point: "overPoint",
       under_point: "underPoint",
+      default_group: "defaultGroup",
     }[str] || str
   );
 };

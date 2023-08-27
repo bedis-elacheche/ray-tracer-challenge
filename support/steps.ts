@@ -48,7 +48,7 @@ When(
     `^${lowercase.source} ← ${lowercase.source}\\.${lowercase.source}$`,
   ),
   function (firstVarName: string, secondVarName: string, key: string) {
-    this[firstVarName] = this[secondVarName][key];
+    this[firstVarName] = this[secondVarName][mapKey(key)];
   },
 );
 
@@ -205,6 +205,28 @@ Then(
   ) {
     const first = this[firstVarName][firstKey];
     const second = this[secondVarName][secondKey];
+
+    if (typeof first !== "object" && typeof second !== "object") {
+      expect(first).to.eql(second);
+    } else {
+      expect(first.equals(second)).to.be.true;
+    }
+  },
+);
+
+Then(
+  new RegExp(
+    `^${lowercase.source}\\.${lowercase.source} = ${lowercase.source}\\.${lowercase.source}\\[${int.source}\\]$`,
+  ),
+  function (
+    firstVarName: string,
+    firstKey: string,
+    secondVarName: string,
+    secondKey: string,
+    index: string,
+  ) {
+    const first = this[firstVarName][firstKey];
+    const second = this[secondVarName][secondKey][parseInt(index, 10) - 1];
 
     if (typeof first !== "object" && typeof second !== "object") {
       expect(first).to.eql(second);

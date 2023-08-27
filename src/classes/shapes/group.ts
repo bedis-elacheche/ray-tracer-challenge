@@ -6,22 +6,26 @@ import { Shape } from "./shape";
 export type GroupChild = Group | Shape;
 
 export class Group {
+  public name: string;
   public children: GroupChild[];
   public transform: Matrix;
   public parent: Group | null;
   public material: Material;
 
   constructor({
+    name = `Group ${Date.now()}`,
     children = [],
     transform = Matrix.identity(4),
     material = new Material(),
     parent = null,
   }: {
+    name?: string;
     children?: GroupChild[];
     material?: Material;
     transform?: Matrix;
     parent?: Group;
   } = {}) {
+    this.name = name;
     this.children = children;
     this.transform = transform;
     this.parent = parent;
@@ -70,6 +74,7 @@ export class Group {
     }
 
     return (
+      this.name === group.name &&
       this.transform.equals(group.transform) &&
       this.children.every((item, index) => {
         const otherChild = group.children[index];

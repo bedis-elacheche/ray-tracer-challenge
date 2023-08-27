@@ -17,6 +17,35 @@ When(
   },
 );
 
+When(
+  "{word} ← {word} child of {word}",
+  function (varName: string, ordinal: string, groupVarName: string) {
+    const group = getGroup(this, groupVarName);
+
+    let index = 0;
+
+    switch (ordinal) {
+      case "first": {
+        index = 0;
+        break;
+      }
+      case "second": {
+        index = 1;
+        break;
+      }
+      case "third": {
+        index = 2;
+        break;
+      }
+      default: {
+        throw "Not implementd!";
+      }
+    }
+
+    this[varName] = group.children[index];
+  },
+);
+
 Then(
   "{word} includes {word}",
   function (groupVarName: string, shapeVarName: string) {
