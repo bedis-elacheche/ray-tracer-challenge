@@ -4,7 +4,7 @@ import path from "node:path";
 import { Given, Then, When } from "@cucumber/cucumber";
 import { expect } from "chai";
 
-import { Group, OBJParser, Point } from "../src";
+import { Group, OBJParser, Point, Vector } from "../src";
 import { getGroup, getOBJParserResult, getString } from "./utils";
 
 Given(
@@ -103,5 +103,21 @@ Then(
         return false;
       }),
     ).to.not.be.undefined;
+  },
+);
+
+Then(
+  "{word}.normals[{int}] = vector\\({float}, {float}, {float})",
+  function (
+    parserResultVarName: string,
+    index: number,
+    x: number,
+    y: number,
+    z: number,
+  ) {
+    const parserResult = getOBJParserResult(this, parserResultVarName);
+
+    expect(parserResult.normals[index - 1].equals(new Vector(x, y, z))).to.be
+      .true;
   },
 );
