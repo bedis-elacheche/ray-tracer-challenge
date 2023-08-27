@@ -5,6 +5,7 @@ import {
   Camera,
   Canvas,
   Color,
+  CSG,
   Cube,
   Group,
   Intersection,
@@ -65,11 +66,19 @@ export const getStripe = getInstance(Stripe);
 export const getCube = getInstance(Cube);
 export const getGroup = getInstance(Group);
 export const getOBJParserResult = getInstance(OBJParserResult);
+export const getCSG = getInstance(CSG);
 export const getShapeOrGroup = (world: IWorld, name: string) => {
   try {
     return getShape(world, name);
   } catch (e) {
     return getGroup(world, name);
+  }
+};
+export const getCSGOperand = (world: IWorld, name: string) => {
+  try {
+    return getShape(world, name);
+  } catch (e) {
+    return getCSG(world, name);
   }
 };
 

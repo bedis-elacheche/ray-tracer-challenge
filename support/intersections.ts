@@ -83,6 +83,37 @@ Given(
 
 Given(
   new RegExp(
+    `^${lowercase.source} ← intersections\\(${float.source}:${lowercase.source}, ${float.source}:${lowercase.source}, ${float.source}:${lowercase.source}, ${float.source}:${lowercase.source}\\)$`,
+  ),
+  function (
+    intersectionVarName: string,
+    t1: string,
+    firstShapeVarName: string,
+    t2: string,
+    secondShapeVarName: string,
+    t3: string,
+    thirdShapeVarName: string,
+    t4: string,
+    fourthShapeVarName: string,
+  ) {
+    const first = getShape(this, firstShapeVarName);
+    const second = getShape(this, secondShapeVarName);
+    const third = getShape(this, thirdShapeVarName);
+    const fourth = getShape(this, fourthShapeVarName);
+
+    this[intersectionVarName] = [
+      [t1, first],
+      [t2, second],
+      [t3, third],
+      [t4, fourth],
+    ].map(
+      ([t, shape]: [string, Shape]) => new Intersection(parseFloat(t), shape),
+    );
+  },
+);
+
+Given(
+  new RegExp(
     `^${lowercase.source} ← intersections\\(${float.source}:${uppercase.source}, ${float.source}:${uppercase.source}, ${float.source}:${uppercase.source}, ${float.source}:${uppercase.source}, ${float.source}:${uppercase.source}, ${float.source}:${uppercase.source}\\)$`,
   ),
   function (

@@ -242,7 +242,11 @@ Then(
     const first = this[firstVarName];
     const second = mapValue(this, secondVarName);
 
-    expect(first.equals(second)).to.be.true;
+    if (typeof first !== "object" && typeof second !== "object") {
+      expect(first).to.eql(second);
+    } else {
+      expect(first.equals(second)).to.be.true;
+    }
   },
 );
 

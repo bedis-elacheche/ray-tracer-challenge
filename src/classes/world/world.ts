@@ -1,23 +1,23 @@
 import { EPSILON, Point, Transformations, Vector } from "../core";
 import { Color, Material } from "../materials";
-import { GroupChild, Shape, Sphere } from "../shapes";
+import { BaseShape, Sphere } from "../shapes";
 import { Environment } from "./environment";
 import { Intersection } from "./intersection";
 import { Light } from "./light";
 import { Projectile } from "./projectile";
 import { Ray } from "./ray";
 
-type Computation = ReturnType<typeof World.prepareComputations>;
+export type Computation = ReturnType<typeof World.prepareComputations>;
 
 export class World {
   public light: Light;
-  public children: GroupChild[];
+  public children: BaseShape[];
 
   constructor({
     shapes = [],
     light = null,
   }: {
-    shapes?: GroupChild[];
+    shapes?: BaseShape[];
     light?: Light;
   } = {}) {
     this.children = shapes;
@@ -51,7 +51,7 @@ export class World {
   static prepareComputations(
     hit: Intersection,
     ray: Ray,
-    intesections: Intersection[],
+    intesections: Intersection<BaseShape>[],
   ) {
     const { t, object } = hit;
     const point = ray.position(t);
@@ -79,7 +79,7 @@ export class World {
     computation.underPoint = computation.point.subtract(offset);
     computation.reflectv = ray.direction.reflect(computation.normalv);
 
-    const containers: Shape[] = [];
+    const containers: BaseShape[] = [];
 
     for (const intersection of intesections) {
       if (intersection.equals(hit)) {

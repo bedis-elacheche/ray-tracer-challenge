@@ -1,4 +1,4 @@
-import { Group, Shape } from "../shapes";
+import { BaseShape } from "../shapes";
 import { Matrix } from "./matrix";
 import { Point } from "./point";
 import { Vector } from "./vector";
@@ -108,20 +108,20 @@ export class Transformations {
     );
   }
 
-  static worldToObject(item: Shape | Group, point: Point) {
-    if (item.parent) {
+  static worldToObject(item: BaseShape, point: Point) {
+    if (item.parent instanceof BaseShape) {
       point = Transformations.worldToObject(item.parent, point);
     }
 
     return item.transform.inverse().multiply(point);
   }
 
-  static normalToWorld(item: Shape | Group, vector: Vector) {
+  static normalToWorld(item: BaseShape, vector: Vector) {
     let normal = Vector.from(
       item.transform.inverse().transpose().multiply(vector),
     ).normalize();
 
-    if (item.parent) {
+    if (item.parent instanceof BaseShape) {
       normal = Transformations.normalToWorld(item.parent, normal);
     }
 

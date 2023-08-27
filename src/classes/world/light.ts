@@ -1,6 +1,6 @@
 import { Point, Vector } from "../core";
 import { Color, Material } from "../materials";
-import { Shape } from "../shapes";
+import { BaseShape } from "../shapes";
 
 export class Light {
   public position: Point;
@@ -13,7 +13,7 @@ export class Light {
 
   apply(
     material: Material,
-    object: Shape,
+    object: BaseShape,
     point: Point,
     eye: Vector,
     normal: Vector,

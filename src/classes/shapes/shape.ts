@@ -1,52 +1,49 @@
-import { Matrix, Point, Transformations, Vector } from "../core";
-import { Material } from "../materials";
+import { Point, Transformations, Vector } from "../core";
 import { Intersection, Ray } from "../world";
+import { BaseShape, BaseShapeProps } from "./abstract/base-shape";
+import { CSG } from "./csg";
 import { Group } from "./group";
 
-export type ShapeProps = {
-  origin?: Point;
-  transform?: Matrix;
-  material?: Material;
-  parent?: Group;
-};
+export type ShapeParent = CSG | Group | null;
 
-export class Shape {
-  public transform: Matrix;
-  public origin: Point;
-  public material: Material;
-  public parent: Group | null;
+export type ShapeProps = BaseShapeProps<ShapeParent>;
 
-  constructor({
-    origin = new Point(0, 0, 0),
-    transform = Matrix.identity(4),
-    material = new Material(),
-    parent = null,
-  }: ShapeProps = {}) {
-    this.origin = origin;
-    this.transform = transform;
-    this.material = material;
-    this.parent = parent;
-  }
-
-  normalAt(point: Point, intersection?: Intersection) {
+export class Shape extends BaseShape<ShapeParent> {
+  normalAt(point: Point, intersection?: Intersection): Vector {
     const localPoint = Transformations.worldToObject(this, point);
     const localNormal = this.localNormalAt(localPoint, intersection);
 
     return Transformations.normalToWorld(this, localNormal);
   }
 
-  localNormalAt(localPoint: Point, _intersection?: Intersection) {
+  localNormalAt(localPoint: Point, _intersection?: Intersection): Vector {
     return new Vector(localPoint.x, localPoint.y, localPoint.z);
   }
 
-  intersect(r: Ray) {
+  intersect(r: Ray): Intersection<Shape>[] {
     const localRay = r.transform(this.transform.inverse());
 
     return this.localIntersect(localRay);
   }
 
-  localIntersect(_localRay: Ray): Intersection[] {
+  localIntersect(_localRay: Ray): Intersection<Shape>[] {
     return [];
+  }
+
+  protected areParentsEqual(sParent: ShapeParent) {
+    if (this.parent === null && sParent === null) {
+      return true;
+    }
+
+    if (this.parent instanceof Group && sParent instanceof Group) {
+      return this.parent.equals(sParent);
+    }
+
+    if (this.parent instanceof CSG && sParent instanceof CSG) {
+      return this.parent.equals(sParent);
+    }
+
+    return false;
   }
 
   equals(s: Shape) {
@@ -54,18 +51,11 @@ export class Shape {
       return true;
     }
 
-    const areParentsEqual =
-      this.parent === null && s.parent === null
-        ? true
-        : this.parent !== null &&
-          s.parent !== null &&
-          this.parent.equals(s.parent);
-
     return (
+      this.areParentsEqual(s.parent) &&
       this.transform.equals(s.transform) &&
       this.origin.equals(s.origin) &&
-      this.material.equals(s.material) &&
-      areParentsEqual
+      this.material.equals(s.material)
     );
   }
 }

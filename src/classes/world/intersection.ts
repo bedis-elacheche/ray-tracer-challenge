@@ -1,6 +1,6 @@
-import { Shape } from "../shapes";
+import { BaseShape } from "../shapes";
 
-export class Intersection<T extends Shape = Shape> {
+export class Intersection<T extends BaseShape = BaseShape> {
   public t: number;
   public object: T;
   public u: number;
