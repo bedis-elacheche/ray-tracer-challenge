@@ -10,18 +10,18 @@ import { Ray } from "./ray";
 export type Computation = ReturnType<typeof World.prepareComputations>;
 
 export class World {
-  public light: Light;
+  public lights: Light[];
   public children: BaseShape[];
 
   constructor({
     shapes = [],
-    light = null,
+    lights = [],
   }: {
     shapes?: BaseShape[];
-    light?: Light;
+    lights?: Light[];
   } = {}) {
     this.children = shapes;
-    this.light = light;
+    this.lights = lights;
   }
 
   static default() {
@@ -38,7 +38,7 @@ export class World {
     });
     const light = new Light(new Point(-10, 10, -10), new Color(1, 1, 1));
 
-    return new World({ shapes: [s1, s2], light });
+    return new World({ shapes: [s1, s2], lights: [light] });
   }
 
   static tick(env: Environment, proj: Projectile) {
@@ -119,28 +119,35 @@ export class World {
   }
 
   shadeHit(computation: Computation, remaining = 5) {
-    const surface = this.light.apply(
-      computation.object.material,
-      computation.object,
-      computation.point,
-      computation.eyev,
-      computation.normalv,
-      this.isShadowed(computation.overPoint),
-    );
-    const reflected = this.reflectedColor(computation, remaining);
-    const refracted = this.refractedColor(computation, remaining);
+    let color = new Color(0, 0, 0);
 
-    const material = computation.object.material;
+    for (const light of this.lights) {
+      const surface = light.apply(
+        computation.object.material,
+        computation.object,
+        computation.point,
+        computation.eyev,
+        computation.normalv,
+        this.isShadowed(computation.overPoint),
+      );
+      const reflected = this.reflectedColor(computation, remaining);
+      const refracted = this.refractedColor(computation, remaining);
 
-    if (material.reflective && material.transparency) {
-      const reflectance = World.shlick(computation);
+      const material = computation.object.material;
 
-      return surface
-        .add(reflected.multiply(reflectance))
-        .add(refracted.multiply(1 - reflectance));
+      if (material.reflective && material.transparency) {
+        const reflectance = World.shlick(computation);
+
+        color = color
+          .add(surface)
+          .add(reflected.multiply(reflectance))
+          .add(refracted.multiply(1 - reflectance));
+      } else {
+        color = color.add(surface).add(reflected).add(refracted);
+      }
     }
 
-    return surface.add(reflected).add(refracted);
+    return color;
   }
 
   colorAt(ray: Ray, remaining = 5) {
@@ -191,14 +198,20 @@ export class World {
   }
 
   isShadowed(point: Point) {
-    const vector = this.light.position.subtract(point);
-    const distance = vector.magnitude();
-    const direction = vector.normalize();
-    const ray = new Ray(point, direction);
-    const intersections = this.intersect(ray);
-    const hit = Intersection.hit(intersections);
+    for (const light of this.lights) {
+      const vector = light.position.subtract(point);
+      const distance = vector.magnitude();
+      const direction = vector.normalize();
+      const ray = new Ray(point, direction);
+      const intersections = this.intersect(ray);
+      const hit = Intersection.hit(intersections);
 
-    return hit ? hit.t < distance : false;
+      if (hit && hit.t < distance) {
+        return true;
+      }
+    }
+
+    return false;
   }
 
   static shlick(computation: Computation) {

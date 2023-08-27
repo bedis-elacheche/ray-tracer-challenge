@@ -53,7 +53,10 @@ export const sceneWithPlanes = () => {
 
   const light = new Light(new Point(-10, 10, -10), new Color(1, 1, 1));
 
-  const world = new World({ shapes: [floor, middle, left, right], light });
+  const world = new World({
+    shapes: [floor, middle, left, right],
+    lights: [light],
+  });
 
   const camera = new Camera(
     300,

@@ -5,6 +5,7 @@ import { Group, Intersection, Shape, World } from "../src";
 import {
   getArray,
   getIntersection,
+  getLight,
   getPoint,
   getRay,
   getShape,
@@ -222,7 +223,7 @@ Then("{word} contains no objects", function (varName: string) {
 Then("{word} has no light source", function (varName: string) {
   const world = getWorld(this, varName);
 
-  expect(world.light).to.be.null;
+  expect(world.lights).to.be.an("array").that.is.empty;
 });
 
 Then(
@@ -267,5 +268,15 @@ Then(
       RangeError,
       "Maximum call stack size exceeded",
     );
+  },
+);
+
+Then(
+  "{word}.lights[{int}] = {word}",
+  function (worldVarName: string, index: number, lightVarName: string) {
+    const world = getWorld(this, worldVarName);
+    const light = getLight(this, lightVarName);
+
+    expect(world.lights[index - 1].equals(light)).to.be.true;
   },
 );

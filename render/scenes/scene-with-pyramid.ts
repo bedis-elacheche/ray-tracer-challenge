@@ -69,7 +69,7 @@ export const sceneWithPyramid = () => {
 
   const world = new World({
     shapes: [floor, leftWall, rightWall, pyramid],
-    light,
+    lights: [light],
   });
 
   const camera = new Camera(

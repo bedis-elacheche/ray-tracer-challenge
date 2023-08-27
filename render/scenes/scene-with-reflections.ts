@@ -78,7 +78,7 @@ export const sceneWithReflections = () => {
 
   const world = new World({
     shapes: [floor, leftWall, rightWall, outer, inner],
-    light,
+    lights: [light],
   });
 
   const camera = new Camera(

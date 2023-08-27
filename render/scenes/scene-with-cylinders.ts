@@ -98,7 +98,7 @@ export const sceneWithInfiniteCylinders = () => {
 
   const world = new World({
     shapes: [floor, leftWall, rightWall, middle, left, right],
-    light,
+    lights: [light],
   });
 
   const camera = new Camera(
@@ -207,7 +207,7 @@ const makeSceneWithFiniteCylinders = (closed: boolean) => () => {
 
   const world = new World({
     shapes: [floor, leftWall, rightWall, middle, left, right],
-    light,
+    lights: [light],
   });
 
   const camera = new Camera(

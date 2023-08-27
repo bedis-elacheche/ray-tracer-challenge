@@ -14,7 +14,7 @@ Scenario: The default world
     And s2 ← sphere() with:
       | transform | scaling(0.5, 0.5, 0.5) |
   When w ← default_world()
-  Then w.light = light
+    Then w.lights[1] = light
     And w contains s1
     And w contains s2
 

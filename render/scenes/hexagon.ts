@@ -59,7 +59,7 @@ export const hexagon = () => {
 
   const world = new World({
     shapes: [hexagon],
-    light,
+    lights: [light],
   });
 
   const camera = new Camera(

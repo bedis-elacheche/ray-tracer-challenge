@@ -70,7 +70,7 @@ export const scene = () => {
 
   const world = new World({
     shapes: [floor, leftWall, rightWall, middle, left, right],
-    light,
+    lights: [light],
   });
 
   const camera = new Camera(

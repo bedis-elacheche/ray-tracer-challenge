@@ -10,6 +10,7 @@ import {
   getPoint,
   getShape,
   getVector,
+  getWorld,
   lowercase,
 } from "./utils";
 
@@ -47,10 +48,14 @@ When(
     g: string,
     b: string,
   ) {
-    this[varName][key] = new Light(
-      new Point(parseFloat(x), parseFloat(y), parseFloat(z)),
-      new Color(parseFloat(r), parseFloat(g), parseFloat(b)),
-    );
+    const world = getWorld(this, varName);
+
+    world.lights = [
+      new Light(
+        new Point(parseFloat(x), parseFloat(y), parseFloat(z)),
+        new Color(parseFloat(r), parseFloat(g), parseFloat(b)),
+      ),
+    ];
   },
 );
 
