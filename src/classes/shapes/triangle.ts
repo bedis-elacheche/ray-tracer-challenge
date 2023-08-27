@@ -2,6 +2,12 @@ import { EPSILON, Point, Vector } from "../core";
 import { Intersection, Ray } from "../world";
 import { Shape, ShapeProps } from "./shape";
 
+export type TriangleProps = ShapeProps & {
+  p1: Point;
+  p2: Point;
+  p3: Point;
+};
+
 export class Triangle extends Shape {
   public p1: Point;
   public p2: Point;
@@ -10,20 +16,8 @@ export class Triangle extends Shape {
   public e2: Vector;
   public normal: Vector;
 
-  constructor({
-    p1,
-    p2,
-    p3,
-    origin,
-    transform,
-    material,
-    parent,
-  }: ShapeProps & {
-    p1: Point;
-    p2: Point;
-    p3: Point;
-  }) {
-    super({ origin, transform, material, parent });
+  constructor({ p1, p2, p3, ...rest }: TriangleProps) {
+    super(rest);
     this.p1 = p1;
     this.p2 = p2;
     this.p3 = p3;
@@ -33,7 +27,10 @@ export class Triangle extends Shape {
     this.normal = this.e2.cross(this.e1).normalize();
   }
 
-  localIntersect(localRay: Ray): Intersection<Triangle>[] {
+  protected mollerTrumboreIntersection(
+    localRay: Ray,
+    { smoothTriangle }: { smoothTriangle: boolean },
+  ) {
     const directionCrossE2 = localRay.direction.cross(this.e2);
     const determinant = this.e1.dot(directionCrossE2);
 
@@ -58,10 +55,16 @@ export class Triangle extends Shape {
 
     const t = f * this.e2.dot(origin_CrossE1);
 
-    return [new Intersection(t, this)];
+    return smoothTriangle
+      ? [new Intersection(t, this, u, v)]
+      : [new Intersection(t, this)];
   }
 
-  localNormalAt(_localPoint: Point) {
+  localIntersect(localRay: Ray): Intersection<Triangle>[] {
+    return this.mollerTrumboreIntersection(localRay, { smoothTriangle: false });
+  }
+
+  localNormalAt(_localPoint: Point, _intersection?: Intersection) {
     return this.normal;
   }
 }

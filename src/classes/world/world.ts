@@ -60,7 +60,7 @@ export class World {
       object,
       point,
       eyev: ray.direction.negate(),
-      normalv: object.normalAt(point),
+      normalv: object.normalAt(point, hit),
       inside: false,
       overPoint: null as Point,
       underPoint: null as Point,

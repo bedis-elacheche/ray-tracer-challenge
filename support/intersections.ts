@@ -152,6 +152,20 @@ When(
 );
 
 When(
+  "{word} ← intersection_with_uv\\({float}, {word}, {float}, {float})",
+  function (
+    intersectionVarName: string,
+    t: number,
+    shapeVarName: string,
+    u: number,
+    v: number,
+  ) {
+    const shape = getShape(this, shapeVarName);
+    this[intersectionVarName] = new Intersection(t, shape, u, v);
+  },
+);
+
+When(
   new RegExp(
     `^${lowercase.source} ← intersections\\(${lowercase.source}, ${lowercase.source}\\)$`,
   ),

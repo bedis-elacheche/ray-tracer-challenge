@@ -4,6 +4,7 @@ import { expect } from "chai";
 import { Point, Shape, Transformations } from "../src";
 import {
   customizeShapeWith,
+  getIntersection,
   getMatrix,
   getPoint,
   getRay,
@@ -96,6 +97,23 @@ When(
     const shape = getShape(this, shapeVarName);
 
     this[normalVarName] = shape.normalAt(new Point(x, y, z));
+  },
+);
+
+When(
+  "{word} ← normal_at\\({word}, point\\({float}, {float}, {float}), {word})",
+  function (
+    normalVarName: string,
+    shapeVarName: string,
+    x: number,
+    y: number,
+    z: number,
+    intersectionVarName: string,
+  ) {
+    const shape = getShape(this, shapeVarName);
+    const intersection = getIntersection(this, intersectionVarName);
+
+    this[normalVarName] = shape.normalAt(new Point(x, y, z), intersection);
   },
 );
 

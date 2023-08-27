@@ -3,10 +3,14 @@ import { Shape } from "../shapes";
 export class Intersection<T extends Shape = Shape> {
   public t: number;
   public object: T;
+  public u: number;
+  public v: number;
 
-  constructor(t: number, object: T) {
+  constructor(t: number, object: T, u?: number, v?: number) {
     this.t = t;
     this.object = object;
+    this.u = u;
+    this.v = v;
   }
 
   static hit(intersections: Intersection[]): Intersection | null {

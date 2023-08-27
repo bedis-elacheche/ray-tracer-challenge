@@ -28,14 +28,14 @@ export class Shape {
     this.parent = parent;
   }
 
-  normalAt(point: Point) {
+  normalAt(point: Point, intersection?: Intersection) {
     const localPoint = Transformations.worldToObject(this, point);
-    const localNormal = this.localNormalAt(localPoint);
+    const localNormal = this.localNormalAt(localPoint, intersection);
 
     return Transformations.normalToWorld(this, localNormal);
   }
 
-  localNormalAt(localPoint: Point) {
+  localNormalAt(localPoint: Point, _intersection?: Intersection) {
     return new Vector(localPoint.x, localPoint.y, localPoint.z);
   }
 
