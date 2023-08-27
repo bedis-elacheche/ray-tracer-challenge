@@ -42,7 +42,7 @@ Scenario Outline: Evaluating the rule for a CSG operation
   | difference   | false | true  | false | true   |
   | difference   | false | false | true  | false  |
   | difference   | false | false | false | false  |
-@todo
+
 Scenario Outline: Filtering a list of intersections
   Given s1 ← sphere()
     And s2 ← cube()
@@ -58,13 +58,13 @@ Scenario Outline: Filtering a list of intersections
   | union        | 0  | 3  |
   | intersection | 1  | 2  |
   | difference   | 0  | 1  |
-@todo
+
 Scenario: A ray misses a CSG object
   Given c ← csg("union", sphere(), cube())
     And r ← ray(point(0, 2, -5), vector(0, 0, 1))
   When xs ← local_intersect(c, r)
   Then xs is empty
-@todo
+
 Scenario: A ray hits a CSG object
   Given s1 ← sphere()
     And s2 ← sphere()

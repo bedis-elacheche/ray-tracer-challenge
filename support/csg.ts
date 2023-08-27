@@ -1,11 +1,33 @@
 import { Then, When } from "@cucumber/cucumber";
 import { expect } from "chai";
 
-import { CSG, CSGOperation } from "../src";
-import { getCSG, getCSGOperand } from "./utils";
+import {
+  CSG,
+  CSGOperand,
+  CSGOperation,
+  Cube,
+  Intersection,
+  Sphere,
+} from "../src";
+import { getArray, getCSG, getCSGOperand, lowercase } from "./utils";
+
+const operation = /"(union|intersection|difference)"/;
 
 When(
-  "{word} ← csg\\({string}, {word}, {word})",
+  "{word} ← csg\\({string}, sphere\\(), cube\\())",
+  function (varName: string, operation: CSGOperation) {
+    this[varName] = new CSG({
+      operation,
+      left: new Sphere(),
+      right: new Cube(),
+    });
+  },
+);
+
+When(
+  new RegExp(
+    `${lowercase.source} ← csg\\(${operation.source}, ${lowercase.source}, ${lowercase.source}\\)`,
+  ),
   function (
     varName: string,
     operation: CSGOperation,
@@ -38,6 +60,20 @@ When(
       inl === "true",
       inr === "true",
     );
+  },
+);
+
+When(
+  "{word} ← filter_intersections\\({word}, {word})",
+  function (varName: string, csgVarName: string, intersectionsVarName: string) {
+    const csg = getCSG(this, csgVarName);
+    const intersections = getArray(
+      this,
+      intersectionsVarName,
+      Intersection<CSGOperand>,
+    );
+
+    this[varName] = csg.filterIntersections(intersections);
   },
 );
 

@@ -52,6 +52,7 @@ export class Shape extends BaseShape<ShapeParent> {
     }
 
     return (
+      this.constructor.name === s.constructor.name &&
       this.areParentsEqual(s.parent) &&
       this.transform.equals(s.transform) &&
       this.origin.equals(s.origin) &&

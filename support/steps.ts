@@ -237,6 +237,27 @@ Then(
 );
 
 Then(
+  new RegExp(
+    `^${lowercase.source}\\[${int.source}\\] = ${lowercase.source}\\[${int.source}\\]$`,
+  ),
+  function (
+    firstVarName: string,
+    firstVarIndex: string,
+    secondVarName: string,
+    secondVarIndex: string,
+  ) {
+    const first = this[firstVarName][parseInt(firstVarIndex, 10)];
+    const second = this[secondVarName][parseInt(secondVarIndex, 10)];
+
+    if (typeof first !== "object" && typeof second !== "object") {
+      expect(first).to.eql(second);
+    } else {
+      expect(first.equals(second)).to.be.true;
+    }
+  },
+);
+
+Then(
   new RegExp(`^${lowercase.source} = ${lowercase.source}$`),
   function (firstVarName: string, secondVarName: string) {
     const first = this[firstVarName];

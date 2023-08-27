@@ -79,6 +79,24 @@ export class Group extends BaseShape<GroupParent> implements CompositeShape {
     return false;
   }
 
+  includes(s: BaseShape<unknown>): boolean {
+    return this.children.some((operand) => {
+      if (operand instanceof CSG && operand instanceof CSG) {
+        return operand.includes(s);
+      }
+
+      if (operand instanceof Group && s instanceof Group) {
+        return operand.includes(s);
+      }
+
+      if (operand instanceof Shape && s instanceof Shape) {
+        return operand.equals(s);
+      }
+
+      return false;
+    });
+  }
+
   equals(group: Group): boolean {
     if (this === group) {
       return true;
