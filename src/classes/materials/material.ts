@@ -12,6 +12,7 @@ export class Material {
   public refractiveIndex: number;
   public transparency: number;
   public reflective: number;
+  public hasShadow: boolean;
 
   constructor({
     color = new Color(1, 1, 1),
@@ -23,6 +24,7 @@ export class Material {
     reflective = 0.0,
     transparency = 0.0,
     refractiveIndex = 1.0,
+    hasShadow = true,
   }: {
     color?: Color;
     ambient?: number;
@@ -31,6 +33,7 @@ export class Material {
     pattern?: Pattern;
     shininess?: number;
     reflective?: number;
+    hasShadow?: boolean;
     transparency?: number;
     refractiveIndex?: number;
   } = {}) {
@@ -40,6 +43,7 @@ export class Material {
     this.pattern = pattern;
     this.specular = specular;
     this.shininess = shininess;
+    this.hasShadow = hasShadow;
     this.reflective = reflective;
     this.transparency = transparency;
     this.refractiveIndex = refractiveIndex;

@@ -206,7 +206,7 @@ export class World {
       const intersections = this.intersect(ray);
       const hit = Intersection.hit(intersections);
 
-      if (hit && hit.t < distance) {
+      if (hit && hit.t < distance && hit.object.material.hasShadow) {
         return true;
       }
     }

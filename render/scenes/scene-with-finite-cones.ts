@@ -65,6 +65,7 @@ export const sceneWithFiniteCones = () => {
       ),
       diffuse: 0.7,
       specular: 0.3,
+      hasShadow: false,
     }),
     maximum: 2,
     minimum: 0,
