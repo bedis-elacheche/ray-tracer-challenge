@@ -1,29 +1,25 @@
 import { Matrix, Point, Vector } from "../../core";
-import { Material } from "../../materials";
 import { Intersection, Ray } from "../../world";
 
 export type BaseShapeProps<TParent> = {
   origin?: Point;
   transform?: Matrix;
-  material?: Material;
   parent?: TParent;
 };
 
 export abstract class BaseShape<TParent = unknown> {
   public transform: Matrix;
   public origin: Point;
-  public material: Material;
+
   public parent: TParent | null;
 
   constructor({
     origin = new Point(0, 0, 0),
     transform = Matrix.identity(4),
-    material = new Material(),
     parent = null,
   }: BaseShapeProps<TParent> = {}) {
     this.origin = origin;
     this.transform = transform;
-    this.material = material;
     this.parent = parent;
   }
 

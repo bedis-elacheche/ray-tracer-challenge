@@ -13,8 +13,10 @@ export class Intersection<T extends BaseShape = BaseShape> {
     this.v = v;
   }
 
-  static hit(intersections: Intersection[]): Intersection | null {
-    let hit: Intersection | null = null;
+  static hit<T extends BaseShape = BaseShape>(
+    intersections: Intersection<T>[],
+  ): Intersection<T> | null {
+    let hit: Intersection<T> | null = null;
 
     for (const intersection of intersections) {
       if (intersection.t < 0) {

@@ -7,6 +7,7 @@ import {
   Matrix,
   Point,
   Ray,
+  Shape,
   Sphere,
   Transformations,
 } from "../../src";
@@ -32,7 +33,7 @@ const makeScene = (transform?: Matrix) => () => {
       const ray = new Ray(rayOrigin, position.subtract(rayOrigin).normalize());
       const eye = ray.direction.negate();
       const xs = shape.intersect(ray);
-      const hit = Intersection.hit(xs);
+      const hit = Intersection.hit<Shape>(xs);
 
       if (hit) {
         const point = ray.position(hit.t);

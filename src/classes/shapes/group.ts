@@ -29,8 +29,6 @@ export class Group extends BaseShape<GroupParent> implements CompositeShape {
     this.children.forEach((child) => {
       child.parent = this;
     });
-
-    this.applyMaterial(rest.material);
   }
 
   applyMaterial(material: Material) {

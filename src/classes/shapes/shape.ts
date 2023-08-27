@@ -1,4 +1,5 @@
 import { Point, Transformations, Vector } from "../core";
+import { Material } from "../materials";
 import { Intersection, Ray } from "../world";
 import { BaseShape, BaseShapeProps } from "./abstract/base-shape";
 import { CSG } from "./csg";
@@ -6,9 +7,17 @@ import { Group } from "./group";
 
 export type ShapeParent = CSG | Group | null;
 
-export type ShapeProps = BaseShapeProps<ShapeParent>;
+export type ShapeProps = BaseShapeProps<ShapeParent> & { material?: Material };
 
 export class Shape extends BaseShape<ShapeParent> {
+  public material: Material;
+
+  constructor({ material = new Material(), ...rest }: ShapeProps = {}) {
+    super(rest);
+
+    this.material = material;
+  }
+
   normalAt(point: Point, intersection?: Intersection): Vector {
     const localPoint = Transformations.worldToObject(this, point);
     const localNormal = this.localNormalAt(localPoint, intersection);

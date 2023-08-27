@@ -1,6 +1,6 @@
 import { EPSILON, Point, Transformations, Vector } from "../core";
 import { Color, Material } from "../materials";
-import { BaseShape, Sphere } from "../shapes";
+import { BaseShape, Shape, Sphere } from "../shapes";
 import { Environment } from "./environment";
 import { Intersection } from "./intersection";
 import { Light } from "./light";
@@ -49,9 +49,9 @@ export class World {
   }
 
   static prepareComputations(
-    hit: Intersection,
+    hit: Intersection<Shape>,
     ray: Ray,
-    intesections: Intersection<BaseShape>[],
+    intesections: Intersection<Shape>[],
   ) {
     const { t, object } = hit;
     const point = ray.position(t);
@@ -79,7 +79,7 @@ export class World {
     computation.underPoint = computation.point.subtract(offset);
     computation.reflectv = ray.direction.reflect(computation.normalv);
 
-    const containers: BaseShape[] = [];
+    const containers: Shape[] = [];
 
     for (const intersection of intesections) {
       if (intersection.equals(hit)) {
@@ -111,7 +111,9 @@ export class World {
   }
 
   intersect(ray: Ray) {
-    const xs = this.children.flatMap((shape) => shape.intersect(ray));
+    const xs = this.children.flatMap((shape) =>
+      shape.intersect(ray),
+    ) as Intersection<Shape>[];
 
     return xs.filter(({ t }) => t > 0).sort((a, z) => a.t - z.t);
   }

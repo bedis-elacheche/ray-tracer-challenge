@@ -95,10 +95,10 @@ When(
     intersectionsVarName: string,
   ) {
     const intersection = getIntersection(this, intersectionVarName);
-    const intersections = getArray<Intersection>(
+    const intersections = getArray(
       this,
       intersectionsVarName,
-      Intersection,
+      Intersection<Shape>,
     );
     const ray = getRay(this, rayVarName);
 
@@ -117,10 +117,10 @@ When(
     rayVarName: string,
     _intersectionsVarNameAgain: string,
   ) {
-    const intersections = getArray<Intersection>(
+    const intersections = getArray(
       this,
       intersectionsVarName,
-      Intersection,
+      Intersection<Shape>,
     );
     const ray = getRay(this, rayVarName);
 

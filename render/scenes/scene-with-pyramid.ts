@@ -55,12 +55,15 @@ export const sceneWithPyramid = () => {
     transform: Transformations.translation(-0.5, 0, -0.5)
       .multiply(Transformations.rotateY(Math.PI / 5))
       .multiply(Transformations.scale(1.25, 1, 1.25)),
-    material: new Material({
+  });
+
+  pyramid.applyMaterial(
+    new Material({
       color: new Color(0, 0.75, 0.75),
       specular: 0.9,
       diffuse: 0.9,
     }),
-  });
+  );
 
   const light = new Light(new Point(-10, 10, -10), new Color(1, 1, 1));
 
