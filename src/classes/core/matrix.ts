@@ -8,6 +8,7 @@ export class Matrix {
   public rows: number;
   public cols: number;
   private items: number[][];
+  private _inverse: Matrix;
 
   constructor(rows: number, cols: number) {
     this.rows = rows;
@@ -59,6 +60,8 @@ export class Matrix {
     if (clamp(0, this.cols - 1, x) === x && clamp(0, this.rows - 1, y) === y) {
       this.items[y][x] = value;
     }
+
+    this._inverse = null;
 
     return this;
   }
@@ -183,6 +186,10 @@ export class Matrix {
   }
 
   inverse() {
+    if (this._inverse) {
+      return this._inverse;
+    }
+
     const determinant = this.determinant();
 
     if (determinant === 0) {
@@ -198,6 +205,8 @@ export class Matrix {
         matrix.set(y, x, cofactor / determinant);
       }
     }
+
+    this._inverse = matrix;
 
     return matrix;
   }
