@@ -13,7 +13,7 @@ import {
 } from "../../src";
 
 const makeScene = (transform?: Matrix) => () => {
-  const canvas = new Canvas(300, 300);
+  const canvas = new Canvas(800, 800);
   const rayOrigin = new Point(0, 0, -5);
   const wallZ = 10;
   const wallSize = 10;

@@ -63,8 +63,8 @@ export const hexagon = () => {
   });
 
   const camera = new Camera(
-    300,
-    300,
+    800,
+    800,
     Math.PI / 3,
     Transformations.viewTransform(
       new Point(0, 1.5, -3),
