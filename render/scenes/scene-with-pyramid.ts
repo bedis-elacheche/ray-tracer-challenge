@@ -72,16 +72,16 @@ export const sceneWithPyramid = () => {
     lights: [light],
   });
 
-  const camera = new Camera(
-    800,
-    800,
-    Math.PI / 3,
-    Transformations.viewTransform(
+  const camera = new Camera({
+    height: 800,
+    width: 800,
+    fieldOfView: Math.PI / 3,
+    transform: Transformations.viewTransform(
       new Point(0, 3, -7),
       new Point(0, 1, 0),
       new Vector(0, 1, 0),
     ),
-  );
+  });
 
   return camera.render(world);
 };

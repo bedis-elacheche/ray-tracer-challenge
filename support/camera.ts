@@ -2,18 +2,25 @@ import { Given, Then, When } from "@cucumber/cucumber";
 import { expect } from "chai";
 
 import { Camera, Color, EPSILON } from "../src";
-import { float, getCamera, getCanvas, getWorld, lowercase } from "./utils";
+import {
+  float,
+  getCamera,
+  getCanvas,
+  getNumber,
+  getWorld,
+  lowercase,
+} from "./utils";
 
 Given(
   new RegExp(
     `${lowercase.source} ← camera\\(${float.source}, ${float.source}, π\\/${float.source}\\)`,
   ),
   function (varName: string, hsize: string, vsize: string, divisor: string) {
-    this[varName] = new Camera(
-      parseFloat(hsize),
-      parseFloat(vsize),
-      Math.PI / parseFloat(divisor),
-    );
+    this[varName] = new Camera({
+      height: parseFloat(hsize),
+      width: parseFloat(vsize),
+      fieldOfView: Math.PI / parseFloat(divisor),
+    });
   },
 );
 
@@ -31,7 +38,11 @@ Given(
     vsizeVar: string,
     fovVar: string,
   ) {
-    this[varName] = new Camera(this[hsizeVar], this[vsizeVar], this[fovVar]);
+    const height = getNumber(this, hsizeVar);
+    const width = getNumber(this, vsizeVar);
+    const fieldOfView = getNumber(this, fovVar);
+
+    this[varName] = new Camera({ height, width, fieldOfView });
   },
 );
 
@@ -59,9 +70,9 @@ Then(
   function (varName: string, divisor: number) {
     const camera = getCamera(this, varName);
 
-    expect(Math.abs(camera.fov - Math.PI / divisor)).to.be.lessThanOrEqual(
-      EPSILON,
-    );
+    expect(
+      Math.abs(camera.fieldOfView - Math.PI / divisor),
+    ).to.be.lessThanOrEqual(EPSILON);
   },
 );
 

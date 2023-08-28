@@ -4,33 +4,38 @@ import { Ray } from "./ray";
 import { World } from "./world";
 
 export class Camera {
-  public hsize: number;
-  public vsize: number;
-  public fov: number;
+  public height: number;
+  public width: number;
+  public fieldOfView: number;
   public pixelSize: number;
   public transform: Matrix;
   private _halfWidth: number;
   private _halfHeight: number;
 
-  constructor(
-    hsize: number,
-    vsize: number,
-    fov: number,
+  constructor({
+    height,
+    width,
+    fieldOfView,
     transform = Matrix.identity(4),
-  ) {
-    this.hsize = hsize;
-    this.vsize = vsize;
-    this.fov = fov;
+  }: {
+    height: number;
+    width: number;
+    fieldOfView: number;
+    transform?: Matrix;
+  }) {
+    this.height = height;
+    this.width = width;
+    this.fieldOfView = fieldOfView;
     this.transform = transform;
 
-    const halfView = Math.tan(fov / 2);
-    const aspectRatio = hsize / vsize;
+    const halfView = Math.tan(fieldOfView / 2);
+    const aspectRatio = height / width;
     const [halfWidth, halfHeight] =
       aspectRatio >= 1
         ? [halfView, halfView / aspectRatio]
         : [halfView * aspectRatio, halfView];
 
-    this.pixelSize = (halfWidth * 2) / hsize;
+    this.pixelSize = (halfWidth * 2) / height;
     this._halfWidth = halfWidth;
     this._halfHeight = halfHeight;
   }
@@ -51,10 +56,10 @@ export class Camera {
   }
 
   render(world: World) {
-    const image = new Canvas(this.hsize, this.vsize);
+    const image = new Canvas(this.height, this.width);
 
-    for (let y = 0; y < this.vsize; y++) {
-      for (let x = 0; x < this.hsize; x++) {
+    for (let y = 0; y < this.width; y++) {
+      for (let x = 0; x < this.height; x++) {
         const ray = this.rayForPixel(x, y);
         const color = world.colorAt(ray);
 

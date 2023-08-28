@@ -82,16 +82,26 @@ export const getCSGOperand = (world: IWorld, name: string) => {
   }
 };
 
+export const getNumber = (world: IWorld, name: string) => {
+  const item = world[name];
+
+  expect(item).to.be.a("number");
+
+  return item as number;
+};
+
 export const getString = (world: IWorld, name: string) => {
   const item = world[name];
 
-  expect(item).to.be.a.string;
+  expect(item).to.be.a("string");
 
   return item as string;
 };
 
 export const getBoolean = (world: IWorld, name: string) => {
   const item = world[name];
+
+  expect(item).to.be.a("boolean");
 
   return item as boolean;
 };
@@ -117,6 +127,8 @@ export const mapKey = (str: string) => {
     {
       count: "length",
       refractive_index: "refractiveIndex",
+      hsize: "height",
+      vsize: "width",
       pixel_size: "pixelSize",
       over_point: "overPoint",
       under_point: "underPoint",
