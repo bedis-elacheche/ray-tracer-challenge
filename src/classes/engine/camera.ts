@@ -1,9 +1,15 @@
-import { Matrix, Point } from "../core";
+import { EventEmitter, Matrix, Point } from "../core";
+import { Color } from "../materials";
 import { Canvas } from "./canvas";
 import { Ray } from "./ray";
 import { World } from "./world";
 
-export class Camera {
+export type CameraEvents = {
+  "pixel-rendered": [x: number, y: number, color: Color];
+  "image-rendered": [canvas: Canvas];
+};
+
+export class Camera extends EventEmitter<CameraEvents> {
   public height: number;
   public width: number;
   public fieldOfView: number;
@@ -23,6 +29,7 @@ export class Camera {
     fieldOfView: number;
     transform?: Matrix;
   }) {
+    super();
     this.height = height;
     this.width = width;
     this.fieldOfView = fieldOfView;
@@ -55,17 +62,26 @@ export class Camera {
     return new Ray(origin, direction);
   }
 
+  colorAt(world: World, x: number, y: number) {
+    const ray = this.rayForPixel(x, y);
+
+    return world.colorAt(ray);
+  }
+
   render(world: World) {
     const image = new Canvas(this.height, this.width);
 
     for (let y = 0; y < this.width; y++) {
       for (let x = 0; x < this.height; x++) {
-        const ray = this.rayForPixel(x, y);
-        const color = world.colorAt(ray);
+        const color = this.colorAt(world, x, y);
 
         image.writePixel(x, y, color);
+
+        this.emit("pixel-rendered", x, y, color);
       }
     }
+
+    this.emit("image-rendered", image);
 
     return image;
   }
