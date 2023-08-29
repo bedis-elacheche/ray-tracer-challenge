@@ -1,5 +1,5 @@
 import { Matrix, Point, Vector } from "../../core";
-import { Intersection, Ray } from "../../world";
+import { Intersection, Ray } from "../../engine";
 
 export type BaseShapeProps<TParent> = {
   origin?: Point;

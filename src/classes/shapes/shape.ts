@@ -1,6 +1,6 @@
 import { Point, Transformations, Vector } from "../core";
+import { Intersection, Ray } from "../engine";
 import { Material } from "../materials";
-import { Intersection, Ray } from "../world";
 import { BaseShape, BaseShapeProps } from "./abstract/base-shape";
 import { CSG } from "./csg";
 import { Group } from "./group";

@@ -1,5 +1,5 @@
 import { Point, Vector } from "../core";
-import { Intersection, Ray } from "../world";
+import { Intersection, Ray } from "../engine";
 import { Triangle, TriangleProps } from "./triangle";
 
 export class SmoothTriangle extends Triangle {

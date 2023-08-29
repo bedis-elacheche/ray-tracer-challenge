@@ -1,5 +1,5 @@
 import { EPSILON, Point, Vector } from "../core";
-import { Intersection, Ray } from "../world";
+import { Intersection, Ray } from "../engine";
 import { Shape, ShapeProps } from "./shape";
 
 export class Cylinder extends Shape {

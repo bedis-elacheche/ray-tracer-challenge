@@ -1,5 +1,5 @@
 import { Point } from "../core";
-import { Intersection, Ray } from "../world";
+import { Intersection, Ray } from "../engine";
 import { Shape } from "./shape";
 
 export class Sphere extends Shape {

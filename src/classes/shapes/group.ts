@@ -1,5 +1,5 @@
+import { Intersection, Ray } from "../engine";
 import { Material } from "../materials";
-import { Intersection, Ray } from "../world";
 import { BaseShape, BaseShapeProps, CompositeShape } from "./abstract";
 import { CSG } from "./csg";
 import { Shape } from "./shape";
