@@ -1,6 +1,7 @@
 import { Canvas, Color, Point, Transformations } from "../../src";
+import { ProgressBar } from "../progress";
 
-export const clock = () => {
+export const clock = (name: string, progress: ProgressBar) => {
   const white = new Color(1, 1, 1);
   const red = new Color(1, 0, 0);
   const canvas = new Canvas(400, 400);
@@ -15,6 +16,8 @@ export const clock = () => {
     0,
   );
 
+  progress.start(name, 12);
+
   for (let i = 1; i < 13; i++) {
     const rotation = Transformations.rotateZ((Math.PI / 6) * i);
     const point = translateToCenter
@@ -27,6 +30,8 @@ export const clock = () => {
       Math.round(point.y),
       i % 3 ? white : red,
     );
+
+    progress.increment("current");
   }
 
   return canvas;

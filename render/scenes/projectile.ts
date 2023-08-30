@@ -8,8 +8,9 @@ import {
   Vector,
   World,
 } from "../../src";
+import { ProgressBar } from "../progress";
 
-export const projectile = () => {
+export const projectile = (name: string, progress: ProgressBar) => {
   const position = new Point(0, 1, 0);
   const velocity = new Vector(1, 1.8, 0).normalize().multiply(11.25);
   let projectile = new Projectile(position, velocity);
@@ -21,6 +22,8 @@ export const projectile = () => {
   const canvas = new Canvas(900, 500);
   const color = new Color(1, 1, 1);
 
+  progress.start(name, canvas.height * canvas.width);
+
   while (projectile.position.y > EPSILON) {
     projectile = World.tick(environment, projectile);
     canvas.writePixel(
@@ -28,6 +31,8 @@ export const projectile = () => {
       canvas.height - Math.round(projectile.position.y),
       color,
     );
+
+    progress.increment("current");
   }
 
   return canvas;

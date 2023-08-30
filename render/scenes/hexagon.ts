@@ -12,6 +12,7 @@ import {
   Vector,
   World,
 } from "../../src";
+import { ProgressBar } from "../progress";
 
 const makeHexagonCorner = () => {
   return new Sphere({
@@ -39,7 +40,7 @@ const makeHexagonSide = ({ transform }: { transform?: Matrix }) => {
   });
 };
 
-export const hexagon = () => {
+export const hexagon = (name: string, progress: ProgressBar) => {
   const hexagon = new Group({
     transform: Transformations.rotateY(Math.PI / 4),
     children: Array.from({ length: 6 }, (_, i) =>
@@ -71,6 +72,12 @@ export const hexagon = () => {
       new Point(0, 0, 0),
       new Vector(0, 1, 0),
     ),
+  });
+
+  progress.start(name, camera.height * camera.width);
+
+  camera.on("pixel-rendered", () => {
+    progress.increment("current");
   });
 
   return camera.render(world);

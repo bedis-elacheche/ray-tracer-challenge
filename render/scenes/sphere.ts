@@ -8,34 +8,42 @@ import {
   Sphere,
   Transformations,
 } from "../../src";
+import { ProgressBar } from "../progress";
 
-const makeScene = (transform?: Matrix) => () => {
-  const canvas = new Canvas(800, 800);
-  const rayOrigin = new Point(0, 0, -5);
-  const wallZ = 10;
-  const wallSize = 10;
-  const pixelSize = wallSize / canvas.height;
-  const half = wallSize / 2;
-  const color = new Color(1, 0, 0);
-  const shape = new Sphere({ transform });
+const makeScene =
+  (transform?: Matrix) => (name: string, progress: ProgressBar) => {
+    const canvas = new Canvas(800, 800);
+    const rayOrigin = new Point(0, 0, -5);
+    const wallZ = 10;
+    const wallSize = 10;
+    const pixelSize = wallSize / canvas.height;
+    const half = wallSize / 2;
+    const color = new Color(1, 0, 0);
+    const shape = new Sphere({ transform });
 
-  for (let y = 0; y < canvas.height; y++) {
-    const worldY = half - pixelSize * y;
-    for (let x = 0; x < canvas.width; x++) {
-      const worldX = -half + pixelSize * x;
+    progress.start(name, canvas.height * canvas.width);
 
-      const position = new Point(worldX, worldY, wallZ);
-      const ray = new Ray(rayOrigin, position.subtract(rayOrigin).normalize());
-      const xs = shape.intersect(ray);
+    for (let y = 0; y < canvas.height; y++) {
+      const worldY = half - pixelSize * y;
+      for (let x = 0; x < canvas.width; x++) {
+        const worldX = -half + pixelSize * x;
 
-      if (Intersection.hit(xs)) {
-        canvas.writePixel(x, y, color);
+        const position = new Point(worldX, worldY, wallZ);
+        const ray = new Ray(
+          rayOrigin,
+          position.subtract(rayOrigin).normalize(),
+        );
+        const xs = shape.intersect(ray);
+
+        if (Intersection.hit(xs)) {
+          canvas.writePixel(x, y, color);
+        }
+        progress.increment("current");
       }
     }
-  }
 
-  return canvas;
-};
+    return canvas;
+  };
 
 export const sphere = makeScene();
 

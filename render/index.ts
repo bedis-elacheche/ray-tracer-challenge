@@ -1,7 +1,7 @@
-/* eslint-disable no-console */
 import { writeFileSync } from "fs";
 
 import { Canvas } from "../src";
+import { ProgressBar } from "./progress";
 import {
   clock,
   hexagon,
@@ -31,7 +31,7 @@ import {
 type Units = 0 | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9;
 type Chapter = Exclude<`${0 | 1}${Units}`, "00" | "18" | "19">;
 type SceneKey = `${Chapter}-${string}`;
-type Scene = () => Canvas;
+type Scene = (sceneName: string, progress: ProgressBar) => Canvas;
 
 const scenes: Record<SceneKey, Scene> = {
   "02-01-projectile": projectile,
@@ -64,23 +64,27 @@ const getLastScene = (dict: Record<SceneKey, Scene>): string =>
 
 const sceneName = process.argv[2] ?? getLastScene(scenes) ?? "";
 
-const renderScene = (sceneName: SceneKey) => {
+const renderScene = (sceneName: SceneKey, progress: ProgressBar) => {
   const existingScene = scenes[sceneName];
 
   if (existingScene) {
-    console.log(`Rendering ${sceneName}`);
-    writeFileSync(`./photos/${sceneName}.ppm`, existingScene().toPPM());
-  } else {
-    console.log("Nothing to render!");
+    writeFileSync(
+      `./photos/${sceneName}.ppm`,
+      existingScene(sceneName, progress).toPPM(),
+    );
   }
 };
 
 if (sceneName === "all") {
-  console.log("Rendering all scenes");
+  const bar = new ProgressBar(50, Object.keys(scenes).length);
 
   for (const key in scenes) {
-    renderScene(key as SceneKey);
+    renderScene(key as SceneKey, bar);
+
+    bar.increment("overall");
   }
+
+  bar.renderSummary();
 } else {
-  renderScene(sceneName as SceneKey);
+  renderScene(sceneName as SceneKey, new ProgressBar(50, 1));
 }
