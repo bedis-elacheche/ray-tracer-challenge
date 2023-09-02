@@ -12,8 +12,17 @@ export type ShapeProps = BaseShapeProps<ShapeParent> & { material?: Material };
 export class Shape extends BaseShape<ShapeParent> {
   public material: Material;
 
-  constructor({ material = new Material(), ...rest }: ShapeProps = {}) {
-    super(rest);
+  constructor({
+    material = new Material(),
+    origin,
+    transform,
+    parent,
+  }: ShapeProps = {}) {
+    super({
+      origin,
+      transform,
+      parent,
+    });
 
     this.material = material;
   }

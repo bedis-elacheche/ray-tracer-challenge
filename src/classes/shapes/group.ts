@@ -20,9 +20,15 @@ export class Group extends BaseShape<GroupParent> implements CompositeShape {
   constructor({
     name = `Group ${Date.now()}`,
     children = [],
-    ...rest
+    origin,
+    transform,
+    parent,
   }: GroupProps = {}) {
-    super(rest);
+    super({
+      origin,
+      transform,
+      parent,
+    });
     this.name = name;
     this.children = children;
 

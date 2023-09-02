@@ -8,7 +8,7 @@ import {
   Pattern,
   Point,
   Ring,
-  Stripe,
+  Stripes,
   Transformations,
 } from "../src";
 import {
@@ -29,7 +29,9 @@ Given(
     const firstColor = getColor(this, firstColorName);
     const secondColor = getColor(this, secondColorName);
 
-    this[varName] = new Stripe(firstColor, secondColor);
+    this[varName] = new Stripes({
+      colors: [firstColor, secondColor],
+    });
   },
 );
 
@@ -39,7 +41,9 @@ Given(
     const firstColor = getColor(this, firstColorName);
     const secondColor = getColor(this, secondColorName);
 
-    this[varName] = new Gradient(firstColor, secondColor);
+    this[varName] = new Gradient({
+      colors: [firstColor, secondColor],
+    });
   },
 );
 
@@ -49,7 +53,9 @@ Given(
     const firstColor = getColor(this, firstColorName);
     const secondColor = getColor(this, secondColorName);
 
-    this[varName] = new Ring(firstColor, secondColor);
+    this[varName] = new Ring({
+      colors: [firstColor, secondColor],
+    });
   },
 );
 
@@ -59,7 +65,9 @@ Given(
     const firstColor = getColor(this, firstColorName);
     const secondColor = getColor(this, secondColorName);
 
-    this[varName] = new Checkers(firstColor, secondColor);
+    this[varName] = new Checkers({
+      colors: [firstColor, secondColor],
+    });
   },
 );
 
@@ -76,7 +84,9 @@ Given(
   ) {
     const material = getMaterial(this, varName);
 
-    material.pattern = new Stripe(new Color(ra, ga, ba), new Color(rb, gb, bb));
+    material.pattern = new Stripes({
+      colors: [new Color(ra, ga, ba), new Color(rb, gb, bb)],
+    });
   },
 );
 

@@ -13,13 +13,27 @@ export class SmoothTriangle extends Triangle {
     n1,
     n2,
     n3,
-    ...rest
+    p1,
+    p2,
+    p3,
+    origin,
+    transform,
+    material,
+    parent,
   }: TriangleProps & {
     n1: Vector;
     n2: Vector;
     n3: Vector;
   }) {
-    super(rest);
+    super({
+      p1,
+      p2,
+      p3,
+      origin,
+      transform,
+      material,
+      parent,
+    });
 
     this.n1 = n1;
     this.n2 = n2;

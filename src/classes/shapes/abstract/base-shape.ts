@@ -10,7 +10,6 @@ export type BaseShapeProps<TParent> = {
 export abstract class BaseShape<TParent = unknown> {
   public transform: Matrix;
   public origin: Point;
-
   public parent: TParent | null;
 
   constructor({

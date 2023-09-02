@@ -21,8 +21,12 @@ export class CSG extends BaseShape<CSGParent> implements CompositeShape {
   public left: CSGOperand;
   public right: CSGOperand;
 
-  constructor({ operation, left, right, ...rest }: CSGProps) {
-    super(rest);
+  constructor({ operation, left, right, origin, transform, parent }: CSGProps) {
+    super({
+      origin,
+      transform,
+      parent,
+    });
 
     this.operation = operation;
 

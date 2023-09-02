@@ -10,6 +10,7 @@ export class Color {
     this.green = green;
     this.blue = blue;
   }
+
   add(color: Color) {
     return new Color(
       this.red + color.red,

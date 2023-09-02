@@ -19,7 +19,7 @@ import {
   Ray,
   Shape,
   Sphere,
-  Stripe,
+  Stripes,
   Transformations,
   Tuple,
   Vector,
@@ -62,7 +62,7 @@ export const getWorld = getInstance(World);
 export const getCamera = getInstance(Camera);
 export const getPlane = getInstance(Plane);
 export const getPattern = getInstance(Pattern);
-export const getStripe = getInstance(Stripe);
+export const getStripe = getInstance(Stripes);
 export const getCube = getInstance(Cube);
 export const getGroup = getInstance(Group);
 export const getOBJParserResult = getInstance(OBJParserResult);
@@ -137,7 +137,10 @@ export const mapKey = (str: string) => {
   );
 };
 
-export const mapValue = (world: IWorld, key: string) => {
+export const mapValue = <T extends Record<string, unknown>>(
+  obj: T,
+  key: string,
+) => {
   const dict: Record<string, unknown> = {
     identity_matrix: Matrix.identity(4),
     infinity: Infinity,
@@ -145,7 +148,14 @@ export const mapValue = (world: IWorld, key: string) => {
     false: false,
   };
 
-  return Object.hasOwn(dict, key) ? dict[key] : world[key];
+  /* eslint-disable @typescript-eslint/no-explicit-any */
+  const getters: Record<string, (obj: T) => any> = {
+    a: (obj: any) => obj.colors[0],
+    b: (obj: any) => obj.colors[1],
+  };
+  /* eslint-enable @typescript-eslint/no-explicit-any */
+
+  return Object.hasOwn(dict, key) ? dict[key] : getters[key]?.(obj) ?? obj[key];
 };
 
 export const getNumericParameters = (str: string) => {

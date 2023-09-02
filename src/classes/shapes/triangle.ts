@@ -16,8 +16,22 @@ export class Triangle extends Shape {
   public e2: Vector;
   public normal: Vector;
 
-  constructor({ p1, p2, p3, ...rest }: TriangleProps) {
-    super(rest);
+  constructor({
+    p1,
+    p2,
+    p3,
+    origin,
+    transform,
+    material,
+    parent,
+  }: TriangleProps) {
+    super({
+      origin,
+      transform,
+      material,
+      parent,
+    });
+
     this.p1 = p1;
     this.p2 = p2;
     this.p3 = p3;

@@ -182,7 +182,7 @@ Then(
     `^${lowercase.source}\\.${lowercase.source} = ${lowercase.source}$`,
   ),
   function (varName: string, key: string, value: string) {
-    const first = this[varName][key];
+    const first = mapValue(this[varName], key);
     const second = mapValue(this, value);
 
     if (typeof first !== "object" && typeof second !== "object") {

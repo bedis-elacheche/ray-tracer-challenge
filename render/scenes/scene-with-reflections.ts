@@ -17,11 +17,10 @@ export const sceneWithReflections = (name: string, progress: ProgressBar) => {
   const floor = new Plane({
     transform: Transformations.scale(10, 0.01, 10),
     material: new Material({
-      pattern: new Checkers(
-        new Color(0.25, 0.25, 0.22),
-        new Color(0.5, 0.5, 0.5),
-        Transformations.scale(0.25, 0.25, 0.25),
-      ),
+      pattern: new Checkers({
+        colors: [new Color(0.25, 0.25, 0.22), new Color(0.5, 0.5, 0.5)],
+        transform: Transformations.scale(0.25, 0.25, 0.25),
+      }),
       specular: 0.5,
       reflective: 0.25,
     }),
