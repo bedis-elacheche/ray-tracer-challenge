@@ -28,17 +28,22 @@ export class ProgressBar {
     this.clear();
   }
 
-  private renderProgress(type: string, progress: Progress) {
+  private renderProgress(type: "overall" | "current", progress: Progress) {
     const barCompleteChar = "\u2588";
     const barIncompleteChar = "\u2591";
 
     let str = `${type}: `;
 
+    let percentage = progress.currentProgress / progress.total;
+
+    if (type === "overall") {
+      percentage +=
+        this.current.currentProgress / this.current.total / progress.total;
+    }
+
     for (let i = 0; i < this.size; i++) {
       const char =
-        i / this.size >= progress.currentProgress / progress.total
-          ? barIncompleteChar
-          : barCompleteChar;
+        i / this.size >= percentage ? barIncompleteChar : barCompleteChar;
 
       str += char;
     }
@@ -47,7 +52,7 @@ export class ProgressBar {
       .toString()
       .padStart(5, " ")}s`;
 
-    str += `| ${Math.floor((progress.currentProgress / progress.total) * 100)
+    str += `| ${Math.floor(percentage * 100)
       .toString()
       .padStart(3, " ")}%`;
 
@@ -60,11 +65,11 @@ export class ProgressBar {
 
   render() {
     rdl.cursorTo(process.stdout, 0, 0);
-    this.renderProgress("Overall", this.overall);
+    this.renderProgress("overall", this.overall);
 
     if (this.current) {
       rdl.cursorTo(process.stdout, 0, 1);
-      this.renderProgress("Current", this.current);
+      this.renderProgress("current", this.current);
       rdl.cursorTo(process.stdout, 0, 2);
       rdl.clearScreenDown(process.stdout);
       process.stdout.write(`Rendering scene: ${this.current.scene}`);
