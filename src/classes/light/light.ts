@@ -1,8 +1,9 @@
 import { Point, Vector } from "../core";
+import { World } from "../engine/world";
 import { Color, Material } from "../materials";
 import { BaseShape } from "../shapes";
 
-export class Light {
+export abstract class Light {
   public position: Point;
   public intensity: Color;
 
@@ -17,7 +18,7 @@ export class Light {
     point: Point,
     eye: Vector,
     normal: Vector,
-    inShadow: boolean,
+    shadowIntensity: number,
   ) {
     const color = material.pattern
       ? material.pattern.colorAt(point, object)
@@ -46,8 +47,12 @@ export class Light {
       }
     }
 
-    return inShadow ? ambient : ambient.add(diffuse).add(specular);
+    return ambient
+      .add(diffuse.multiply(shadowIntensity))
+      .add(specular.multiply(shadowIntensity));
   }
+
+  abstract intensityAt(point: Point, world: World): number;
 
   equals(l: Light) {
     if (this === l) {
@@ -55,7 +60,9 @@ export class Light {
     }
 
     return (
-      this.position.equals(l.position) && this.intensity.equals(l.intensity)
+      this.constructor.name === l.constructor.name &&
+      this.position.equals(l.position) &&
+      this.intensity.equals(l.intensity)
     );
   }
 }

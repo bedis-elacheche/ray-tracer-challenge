@@ -5,8 +5,8 @@ import { Group, Intersection, Shape, World } from "../src";
 import {
   getArray,
   getIntersection,
-  getLight,
   getPoint,
+  getPointLight,
   getRay,
   getShape,
   getShapeOrGroup,
@@ -254,7 +254,25 @@ Then(
     const world = getWorld(this, worldVarName);
     const point = getPoint(this, pointVarName);
 
-    expect(world.isShadowed(point)).to.eq(value === "true");
+    expect(world.isShadowed(point, world.lights[0].position)).to.eq(
+      value === "true",
+    );
+  },
+);
+
+Then(
+  "is_shadowed\\({word}, {word}, {word}) is {word}",
+  function (
+    worldVarName: string,
+    lightPositionVarName: string,
+    pointVarName: string,
+    value: string,
+  ) {
+    const world = getWorld(this, worldVarName);
+    const lightPosition = getPoint(this, lightPositionVarName);
+    const point = getPoint(this, pointVarName);
+
+    expect(world.isShadowed(lightPosition, point)).to.eq(value === "true");
   },
 );
 
@@ -275,7 +293,7 @@ Then(
   "{word}.lights[{int}] = {word}",
   function (worldVarName: string, index: number, lightVarName: string) {
     const world = getWorld(this, worldVarName);
-    const light = getLight(this, lightVarName);
+    const light = getPointLight(this, lightVarName);
 
     expect(world.lights[index - 1].equals(light)).to.be.true;
   },

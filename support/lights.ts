@@ -1,13 +1,13 @@
 import { When } from "@cucumber/cucumber";
 
-import { Color, Light, Point } from "../src";
+import { Color, Point, PointLight } from "../src";
 import {
   float,
   getBoolean,
   getColor,
-  getLight,
   getMaterial,
   getPoint,
+  getPointLight,
   getShape,
   getVector,
   getWorld,
@@ -27,7 +27,7 @@ When(
     g: string,
     b: string,
   ) {
-    this[varName] = new Light(
+    this[varName] = new PointLight(
       new Point(parseFloat(x), parseFloat(y), parseFloat(z)),
       new Color(parseFloat(r), parseFloat(g), parseFloat(b)),
     );
@@ -51,7 +51,7 @@ When(
     const world = getWorld(this, varName);
 
     world.lights = [
-      new Light(
+      new PointLight(
         new Point(parseFloat(x), parseFloat(y), parseFloat(z)),
         new Color(parseFloat(r), parseFloat(g), parseFloat(b)),
       ),
@@ -62,10 +62,26 @@ When(
 When(
   "{word} ← point_light\\({word}, {word})",
   function (firstVarName: string, secondVarName: string, thirdVarName: string) {
-    this[firstVarName] = new Light(
+    this[firstVarName] = new PointLight(
       getPoint(this, secondVarName),
       getColor(this, thirdVarName),
     );
+  },
+);
+
+When(
+  "{word} ← intensity_at\\({word}, {word}, {word})",
+  function (
+    firstVarName: string,
+    lightVarName: string,
+    pointVarName: string,
+    worldVarName: string,
+  ) {
+    const light = getPointLight(this, lightVarName);
+    const point = getPoint(this, pointVarName);
+    const world = getWorld(this, worldVarName);
+
+    this[firstVarName] = light.intensityAt(point, world);
   },
 );
 
@@ -82,7 +98,7 @@ When(
     inShadowName: string,
   ) {
     const material = getMaterial(this, materialName);
-    const light = getLight(this, lightName);
+    const light = getPointLight(this, lightName);
     const position = getPoint(this, positionName);
     const shape = getShape(this, shapeName);
     const eye = getVector(this, eyeName);
@@ -95,7 +111,7 @@ When(
       position,
       eye,
       normal,
-      inShadow,
+      inShadow ? 0 : 1,
     );
   },
 );
@@ -115,7 +131,7 @@ When(
   ) {
     const material = getMaterial(this, materialName);
     const shape = getShape(this, shapeName);
-    const light = getLight(this, lightName);
+    const light = getPointLight(this, lightName);
     const eye = getVector(this, eyeName);
     const normal = getVector(this, normalName);
 
@@ -125,7 +141,37 @@ When(
       new Point(x, y, z),
       eye,
       normal,
-      false,
+      1,
+    );
+  },
+);
+
+When(
+  "{word} ← lighting\\({word}.material, {word}.light, {word}, {word}, {word}, {float})",
+  function (
+    varName: string,
+    shapeName: string,
+    worldlName: string,
+    positionName: string,
+    eyeName: string,
+    normalName: string,
+    intensity: number,
+  ) {
+    const shape = getShape(this, shapeName);
+    const material = shape.material;
+    const world = getWorld(this, worldlName);
+    const light = world.lights[0];
+    const position = getPoint(this, positionName);
+    const eye = getVector(this, eyeName);
+    const normal = getVector(this, normalName);
+
+    this[varName] = light.apply(
+      material,
+      shape,
+      position,
+      eye,
+      normal,
+      intensity,
     );
   },
 );

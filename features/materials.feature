@@ -91,3 +91,23 @@ Feature: Materials
     And c2 ← lighting(m, object, light, point(1.1, 0, 0), eyev, normalv, false)
     Then c1 = color(1, 1, 1)
     And c2 = color(0, 0, 0)
+
+  Scenario Outline: lighting() uses light intensity to attenuate color
+    Given w ← default_world()
+    And w.light ← point_light(point(0, 0, -10), color(1, 1, 1))
+    And shape ← the first object in w
+    And shape.material.ambient ← 0.1
+    And shape.material.diffuse ← 0.9
+    And shape.material.specular ← 0
+    And shape.material.color ← color(1, 1, 1)
+    And pt ← point(0, 0, -1)
+    And eyev ← vector(0, 0, -1)
+    And normalv ← vector(0, 0, -1)
+    When result ← lighting(shape.material, w.light, pt, eyev, normalv, <intensity>)
+    Then result = <result>
+
+    Examples:
+      | intensity | result                  |
+      | 1.0       | color(1, 1, 1)          |
+      | 0.5       | color(0.55, 0.55, 0.55) |
+      | 0.0       | color(0.1, 0.1, 0.1)    |

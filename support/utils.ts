@@ -9,13 +9,13 @@ import {
   Cube,
   Group,
   Intersection,
-  Light,
   Material,
   Matrix,
   OBJParserResult,
   Pattern,
   Plane,
   Point,
+  PointLight,
   Ray,
   Shape,
   Sphere,
@@ -57,7 +57,7 @@ export const getShape = getInstance(Shape);
 export const getSphere = getInstance(Sphere);
 export const getIntersection = getInstance(Intersection<Shape>);
 export const getMaterial = getInstance(Material);
-export const getLight = getInstance(Light);
+export const getPointLight = getInstance(PointLight);
 export const getWorld = getInstance(World);
 export const getCamera = getInstance(Camera);
 export const getPlane = getInstance(Plane);
@@ -152,6 +152,7 @@ export const mapValue = <T extends Record<string, unknown>>(
   const getters: Record<string, (obj: T) => any> = {
     a: (obj: any) => obj.colors[0],
     b: (obj: any) => obj.colors[1],
+    light: (obj: any) => obj.lights[0],
   };
   /* eslint-enable @typescript-eslint/no-explicit-any */
 

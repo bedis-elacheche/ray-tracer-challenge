@@ -2,7 +2,7 @@ import { Given, Then, When } from "@cucumber/cucumber";
 import { expect } from "chai";
 
 import { Color, EPSILON, Point, Tuple, Vector } from "../src";
-import { getColor, getTuple, getVector } from "./utils";
+import { float, getColor, getTuple, getVector, lowercase } from "./utils";
 
 Given(
   "{word} ← tuple\\({float}, {float}, {float}, {float})",
@@ -19,9 +19,13 @@ Given(
 );
 
 Given(
-  "{word} ← color\\({float}, {float}, {float})",
-  function (varName: string, r: number, g: number, b: number) {
-    this[varName] = new Color(r, g, b);
+  new RegExp(
+    `^${lowercase.source} ← color\\(${float.source}, ${float.source}, ${float.source}\\)$`,
+  ),
+  function (varName: string, r: string, g: string, b: string) {
+    const parsed = [r, g, b].map(parseFloat) as [number, number, number];
+
+    this[varName] = new Color(...parsed);
   },
 );
 

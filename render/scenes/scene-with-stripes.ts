@@ -1,9 +1,9 @@
 import {
   Camera,
   Color,
-  Light,
   Material,
   Point,
+  PointLight,
   Sphere,
   Stripes,
   Transformations,
@@ -79,7 +79,7 @@ export const sceneWithStripes = (name: string, progress: ProgressBar) => {
     }),
   });
 
-  const light = new Light(new Point(-10, 10, -10), new Color(1, 1, 1));
+  const light = new PointLight(new Point(-10, 10, -10), new Color(1, 1, 1));
 
   const world = new World({
     shapes: [floor, leftWall, rightWall, middle, left, right],

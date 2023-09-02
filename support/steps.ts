@@ -34,6 +34,24 @@ Given(
   },
 );
 
+Given(
+  new RegExp(
+    `^${lowercase.source}\\.${lowercase.source}\\.${lowercase.source} ← color\\(${float.source}, ${float.source}, ${float.source}\\)$`,
+  ),
+  function (
+    firstVarName: string,
+    key: string,
+    subKey: string,
+    r: string,
+    g: string,
+    b: string,
+  ) {
+    const parsed = [r, g, b].map(parseFloat) as [number, number, number];
+
+    this[firstVarName][key][subKey] = new Color(...parsed);
+  },
+);
+
 When(
   new RegExp(
     `^${lowercase.source}\\.${lowercase.source} ← ${lowercase.source}$`,
@@ -48,7 +66,7 @@ When(
     `^${lowercase.source} ← ${lowercase.source}\\.${lowercase.source}$`,
   ),
   function (firstVarName: string, secondVarName: string, key: string) {
-    this[firstVarName] = this[secondVarName][mapKey(key)];
+    this[firstVarName] = mapValue(this[secondVarName], mapKey(key));
   },
 );
 

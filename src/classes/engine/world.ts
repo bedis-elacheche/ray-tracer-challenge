@@ -1,9 +1,9 @@
 import { EPSILON, Point, Transformations, Vector } from "../core";
+import { Light, PointLight } from "../light";
 import { Color, Material } from "../materials";
 import { BaseShape, Shape, Sphere } from "../shapes";
 import { Environment } from "./environment";
 import { Intersection } from "./intersection";
-import { Light } from "./light";
 import { Projectile } from "./projectile";
 import { Ray } from "./ray";
 
@@ -36,7 +36,7 @@ export class World {
       transform: Transformations.scale(0.5, 0.5, 0.5),
       material: new Material(),
     });
-    const light = new Light(new Point(-10, 10, -10), new Color(1, 1, 1));
+    const light = new PointLight(new Point(-10, 10, -10), new Color(1, 1, 1));
 
     return new World({ shapes: [s1, s2], lights: [light] });
   }
@@ -128,7 +128,7 @@ export class World {
         computation.overPoint,
         computation.eyev,
         computation.normalv,
-        this.isShadowed(computation.overPoint),
+        light.intensityAt(computation.overPoint, this),
       );
       const reflected = this.reflectedColor(computation, remaining);
       const refracted = this.refractedColor(computation, remaining);
@@ -197,18 +197,16 @@ export class World {
     return color.multiply(computation.object.material.transparency);
   }
 
-  isShadowed(point: Point) {
-    for (const light of this.lights) {
-      const vector = light.position.subtract(point);
-      const distance = vector.magnitude();
-      const direction = vector.normalize();
-      const ray = new Ray(point, direction);
-      const intersections = this.intersect(ray);
-      const hit = Intersection.hit(intersections);
+  isShadowed(point: Point, lightPosition: Point) {
+    const vector = lightPosition.subtract(point);
+    const distance = vector.magnitude();
+    const direction = vector.normalize();
+    const ray = new Ray(point, direction);
+    const intersections = this.intersect(ray);
+    const hit = Intersection.hit(intersections);
 
-      if (hit && hit.t < distance && hit.object.material.hasShadow) {
-        return true;
-      }
+    if (hit && hit.t < distance && hit.object.material.hasShadow) {
+      return true;
     }
 
     return false;

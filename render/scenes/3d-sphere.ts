@@ -2,10 +2,10 @@ import {
   Canvas,
   Color,
   Intersection,
-  Light,
   Material,
   Matrix,
   Point,
+  PointLight,
   Ray,
   Shape,
   Sphere,
@@ -24,7 +24,7 @@ const makeScene =
     const color = new Color(1, 0.2, 1);
     const material = new Material({ color });
     const shape = new Sphere({ transform, material });
-    const light = new Light(new Point(-10, 10, -10), new Color(1, 1, 1));
+    const light = new PointLight(new Point(-10, 10, -10), new Color(1, 1, 1));
 
     progress.start(name, canvas.height * canvas.width);
 
@@ -51,7 +51,7 @@ const makeScene =
             point,
             eye,
             normal,
-            false,
+            1,
           );
           canvas.writePixel(x, y, castedColor);
         }

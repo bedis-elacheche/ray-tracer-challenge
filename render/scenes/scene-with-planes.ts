@@ -1,10 +1,10 @@
 import {
   Camera,
   Color,
-  Light,
   Material,
   Plane,
   Point,
+  PointLight,
   Sphere,
   Transformations,
   Vector,
@@ -52,7 +52,7 @@ export const sceneWithPlanes = (name: string, progress: ProgressBar) => {
     }),
   });
 
-  const light = new Light(new Point(-10, 10, -10), new Color(1, 1, 1));
+  const light = new PointLight(new Point(-10, 10, -10), new Color(1, 1, 1));
 
   const world = new World({
     shapes: [floor, middle, left, right],
