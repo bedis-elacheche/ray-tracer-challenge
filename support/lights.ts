@@ -27,10 +27,10 @@ When(
     g: string,
     b: string,
   ) {
-    this[varName] = new PointLight(
-      new Point(parseFloat(x), parseFloat(y), parseFloat(z)),
-      new Color(parseFloat(r), parseFloat(g), parseFloat(b)),
-    );
+    this[varName] = new PointLight({
+      position: new Point(parseFloat(x), parseFloat(y), parseFloat(z)),
+      intensity: new Color(parseFloat(r), parseFloat(g), parseFloat(b)),
+    });
   },
 );
 
@@ -51,10 +51,10 @@ When(
     const world = getWorld(this, varName);
 
     world.lights = [
-      new PointLight(
-        new Point(parseFloat(x), parseFloat(y), parseFloat(z)),
-        new Color(parseFloat(r), parseFloat(g), parseFloat(b)),
-      ),
+      new PointLight({
+        position: new Point(parseFloat(x), parseFloat(y), parseFloat(z)),
+        intensity: new Color(parseFloat(r), parseFloat(g), parseFloat(b)),
+      }),
     ];
   },
 );
@@ -62,10 +62,10 @@ When(
 When(
   "{word} ← point_light\\({word}, {word})",
   function (firstVarName: string, secondVarName: string, thirdVarName: string) {
-    this[firstVarName] = new PointLight(
-      getPoint(this, secondVarName),
-      getColor(this, thirdVarName),
-    );
+    this[firstVarName] = new PointLight({
+      position: getPoint(this, secondVarName),
+      intensity: getColor(this, thirdVarName),
+    });
   },
 );
 

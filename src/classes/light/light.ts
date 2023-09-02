@@ -3,11 +3,13 @@ import { World } from "../engine/world";
 import { Color, Material } from "../materials";
 import { BaseShape } from "../shapes";
 
+export type LightProps = { position: Point; intensity: Color };
+
 export abstract class Light {
   public position: Point;
   public intensity: Color;
 
-  constructor(position: Point, intensity: Color) {
+  constructor({ position, intensity }: LightProps) {
     this.position = position;
     this.intensity = intensity;
   }

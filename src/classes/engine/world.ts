@@ -36,7 +36,10 @@ export class World {
       transform: Transformations.scale(0.5, 0.5, 0.5),
       material: new Material(),
     });
-    const light = new PointLight(new Point(-10, 10, -10), new Color(1, 1, 1));
+    const light = new PointLight({
+      position: new Point(-10, 10, -10),
+      intensity: new Color(1, 1, 1),
+    });
 
     return new World({ shapes: [s1, s2], lights: [light] });
   }
