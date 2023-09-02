@@ -125,7 +125,7 @@ export class World {
       const surface = light.apply(
         computation.object.material,
         computation.object,
-        computation.point,
+        computation.overPoint,
         computation.eyev,
         computation.normalv,
         this.isShadowed(computation.overPoint),
