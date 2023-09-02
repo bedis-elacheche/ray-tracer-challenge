@@ -69,10 +69,10 @@ export class Camera extends EventEmitter<CameraEvents> {
   }
 
   render(world: World) {
-    const image = new Canvas(this.height, this.width);
+    const image = new Canvas(this.width, this.height);
 
-    for (let y = 0; y < this.width; y++) {
-      for (let x = 0; x < this.height; x++) {
+    for (let y = 0; y < this.height; y++) {
+      for (let x = 0; x < this.width; x++) {
         const color = this.colorAt(world, x, y);
 
         image.writePixel(x, y, color);
