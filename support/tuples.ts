@@ -2,7 +2,14 @@ import { Given, Then, When } from "@cucumber/cucumber";
 import { expect } from "chai";
 
 import { Color, EPSILON, Point, Tuple, Vector } from "../src";
-import { float, getColor, getTuple, getVector, lowercase } from "./utils";
+import {
+  float,
+  getColor,
+  getPoint,
+  getTuple,
+  getVector,
+  lowercase,
+} from "./utils";
 
 Given(
   "{word} ← tuple\\({float}, {float}, {float}, {float})",
@@ -40,6 +47,25 @@ Given(
   "{word} ← normalize\\(vector\\({float}, {float}, {float}))",
   function (varName: string, x: number, y: number, z: number) {
     this[varName] = new Vector(x, y, z).normalize();
+  },
+);
+
+Given(
+  "{word} ← normalize\\({word} - {word})",
+  function (varName: string, firstVarName: string, secondVarName: string) {
+    const first = getPoint(this, firstVarName);
+    const second = getPoint(this, secondVarName);
+
+    this[varName] = first.subtract(second).normalize();
+  },
+);
+
+Given(
+  "{word} ← point_to_vector\\({word})",
+  function (varName: string, pointVarName: string) {
+    const point = getPoint(this, pointVarName);
+
+    this[varName] = Vector.from(point);
   },
 );
 

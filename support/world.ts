@@ -1,7 +1,7 @@
 import { Given, Then, When } from "@cucumber/cucumber";
 import { expect } from "chai";
 
-import { Group, Intersection, Shape, World } from "../src";
+import { Group, Intersection, PointLight, Shape, World } from "../src";
 import {
   getArray,
   getIntersection,
@@ -254,9 +254,9 @@ Then(
     const world = getWorld(this, worldVarName);
     const point = getPoint(this, pointVarName);
 
-    expect(world.isShadowed(point, world.lights[0].position)).to.eq(
-      value === "true",
-    );
+    expect(
+      world.isShadowed(point, (world.lights[0] as PointLight).position),
+    ).to.eq(value === "true");
   },
 );
 

@@ -111,3 +111,26 @@ Feature: Materials
       | 1.0       | color(1, 1, 1)          |
       | 0.5       | color(0.55, 0.55, 0.55) |
       | 0.0       | color(0.1, 0.1, 0.1)    |
+
+  Scenario Outline: lighting() samples the area light
+    Given corner ← point(-0.5, -0.5, -5)
+    And v1 ← vector(1, 0, 0)
+    And v2 ← vector(0, 1, 0)
+    And light ← area_light(corner, v1, 2, v2, 2, color(1, 1, 1))
+    And shape ← sphere()
+    And shape.material.ambient ← 0.1
+    And shape.material.diffuse ← 0.9
+    And shape.material.specular ← 0
+    And shape.material.color ← color(1, 1, 1)
+    And eye ← point(0, 0, -5)
+    And pt ← <point>
+    And eyev ← normalize(eye - pt)
+    And normalv ← point_to_vector(pt)
+    And m ← shape.material
+    When result ← lighting(m, shape, light, pt, eyev, normalv, 1.0)
+    Then result = <result>
+
+    Examples:
+      | point                     | result                        |
+      | point(0, 0, -1)           | color(0.9965, 0.9965, 0.9965) |
+      | point(0, 0.7071, -0.7071) | color(0.6232, 0.6232, 0.6232) |

@@ -2,6 +2,7 @@ import { DataTable, IWorld } from "@cucumber/cucumber";
 import { expect } from "chai";
 
 import {
+  AreaLight,
   Camera,
   Canvas,
   Color,
@@ -9,6 +10,7 @@ import {
   Cube,
   Group,
   Intersection,
+  Light,
   Material,
   Matrix,
   OBJParserResult,
@@ -57,7 +59,9 @@ export const getShape = getInstance(Shape);
 export const getSphere = getInstance(Sphere);
 export const getIntersection = getInstance(Intersection<Shape>);
 export const getMaterial = getInstance(Material);
+export const getLight = getInstance(Light);
 export const getPointLight = getInstance(PointLight);
+export const getAreaLight = getInstance(AreaLight);
 export const getWorld = getInstance(World);
 export const getCamera = getInstance(Camera);
 export const getPlane = getInstance(Plane);
@@ -133,6 +137,7 @@ export const mapKey = (str: string) => {
       over_point: "overPoint",
       under_point: "underPoint",
       default_group: "defaultGroup",
+      jitter_by: "jitterBy",
     }[str] || str
   );
 };

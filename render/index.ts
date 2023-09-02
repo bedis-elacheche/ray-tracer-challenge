@@ -7,6 +7,7 @@ import {
   hexagon,
   projectile,
   scene,
+  sceneWithAreaLight,
   sceneWithFiniteClosedCylinders,
   sceneWithFiniteCones,
   sceneWithFiniteCylinders,
@@ -57,6 +58,7 @@ const scenes: Record<SceneKey, Scene> = {
   "13-04-3d-scene-with-finite-cones": sceneWithFiniteCones,
   "14-01-3d-group-hexagon": hexagon,
   "15-01-3d-scene-with-pyramid": sceneWithPyramid,
+  "16-01-3d-scene-with-area-light": sceneWithAreaLight,
 };
 
 const getLastScene = (dict: Record<SceneKey, Scene>): string =>

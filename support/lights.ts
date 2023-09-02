@@ -1,10 +1,12 @@
 import { When } from "@cucumber/cucumber";
 
-import { Color, Point, PointLight } from "../src";
+import { AreaLight, Color, Point, PointLight } from "../src";
 import {
   float,
+  getAreaLight,
   getBoolean,
   getColor,
+  getLight,
   getMaterial,
   getPoint,
   getPointLight,
@@ -69,6 +71,32 @@ When(
   },
 );
 
+//     When light ← area_light(corner, v1, 4, v2, 2, color(1, 1, 1))
+
+When(
+  "{word} ← area_light\\({word}, {word}, {int}, {word}, {int}, color\\({float}, {float}, {float}))",
+  function (
+    firstVarName: string,
+    cornerVarName: string,
+    uvecVarName: string,
+    usteps: number,
+    vvecVarName: string,
+    vsteps: number,
+    r: number,
+    g: number,
+    b: number,
+  ) {
+    this[firstVarName] = new AreaLight({
+      corner: getPoint(this, cornerVarName),
+      intensity: new Color(r, g, b),
+      vvec: getVector(this, vvecVarName),
+      vsteps,
+      uvec: getVector(this, uvecVarName),
+      usteps,
+    });
+  },
+);
+
 When(
   "{word} ← intensity_at\\({word}, {word}, {word})",
   function (
@@ -77,7 +105,7 @@ When(
     pointVarName: string,
     worldVarName: string,
   ) {
-    const light = getPointLight(this, lightVarName);
+    const light = getLight(this, lightVarName);
     const point = getPoint(this, pointVarName);
     const world = getWorld(this, worldVarName);
 
@@ -86,7 +114,41 @@ When(
 );
 
 When(
-  "{word} ← lighting\\({word}, {word}, {word}, {word}, {word}, {word}, {word})",
+  new RegExp(
+    `^${lowercase.source} ← lighting\\(${lowercase.source}, ${lowercase.source}, ${lowercase.source}, ${lowercase.source}, ${lowercase.source}, ${lowercase.source}, ${float.source}\\)$`,
+  ),
+  function (
+    varName: string,
+    materialName: string,
+    shapeName: string,
+    lightName: string,
+    positionName: string,
+    eyeName: string,
+    normalName: string,
+    intensity: string,
+  ) {
+    const material = getMaterial(this, materialName);
+    const light = getLight(this, lightName);
+    const position = getPoint(this, positionName);
+    const shape = getShape(this, shapeName);
+    const eye = getVector(this, eyeName);
+    const normal = getVector(this, normalName);
+
+    this[varName] = light.apply(
+      material,
+      shape,
+      position,
+      eye,
+      normal,
+      parseFloat(intensity),
+    );
+  },
+);
+
+When(
+  new RegExp(
+    `^${lowercase.source} ← lighting\\(${lowercase.source}, ${lowercase.source}, ${lowercase.source}, ${lowercase.source}, ${lowercase.source}, ${lowercase.source}, ${lowercase.source}\\)$`,
+  ),
   function (
     varName: string,
     materialName: string,
@@ -98,7 +160,7 @@ When(
     inShadowName: string,
   ) {
     const material = getMaterial(this, materialName);
-    const light = getPointLight(this, lightName);
+    const light = getLight(this, lightName);
     const position = getPoint(this, positionName);
     const shape = getShape(this, shapeName);
     const eye = getVector(this, eyeName);
@@ -173,5 +235,14 @@ When(
       normal,
       intensity,
     );
+  },
+);
+
+When(
+  "{word} ← point_on_light\\({word}, {float}, {float})",
+  function (varName: string, lightVarName: string, u: number, v: number) {
+    const light = getAreaLight(this, lightVarName);
+
+    this[varName] = light.pointOnLight(u, v);
   },
 );

@@ -3,58 +3,29 @@ import { World } from "../engine/world";
 import { Color, Material } from "../materials";
 import { BaseShape } from "../shapes";
 
-export type LightProps = { position: Point; intensity: Color };
+export type LightProps = { intensity: Color };
 
-export abstract class Light {
-  public position: Point;
+export class Light {
   public intensity: Color;
 
-  constructor({ position, intensity }: LightProps) {
-    this.position = position;
+  constructor({ intensity }: LightProps) {
     this.intensity = intensity;
   }
 
   apply(
-    material: Material,
-    object: BaseShape,
-    point: Point,
-    eye: Vector,
-    normal: Vector,
-    shadowIntensity: number,
-  ) {
-    const color = material.pattern
-      ? material.pattern.colorAt(point, object)
-      : material.color;
-    const effectiveColor = color.multiply(this.intensity);
-    const lightVector = this.position.subtract(point).normalize();
-    const ambient = effectiveColor.multiply(material.ambient);
-    const lightDotNormal = lightVector.dot(normal);
-    const black = new Color(0, 0, 0);
-    let diffuse: Color;
-    let specular: Color;
-
-    if (lightDotNormal < 0) {
-      diffuse = black;
-      specular = black;
-    } else {
-      diffuse = effectiveColor.multiply(material.diffuse * lightDotNormal);
-      const reflectVector = lightVector.negate().reflect(normal);
-      const reflectDotEye = reflectVector.dot(eye);
-
-      if (reflectDotEye <= 0) {
-        specular = black;
-      } else {
-        const factor = reflectDotEye ** material.shininess;
-        specular = this.intensity.multiply(material.specular * factor);
-      }
-    }
-
-    return ambient
-      .add(diffuse.multiply(shadowIntensity))
-      .add(specular.multiply(shadowIntensity));
+    _material: Material,
+    _object: BaseShape,
+    _point: Point,
+    _eye: Vector,
+    _normal: Vector,
+    _shadowIntensity: number,
+  ): Color {
+    throw "Cannot call this on an abstract light";
   }
 
-  abstract intensityAt(point: Point, world: World): number;
+  intensityAt(_point: Point, _world: World): number {
+    throw "Cannot call this on an abstract light";
+  }
 
   equals(l: Light) {
     if (this === l) {
@@ -63,7 +34,6 @@ export abstract class Light {
 
     return (
       this.constructor.name === l.constructor.name &&
-      this.position.equals(l.position) &&
       this.intensity.equals(l.intensity)
     );
   }

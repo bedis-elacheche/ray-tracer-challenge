@@ -29,4 +29,16 @@ export class Point extends Tuple {
 
     return tuple;
   }
+
+  add(t: Point): Tuple;
+  add(t: Vector): Point;
+  add(t: Tuple): Tuple {
+    const tuple = super.add(t);
+
+    if (Vector.isVector(t)) {
+      return new Point(tuple.x, tuple.y, tuple.z);
+    }
+
+    return tuple;
+  }
 }

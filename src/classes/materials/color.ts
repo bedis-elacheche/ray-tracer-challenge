@@ -37,6 +37,16 @@ export class Color {
       : new Color(this.red * item, this.green * item, this.blue * item);
   }
 
+  divide(item: number | Color) {
+    return item instanceof Color
+      ? new Color(
+          this.red / item.red,
+          this.green / item.green,
+          this.blue / item.blue,
+        )
+      : new Color(this.red / item, this.green / item, this.blue / item);
+  }
+
   equals(color: Color) {
     return (
       Math.abs(this.red - color.red) <= EPSILON &&
