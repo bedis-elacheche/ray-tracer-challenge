@@ -13,7 +13,6 @@ export class Material implements Serializable {
   public refractiveIndex: number;
   public transparency: number;
   public reflective: number;
-  public hasShadow: boolean;
 
   constructor({
     color = new Color(1, 1, 1),
@@ -25,7 +24,6 @@ export class Material implements Serializable {
     reflective = 0.0,
     transparency = 0.0,
     refractiveIndex = 1.0,
-    hasShadow = true,
   }: {
     color?: Color;
     ambient?: number;
@@ -34,7 +32,6 @@ export class Material implements Serializable {
     pattern?: Pattern;
     shininess?: number;
     reflective?: number;
-    hasShadow?: boolean;
     transparency?: number;
     refractiveIndex?: number;
   } = {}) {
@@ -44,7 +41,6 @@ export class Material implements Serializable {
     this.pattern = pattern;
     this.specular = specular;
     this.shininess = shininess;
-    this.hasShadow = hasShadow;
     this.reflective = reflective;
     this.transparency = transparency;
     this.refractiveIndex = refractiveIndex;
@@ -64,7 +60,6 @@ export class Material implements Serializable {
       diffuse: this.diffuse,
       specular: this.specular,
       shininess: this.shininess,
-      hasShadow: this.hasShadow,
       reflective: this.reflective,
       transparency: this.transparency,
       refractiveIndex: this.refractiveIndex,
@@ -84,7 +79,6 @@ export class Material implements Serializable {
     reflective,
     transparency,
     refractiveIndex,
-    hasShadow,
   }: JSONObject) {
     if (__type === Material.__name__) {
       return new Material({
@@ -97,7 +91,6 @@ export class Material implements Serializable {
         reflective,
         transparency,
         refractiveIndex,
-        hasShadow,
       });
     }
 

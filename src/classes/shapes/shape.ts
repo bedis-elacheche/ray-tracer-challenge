@@ -7,17 +7,22 @@ import { Group } from "./group";
 
 export type ShapeParent = CSG | Group | null;
 
-export type ShapeProps = BaseShapeProps<ShapeParent> & { material?: Material };
+export type ShapeProps = BaseShapeProps<ShapeParent> & {
+  hasShadow?: boolean;
+  material?: Material;
+};
 
 export class Shape extends BaseShape<ShapeParent> implements Serializable {
   public static __name__ = "shape";
   public material: Material;
+  public hasShadow: boolean;
 
   constructor({
     material = new Material(),
     origin,
     transform,
     parent,
+    hasShadow = true,
   }: ShapeProps = {}) {
     super({
       origin,
@@ -26,6 +31,7 @@ export class Shape extends BaseShape<ShapeParent> implements Serializable {
     });
 
     this.material = material;
+    this.hasShadow = hasShadow;
   }
 
   serialize(): JSONObject {
@@ -33,10 +39,11 @@ export class Shape extends BaseShape<ShapeParent> implements Serializable {
       ...super.serialize(),
       __type: Shape.__name__,
       material: this.material.serialize(),
+      hasShadow: this.hasShadow,
     };
   }
 
-  static deserialize({ __type, material, ...rest }: JSONObject) {
+  static deserialize({ __type, hasShadow, material, ...rest }: JSONObject) {
     if (__type === Shape.__name__) {
       const { origin, transform, parent } = BaseShape.deserialize({
         __type: BaseShape.__name__,
@@ -46,6 +53,7 @@ export class Shape extends BaseShape<ShapeParent> implements Serializable {
       return new Shape({
         origin,
         transform,
+        hasShadow: !!hasShadow,
         parent: parent as ShapeParent,
         material: Material.deserialize(material),
       });

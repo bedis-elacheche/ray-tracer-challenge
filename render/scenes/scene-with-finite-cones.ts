@@ -63,11 +63,11 @@ export const sceneWithFiniteCones = (name: string, progress: ProgressBar) => {
       }),
       diffuse: 0.7,
       specular: 0.3,
-      hasShadow: false,
     }),
     maximum: 2,
     minimum: 0,
     closed: true,
+    hasShadow: false,
   });
 
   const right = new Cone({

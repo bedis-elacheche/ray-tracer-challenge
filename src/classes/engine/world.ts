@@ -228,7 +228,7 @@ export class World implements Serializable {
     const intersections = this.intersect(ray);
     const hit = Intersection.hit(intersections);
 
-    if (hit && hit.t < distance && hit.object.material.hasShadow) {
+    if (hit && hit.t < distance && hit.object.hasShadow) {
       return true;
     }
 

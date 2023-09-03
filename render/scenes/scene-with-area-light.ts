@@ -15,12 +15,12 @@ import { ProgressBar } from "../progress";
 
 export const sceneWithAreaLight = (name: string, progress: ProgressBar) => {
   const cube = new Cube({
+    hasShadow: false,
     material: new Material({
       color: new Color(1.5, 1.5, 1.5),
       ambient: 1,
       diffuse: 0,
       specular: 0,
-      hasShadow: false,
     }),
     transform: Transformations.translation(0, 3, 4).multiply(
       Transformations.scale(1, 1, 0.01),
