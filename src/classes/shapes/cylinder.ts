@@ -3,6 +3,8 @@ import { Intersection, Ray } from "../engine";
 import { Shape, ShapeProps } from "./shape";
 
 export class Cylinder extends Shape {
+  public static readonly __name__ = "cylinder";
+
   public maximum: number;
   public minimum: number;
   public closed: boolean;
@@ -25,6 +27,43 @@ export class Cylinder extends Shape {
     this.minimum = minimum;
     this.maximum = maximum;
     this.closed = closed;
+  }
+
+  serialize(): JSONObject {
+    return {
+      ...super.serialize(),
+      __type: Cylinder.__name__,
+      minimum: this.minimum,
+      maximum: this.maximum,
+      closed: this.closed,
+    };
+  }
+
+  static deserialize({
+    __type,
+    minimum,
+    maximum,
+    closed,
+    ...rest
+  }: JSONObject) {
+    if (__type === Cylinder.__name__) {
+      const { origin, transform, material, parent } = Shape.deserialize({
+        __type: Shape.__name__,
+        ...rest,
+      });
+
+      return new Cylinder({
+        minimum: +minimum,
+        maximum: +maximum,
+        closed: !!closed,
+        origin,
+        transform,
+        material,
+        parent,
+      });
+    }
+
+    throw new Error("Cannot deserialize object.");
   }
 
   localNormalAt(localPoint: Point) {

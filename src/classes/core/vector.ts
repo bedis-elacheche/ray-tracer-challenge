@@ -1,6 +1,8 @@
 import { Tuple } from "./tuple";
 
 export class Vector extends Tuple {
+  public static readonly __name__ = "vector";
+
   constructor(x: number, y: number, z: number) {
     super(x, y, z, 0);
   }
@@ -11,6 +13,18 @@ export class Vector extends Tuple {
 
   static from(tuple: Tuple) {
     return new Vector(tuple.x, tuple.y, tuple.z);
+  }
+
+  serialize(): JSONObject {
+    return { __type: Vector.__name__, x: this.x, y: this.y, z: this.z };
+  }
+
+  static deserialize({ __type, x, y, z }: JSONObject) {
+    if (__type === Vector.__name__) {
+      return new Vector(+x, +y, +z);
+    }
+
+    throw new Error("Cannot deserialize object.");
   }
 
   subtract(t: Tuple) {

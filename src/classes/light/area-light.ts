@@ -1,11 +1,12 @@
-import { Point, Vector } from "../core";
+import { Point, Serializable, Vector } from "../core";
 import { World } from "../engine";
 import { Color, Material } from "../materials";
 import { BaseShape } from "../shapes";
 import { sequence } from "../utils";
 import { Light, LightProps } from "./light";
 
-export class AreaLight extends Light {
+export class AreaLight extends Light implements Serializable {
+  public static readonly __name__ = "area-light";
   public corner: Point;
   public uvec: Vector;
   public usteps: number;
@@ -50,9 +51,52 @@ export class AreaLight extends Light {
       : sequence(0.5);
   }
 
+  serialize(): JSONObject {
+    return {
+      ...super.serialize(),
+      __type: AreaLight.__name__,
+      corner: this.corner.serialize(),
+      uvec: this.uvec.serialize(),
+      usteps: this.usteps,
+      vvec: this.vvec.serialize(),
+      vsteps: this.vsteps,
+      jitter: this.jitter,
+    };
+  }
+
+  static deserialize({
+    __type,
+    corner,
+    uvec,
+    usteps,
+    vvec,
+    vsteps,
+    jitter,
+    ...rest
+  }: JSONObject) {
+    if (__type === AreaLight.__name__) {
+      const { intensity } = Light.deserialize({
+        __type: Light.__name__,
+        ...rest,
+      });
+
+      return new AreaLight({
+        intensity,
+        corner: Point.deserialize(corner),
+        uvec: Vector.deserialize(uvec),
+        usteps: +usteps,
+        vvec: Vector.deserialize(vvec),
+        vsteps: +vsteps,
+        jitter: !!jitter,
+      });
+    }
+
+    throw new Error("Cannot deserialize object.");
+  }
+
   apply(
     material: Material,
-    object: BaseShape<unknown>,
+    object: BaseShape,
     point: Point,
     eye: Vector,
     normal: Vector,

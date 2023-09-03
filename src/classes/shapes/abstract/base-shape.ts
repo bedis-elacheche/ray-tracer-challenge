@@ -1,5 +1,6 @@
-import { Matrix, Point, Vector } from "../../core";
+import { Matrix, Point, Serializable, Vector } from "../../core";
 import { Intersection, Ray } from "../../engine";
+import { ShapeDeserializer } from "../shape-deserializer";
 
 export type BaseShapeProps<TParent> = {
   origin?: Point;
@@ -7,7 +8,10 @@ export type BaseShapeProps<TParent> = {
   parent?: TParent;
 };
 
-export abstract class BaseShape<TParent = unknown> {
+export class BaseShape<TParent extends Serializable = Serializable>
+  implements Serializable
+{
+  public static __name__ = "base-shape";
   public transform: Matrix;
   public origin: Point;
   public parent: TParent | null;
@@ -22,6 +26,26 @@ export abstract class BaseShape<TParent = unknown> {
     this.parent = parent;
   }
 
+  serialize(): JSONObject {
+    return {
+      __type: BaseShape.__name__,
+      transform: this.transform.serialize(),
+      origin: this.origin.serialize(),
+      parent: this.parent && this.parent.serialize(),
+    };
+  }
+
+  static deserialize({ __type, origin, transform, parent }: JSONObject) {
+    if (__type === BaseShape.__name__) {
+      return new BaseShape({
+        origin: Point.deserialize(origin),
+        transform: Matrix.deserialize(transform),
+        parent: parent && ShapeDeserializer.deserialize(parent),
+      });
+    }
+    throw new Error("Cannot deserialize object.");
+  }
+
   normalAt(_point: Point, _intersection?: Intersection): Vector {
     throw new Error("normalAt can only be called on concrete shapes");
   }
@@ -30,11 +54,19 @@ export abstract class BaseShape<TParent = unknown> {
     throw new Error("localNormalAt can only be called on concrete shapes");
   }
 
-  abstract intersect(r: Ray): Intersection<BaseShape<TParent>>[];
+  intersect(_r: Ray): Intersection<BaseShape<TParent>>[] {
+    return [];
+  }
 
-  abstract localIntersect(localRay: Ray): Intersection<BaseShape<TParent>>[];
+  localIntersect(_localRay: Ray): Intersection<BaseShape<TParent>>[] {
+    return [];
+  }
 
-  protected abstract areParentsEqual(sParent: TParent): boolean;
+  protected areParentsEqual(_sParent: TParent): boolean {
+    return false;
+  }
 
-  abstract equals(sParent: BaseShape<TParent>): boolean;
+  equals(_sParent: BaseShape<TParent>): boolean {
+    return false;
+  }
 }

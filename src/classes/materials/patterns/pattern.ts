@@ -1,8 +1,9 @@
-import { Matrix, Point, Transformations } from "../../core";
+import { Matrix, Point, Serializable, Transformations } from "../../core";
 import { BaseShape } from "../../shapes";
 import { Color } from "../color";
 
-export class Pattern {
+export class Pattern implements Serializable {
+  public static __name__ = "pattern";
   public transform: Matrix;
   public colors: Color[];
 
@@ -15,6 +16,18 @@ export class Pattern {
   } = {}) {
     this.transform = transform;
     this.colors = colors;
+  }
+
+  serialize(): JSONObject {
+    return {
+      __type: Pattern.__name__,
+      colors: this.colors.map((color) => color.serialize()),
+      transform: this.transform.serialize(),
+    };
+  }
+
+  static deserialize(_json: JSONObject): Pattern {
+    throw new Error("Cannot deserialize object.");
   }
 
   colorAt(p: Point, s?: BaseShape): Color {
@@ -30,5 +43,17 @@ export class Pattern {
 
   localColorAt(p: Point) {
     return new Color(p.x, p.y, p.z);
+  }
+
+  equals(p: Pattern) {
+    if (p === this) {
+      return true;
+    }
+
+    return (
+      this.constructor.name === p.constructor.name &&
+      this.colors.every((color, i) => color.equals(p.colors[i])) &&
+      this.transform.equals(p.transform)
+    );
   }
 }

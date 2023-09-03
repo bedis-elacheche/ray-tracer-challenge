@@ -10,6 +10,7 @@ export * from "./cylinder";
 export * from "./group";
 export * from "./plane";
 export * from "./shape";
+export * from "./shape-deserializer";
 export * from "./smooth-triangle";
 export * from "./sphere";
 export * from "./triangle";

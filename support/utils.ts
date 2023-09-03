@@ -142,11 +142,8 @@ export const mapKey = (str: string) => {
   );
 };
 
-export const mapValue = <T extends Record<string, unknown>>(
-  obj: T,
-  key: string,
-) => {
-  const dict: Record<string, unknown> = {
+export const mapValue = <T extends JSONObject>(obj: T, key: string) => {
+  const dict: JSONObject = {
     identity_matrix: Matrix.identity(4),
     infinity: Infinity,
     true: true,

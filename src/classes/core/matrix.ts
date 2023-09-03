@@ -1,10 +1,12 @@
 import { EPSILON } from "./constants";
 import { Point } from "./point";
+import { Serializable } from "./serializable";
 import { Tuple } from "./tuple";
 import { clamp } from "./utils";
 import { Vector } from "./vector";
 
-export class Matrix {
+export class Matrix implements Serializable {
+  public static readonly __name__ = "matrix";
   public rows: number;
   public cols: number;
   private items: number[][];
@@ -36,6 +38,18 @@ export class Matrix {
     }
 
     return matrix;
+  }
+
+  serialize(): JSONObject {
+    return { __type: Matrix.__name__, items: this.items };
+  }
+
+  static deserialize({ __type, items }: JSONObject) {
+    if (__type === Matrix.__name__) {
+      return Matrix.from(items as number[][]);
+    }
+
+    throw new Error("Cannot deserialize object.");
   }
 
   static identity(size: number) {

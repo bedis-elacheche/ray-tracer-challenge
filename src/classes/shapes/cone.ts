@@ -3,6 +3,7 @@ import { Intersection, Ray } from "../engine";
 import { Shape, ShapeProps } from "./shape";
 
 export class Cone extends Shape {
+  public static readonly __name__ = "cone";
   public maximum: number;
   public minimum: number;
   public closed: boolean;
@@ -25,6 +26,43 @@ export class Cone extends Shape {
     this.minimum = minimum;
     this.maximum = maximum;
     this.closed = closed;
+  }
+
+  serialize(): JSONObject {
+    return {
+      ...super.serialize(),
+      __type: Cone.__name__,
+      minimum: this.minimum,
+      maximum: this.maximum,
+      closed: this.closed,
+    };
+  }
+
+  static deserialize({
+    __type,
+    minimum,
+    maximum,
+    closed,
+    ...rest
+  }: JSONObject) {
+    if (__type === Cone.__name__) {
+      const { origin, transform, material, parent } = Shape.deserialize({
+        __type: Shape.__name__,
+        ...rest,
+      });
+
+      return new Cone({
+        minimum: +minimum,
+        maximum: +maximum,
+        closed: !!closed,
+        origin,
+        transform,
+        material,
+        parent,
+      });
+    }
+
+    throw new Error("Cannot deserialize object.");
   }
 
   localNormalAt(localPoint: Point) {

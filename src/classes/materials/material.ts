@@ -1,10 +1,11 @@
-import { EPSILON } from "../core";
+import { EPSILON, Serializable } from "../core";
 import { Color } from "./color";
-import { Pattern } from "./patterns";
+import { Pattern, PatternDeserializer } from "./patterns";
 
-export class Material {
-  public color: Color;
-  public pattern: Pattern;
+export class Material implements Serializable {
+  public static readonly __name__ = "material";
+  public color: Color | null;
+  public pattern: Pattern | null;
   public ambient: number;
   public diffuse: number;
   public specular: number;
@@ -56,13 +57,77 @@ export class Material {
     });
   }
 
+  serialize(): JSONObject {
+    return {
+      __type: Material.__name__,
+      ambient: this.ambient,
+      diffuse: this.diffuse,
+      specular: this.specular,
+      shininess: this.shininess,
+      hasShadow: this.hasShadow,
+      reflective: this.reflective,
+      transparency: this.transparency,
+      refractiveIndex: this.refractiveIndex,
+      color: this.color && this.color.serialize(),
+      pattern: this.pattern && this.pattern.serialize(),
+    };
+  }
+
+  static deserialize({
+    __type,
+    color,
+    pattern,
+    ambient,
+    diffuse,
+    specular,
+    shininess,
+    reflective,
+    transparency,
+    refractiveIndex,
+    hasShadow,
+  }: JSONObject) {
+    if (__type === Material.__name__) {
+      return new Material({
+        color: color && Color.deserialize(color),
+        pattern: pattern && PatternDeserializer.deserialize(pattern),
+        ambient,
+        diffuse,
+        specular,
+        shininess,
+        reflective,
+        transparency,
+        refractiveIndex,
+        hasShadow,
+      });
+    }
+
+    throw new Error("Cannot deserialize object.");
+  }
+
   equals(m: Material) {
+    if (this === m) {
+      return true;
+    }
+
+    const areColorsEqual = Boolean(
+      (!this.color && !m.color) ||
+        (this.color && m.color && this.color.equals(m.color)),
+    );
+    const arePatternsEqual = Boolean(
+      (!this.pattern && !m.pattern) ||
+        (this.pattern && m.pattern && this.pattern.equals(m.pattern)),
+    );
+
     return (
-      this.color.equals(m.color) &&
+      areColorsEqual &&
+      arePatternsEqual &&
       Math.abs(this.ambient - m.ambient) <= EPSILON &&
       Math.abs(this.diffuse - m.diffuse) <= EPSILON &&
       Math.abs(this.specular - m.specular) <= EPSILON &&
-      Math.abs(this.shininess - m.shininess) <= EPSILON
+      Math.abs(this.shininess - m.shininess) <= EPSILON &&
+      Math.abs(this.reflective - m.reflective) <= EPSILON &&
+      Math.abs(this.transparency - m.transparency) <= EPSILON &&
+      Math.abs(this.refractiveIndex - m.refractiveIndex) <= EPSILON
     );
   }
 }

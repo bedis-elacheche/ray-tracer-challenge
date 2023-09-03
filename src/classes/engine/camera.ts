@@ -1,4 +1,4 @@
-import { EventEmitter, Matrix, Point } from "../core";
+import { EventEmitter, Matrix, Point, Serializable } from "../core";
 import { Color } from "../materials";
 import { Canvas } from "./canvas";
 import { Ray } from "./ray";
@@ -9,7 +9,8 @@ export type CameraEvents = {
   "image-rendered": [canvas: Canvas];
 };
 
-export class Camera extends EventEmitter<CameraEvents> {
+export class Camera extends EventEmitter<CameraEvents> implements Serializable {
+  public static readonly __name__ = "camera";
   public height: number;
   public width: number;
   public fieldOfView: number;
@@ -45,6 +46,35 @@ export class Camera extends EventEmitter<CameraEvents> {
     this.pixelSize = (halfWidth * 2) / height;
     this._halfWidth = halfWidth;
     this._halfHeight = halfHeight;
+  }
+
+  serialize(): JSONObject {
+    return {
+      __type: Camera.__name__,
+      width: this.width,
+      height: this.height,
+      fieldOfView: this.fieldOfView,
+      transform: this.transform.serialize(),
+    };
+  }
+
+  static deserialize({
+    __type,
+    height,
+    width,
+    fieldOfView,
+    transform,
+  }: JSONObject) {
+    if (__type === Camera.__name__) {
+      return new Camera({
+        height: +height,
+        width: +width,
+        fieldOfView: +fieldOfView,
+        transform: Matrix.deserialize(transform),
+      });
+    }
+
+    throw new Error("Cannot deserialize object.");
   }
 
   rayForPixel(x: number, y: number) {
@@ -84,5 +114,21 @@ export class Camera extends EventEmitter<CameraEvents> {
     this.emit("image-rendered", image);
 
     return image;
+  }
+
+  equals(c: Camera) {
+    if (c === this) {
+      return true;
+    }
+
+    return (
+      this.height === c.height &&
+      this.width === c.width &&
+      this.fieldOfView === c.fieldOfView &&
+      this.pixelSize === c.pixelSize &&
+      this._halfHeight === c._halfHeight &&
+      this._halfWidth === c._halfWidth &&
+      this.transform.equals(c.transform)
+    );
   }
 }

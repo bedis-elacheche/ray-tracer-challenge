@@ -1,6 +1,8 @@
 import { EPSILON } from "./constants";
+import { Serializable } from "./serializable";
 
-export class Tuple {
+export class Tuple implements Serializable {
+  public static __name__ = "tuple";
   public x: number;
   public y: number;
   public z: number;
@@ -12,6 +14,7 @@ export class Tuple {
     this.z = z;
     this.w = w;
   }
+
   public static create<T extends Tuple>(
     x: number,
     y: number,
@@ -21,6 +24,24 @@ export class Tuple {
     const TClass = this.constructor.prototype;
 
     return <T>new TClass(x, y, z, w);
+  }
+
+  serialize(): JSONObject {
+    return {
+      __type: Tuple.__name__,
+      x: this.x,
+      y: this.y,
+      z: this.z,
+      w: this.w,
+    };
+  }
+
+  static deserialize({ __type, x, y, z, w }: JSONObject) {
+    if (__type === Tuple.__name__) {
+      return new Tuple(+x, +y, +z, +w);
+    }
+
+    throw new Error("Cannot deserialize object.");
   }
 
   add<T extends Tuple>(this: T, tuple: Tuple) {

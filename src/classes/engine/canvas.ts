@@ -1,7 +1,8 @@
-import { clamp } from "../core";
+import { clamp, Serializable } from "../core";
 import { Color } from "../materials";
 
-export class Canvas {
+export class Canvas implements Serializable {
+  public static readonly __name__ = "canvas";
   public width: number;
   public height: number;
   private pixels: Color[][];
@@ -12,6 +13,40 @@ export class Canvas {
     this.pixels = Array.from({ length: height }, () =>
       Array.from({ length: width }, () => new Color(0, 0, 0)),
     );
+  }
+
+  static from(pixels: Color[][]) {
+    const allColsHaveSameLength = pixels.every(
+      (row) => row.length === pixels[0].length,
+    );
+
+    if (!allColsHaveSameLength) {
+      return null;
+    }
+
+    const canvas = new Canvas(pixels.length, pixels[0].length);
+
+    for (let y = 0; y < canvas.height; y++) {
+      for (let x = 0; x < canvas.width; x++) {
+        canvas.writePixel(x, y, pixels.at(y).at(x));
+      }
+    }
+
+    return canvas;
+  }
+
+  serialize(): JSONObject {
+    return { __type: Canvas.__name__, pixels: this.pixels };
+  }
+
+  static deserialize({ __type, pixels }: JSONObject) {
+    if (__type === Canvas.__name__) {
+      return Canvas.from(
+        pixels.map((row: JSONObject[]) => row.map(Color.deserialize)),
+      );
+    }
+
+    throw new Error("Cannot deserialize object.");
   }
 
   pixelAt(x: number, y: number) {

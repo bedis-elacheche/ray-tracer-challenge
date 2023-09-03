@@ -1,4 +1,4 @@
-import { Point, Transformations, Vector } from "../core";
+import { Point, Serializable, Transformations, Vector } from "../core";
 import { Intersection, Ray } from "../engine";
 import { Material } from "../materials";
 import { BaseShape, BaseShapeProps } from "./abstract/base-shape";
@@ -9,7 +9,8 @@ export type ShapeParent = CSG | Group | null;
 
 export type ShapeProps = BaseShapeProps<ShapeParent> & { material?: Material };
 
-export class Shape extends BaseShape<ShapeParent> {
+export class Shape extends BaseShape<ShapeParent> implements Serializable {
+  public static __name__ = "shape";
   public material: Material;
 
   constructor({
@@ -25,6 +26,32 @@ export class Shape extends BaseShape<ShapeParent> {
     });
 
     this.material = material;
+  }
+
+  serialize(): JSONObject {
+    return {
+      ...super.serialize(),
+      __type: Shape.__name__,
+      material: this.material.serialize(),
+    };
+  }
+
+  static deserialize({ __type, material, ...rest }: JSONObject) {
+    if (__type === Shape.__name__) {
+      const { origin, transform, parent } = BaseShape.deserialize({
+        __type: BaseShape.__name__,
+        ...rest,
+      });
+
+      return new Shape({
+        origin,
+        transform,
+        parent: parent as ShapeParent,
+        material: Material.deserialize(material),
+      });
+    }
+
+    throw new Error("Cannot deserialize object.");
   }
 
   normalAt(point: Point, intersection?: Intersection): Vector {

@@ -9,6 +9,7 @@ export type TriangleProps = ShapeProps & {
 };
 
 export class Triangle extends Shape {
+  public static __name__ = "triangle";
   public p1: Point;
   public p2: Point;
   public p3: Point;
@@ -39,6 +40,37 @@ export class Triangle extends Shape {
     this.e1 = p2.subtract(p1);
     this.e2 = p3.subtract(p1);
     this.normal = this.e2.cross(this.e1).normalize();
+  }
+
+  serialize(): JSONObject {
+    return {
+      ...super.serialize(),
+      __type: Triangle.__name__,
+      p1: this.p1.serialize(),
+      p2: this.p2.serialize(),
+      p3: this.p3.serialize(),
+    };
+  }
+
+  static deserialize({ __type, p1, p2, p3, ...rest }: JSONObject) {
+    if (__type === Triangle.__name__) {
+      const { origin, transform, material, parent } = Shape.deserialize({
+        __type: Shape.__name__,
+        ...rest,
+      });
+
+      return new Triangle({
+        p1: Point.deserialize(p1),
+        p2: Point.deserialize(p2),
+        p3: Point.deserialize(p3),
+        origin,
+        transform,
+        material,
+        parent,
+      });
+    }
+
+    throw new Error("Cannot deserialize object.");
   }
 
   protected mollerTrumboreIntersection(

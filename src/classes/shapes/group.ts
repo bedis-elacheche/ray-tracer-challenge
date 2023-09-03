@@ -3,6 +3,7 @@ import { Material } from "../materials";
 import { BaseShape, BaseShapeProps, CompositeShape } from "./abstract";
 import { CSG } from "./csg";
 import { Shape } from "./shape";
+import { ShapeDeserializer } from "./shape-deserializer";
 
 export type GroupChild = Group | CSG | Shape;
 
@@ -14,6 +15,7 @@ export type GroupProps = BaseShapeProps<GroupParent> & {
 };
 
 export class Group extends BaseShape<GroupParent> implements CompositeShape {
+  public static readonly __name__ = "group";
   public name: string;
   public children: GroupChild[];
 
@@ -35,6 +37,34 @@ export class Group extends BaseShape<GroupParent> implements CompositeShape {
     this.children.forEach((child) => {
       child.parent = this;
     });
+  }
+
+  serialize(): JSONObject {
+    return {
+      ...super.serialize(),
+      __type: Group.__name__,
+      name: this.name,
+      children: this.children.map((child) => child.serialize()),
+    };
+  }
+
+  static deserialize({ __type, name, children, ...rest }: JSONObject) {
+    if (__type === Group.__name__) {
+      const { origin, transform, parent } = BaseShape.deserialize({
+        __type: BaseShape.__name__,
+        ...rest,
+      });
+
+      return new Group({
+        origin,
+        transform,
+        parent: parent as GroupParent,
+        name,
+        children: children.map(ShapeDeserializer.deserialize),
+      });
+    }
+
+    throw new Error("Cannot deserialize object.");
   }
 
   applyMaterial(material: Material) {
@@ -83,7 +113,7 @@ export class Group extends BaseShape<GroupParent> implements CompositeShape {
     return false;
   }
 
-  includes(s: BaseShape<unknown>): boolean {
+  includes(s: BaseShape): boolean {
     return this.children.some((operand) => {
       if (operand instanceof CSG && operand instanceof CSG) {
         return operand.includes(s);

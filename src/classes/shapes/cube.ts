@@ -3,6 +3,33 @@ import { Intersection, Ray } from "../engine";
 import { Shape } from "./shape";
 
 export class Cube extends Shape {
+  public static readonly __name__ = "cube";
+
+  serialize(): JSONObject {
+    return {
+      ...super.serialize(),
+      __type: Cube.__name__,
+    };
+  }
+
+  static deserialize({ __type, ...rest }: JSONObject) {
+    if (__type === Cube.__name__) {
+      const { origin, transform, material, parent } = Shape.deserialize({
+        __type: Shape.__name__,
+        ...rest,
+      });
+
+      return new Cube({
+        origin,
+        transform,
+        material,
+        parent,
+      });
+    }
+
+    throw new Error("Cannot deserialize object.");
+  }
+
   localNormalAt(localPoint: Point) {
     const maxc = Math.max(
       Math.abs(localPoint.x),

@@ -3,6 +3,33 @@ import { Intersection, Ray } from "../engine";
 import { Shape } from "./shape";
 
 export class Sphere extends Shape {
+  public static readonly __name__ = "sphere";
+
+  serialize(): JSONObject {
+    return {
+      ...super.serialize(),
+      __type: Sphere.__name__,
+    };
+  }
+
+  static deserialize({ __type, ...rest }: JSONObject) {
+    if (__type === Sphere.__name__) {
+      const { origin, transform, material, parent } = Shape.deserialize({
+        __type: Shape.__name__,
+        ...rest,
+      });
+
+      return new Sphere({
+        origin,
+        transform,
+        material,
+        parent,
+      });
+    }
+
+    throw new Error("Cannot deserialize object.");
+  }
+
   localNormalAt(localPoint: Point) {
     return localPoint.subtract(this.origin);
   }

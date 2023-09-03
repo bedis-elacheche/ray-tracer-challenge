@@ -3,6 +3,7 @@ import { Material } from "../materials";
 import { BaseShape, BaseShapeProps, CompositeShape } from "./abstract";
 import { Group } from "./group";
 import { Shape } from "./shape";
+import { ShapeDeserializer } from "./shape-deserializer";
 
 export type CSGOperation = "union" | "intersection" | "difference";
 
@@ -17,6 +18,7 @@ export type CSGProps = BaseShapeProps<CSGParent> & {
 };
 
 export class CSG extends BaseShape<CSGParent> implements CompositeShape {
+  public static readonly __name__ = "csg";
   public operation: CSGOperation;
   public left: CSGOperand;
   public right: CSGOperand;
@@ -35,6 +37,36 @@ export class CSG extends BaseShape<CSGParent> implements CompositeShape {
 
     this.right = right;
     this.right.parent = this;
+  }
+
+  serialize(): JSONObject {
+    return {
+      ...super.serialize(),
+      __type: CSG.__name__,
+      operation: this.operation,
+      left: this.left.serialize(),
+      right: this.right.serialize(),
+    };
+  }
+
+  static deserialize({ __type, operation, left, right, ...rest }: JSONObject) {
+    if (__type === CSG.__name__) {
+      const { origin, transform, parent } = BaseShape.deserialize({
+        __type: BaseShape.__name__,
+        ...rest,
+      });
+
+      return new CSG({
+        origin,
+        transform,
+        operation,
+        parent: parent as CSGParent,
+        left: ShapeDeserializer.deserialize(left),
+        right: ShapeDeserializer.deserialize(right),
+      });
+    }
+
+    throw new Error("Cannot deserialize object.");
   }
 
   static isIntersectionAllowed(
@@ -87,7 +119,7 @@ export class CSG extends BaseShape<CSGParent> implements CompositeShape {
     });
   }
 
-  includes(s: BaseShape<unknown>): boolean {
+  includes(s: BaseShape): boolean {
     return [this.left, this.right].some((operand) => {
       if (operand instanceof CSG && operand instanceof CSG) {
         return operand.includes(s);

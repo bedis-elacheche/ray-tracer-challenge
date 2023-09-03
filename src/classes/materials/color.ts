@@ -1,6 +1,7 @@
-import { EPSILON } from "../core";
+import { EPSILON, Serializable } from "../core";
 
-export class Color {
+export class Color implements Serializable {
+  public static readonly __name__ = "color";
   public red: number;
   public green: number;
   public blue: number;
@@ -9,6 +10,23 @@ export class Color {
     this.red = red;
     this.green = green;
     this.blue = blue;
+  }
+
+  serialize(): JSONObject {
+    return {
+      __type: Color.__name__,
+      red: this.red,
+      green: this.green,
+      blue: this.blue,
+    };
+  }
+
+  static deserialize({ __type, red, green, blue }: JSONObject) {
+    if (__type === Color.__name__) {
+      return new Color(+red, +green, +blue);
+    }
+
+    throw new Error("Cannot deserialize object.");
   }
 
   add(color: Color) {

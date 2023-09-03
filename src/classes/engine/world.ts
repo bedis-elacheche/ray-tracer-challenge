@@ -1,7 +1,7 @@
-import { EPSILON, Point, Transformations, Vector } from "../core";
-import { Light, PointLight } from "../light";
+import { EPSILON, Point, Serializable, Transformations, Vector } from "../core";
+import { Light, LightDeserializer, PointLight } from "../light";
 import { Color, Material } from "../materials";
-import { BaseShape, Shape, Sphere } from "../shapes";
+import { BaseShape, Shape, ShapeDeserializer, Sphere } from "../shapes";
 import { Environment } from "./environment";
 import { Intersection } from "./intersection";
 import { Projectile } from "./projectile";
@@ -9,7 +9,8 @@ import { Ray } from "./ray";
 
 export type Computation = ReturnType<typeof World.prepareComputations>;
 
-export class World {
+export class World implements Serializable {
+  public static readonly __name__ = "world";
   public lights: Light[];
   public children: BaseShape[];
 
@@ -22,6 +23,25 @@ export class World {
   } = {}) {
     this.children = shapes;
     this.lights = lights;
+  }
+
+  serialize(): JSONObject {
+    return {
+      __type: World.__name__,
+      lights: this.lights.map((item) => item.serialize()),
+      children: this.children.map((item) => item.serialize()),
+    };
+  }
+
+  static deserialize({ __type, lights, children }: JSONObject) {
+    if (__type === World.__name__) {
+      return new World({
+        lights: lights.map(LightDeserializer.deserialize),
+        shapes: children.map(ShapeDeserializer.deserialize),
+      });
+    }
+
+    throw new Error("Cannot deserialize object.");
   }
 
   static default() {
@@ -234,5 +254,16 @@ export class World {
       2;
 
     return r0 + (1 - r0) * (1 - cos) ** 5;
+  }
+
+  equals(w: World) {
+    if (w === this) {
+      return true;
+    }
+
+    return (
+      this.lights.every((light, index) => light.equals(w.lights.at(index))) &&
+      this.children.every((child, index) => child.equals(w.children.at(index)))
+    );
   }
 }

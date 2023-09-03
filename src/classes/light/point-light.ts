@@ -1,10 +1,11 @@
-import { Point, Vector } from "../core";
+import { Point, Serializable, Vector } from "../core";
 import { World } from "../engine";
 import { Color, Material } from "../materials";
 import { BaseShape } from "../shapes";
 import { Light, LightProps } from "./light";
 
-export class PointLight extends Light {
+export class PointLight extends Light implements Serializable {
+  public static readonly __name__ = "point-light";
   public position: Point;
 
   constructor({
@@ -16,6 +17,30 @@ export class PointLight extends Light {
     super({ intensity });
 
     this.position = position;
+  }
+
+  serialize(): JSONObject {
+    return {
+      ...super.serialize(),
+      __type: PointLight.__name__,
+      position: this.position.serialize(),
+    };
+  }
+
+  static deserialize({ __type, position, ...rest }: JSONObject) {
+    if (__type === PointLight.__name__) {
+      const { intensity } = Light.deserialize({
+        __type: Light.__name__,
+        ...rest,
+      });
+
+      return new PointLight({
+        intensity,
+        position: Point.deserialize(position),
+      });
+    }
+
+    throw new Error("Cannot deserialize object.");
   }
 
   apply(
