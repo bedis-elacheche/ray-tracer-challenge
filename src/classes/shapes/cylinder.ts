@@ -14,6 +14,7 @@ export class Cylinder extends Shape {
     transform,
     material,
     parent,
+    hasShadow,
     minimum = -Infinity,
     maximum = Infinity,
     closed = false,
@@ -22,7 +23,7 @@ export class Cylinder extends Shape {
     maximum?: number;
     closed?: boolean;
   } = {}) {
-    super({ origin, transform, material, parent });
+    super({ hasShadow, origin, transform, material, parent });
 
     this.minimum = minimum;
     this.maximum = maximum;
@@ -47,10 +48,11 @@ export class Cylinder extends Shape {
     ...rest
   }: JSONObject) {
     if (__type === Cylinder.__name__) {
-      const { origin, transform, material, parent } = Shape.deserialize({
-        __type: Shape.__name__,
-        ...rest,
-      });
+      const { origin, transform, material, parent, hasShadow } =
+        Shape.deserialize({
+          __type: Shape.__name__,
+          ...rest,
+        });
 
       return new Cylinder({
         minimum: +minimum,
@@ -60,6 +62,7 @@ export class Cylinder extends Shape {
         transform,
         material,
         parent,
+        hasShadow,
       });
     }
 
@@ -143,6 +146,19 @@ export class Cylinder extends Shape {
         return intersections;
       },
       [],
+    );
+  }
+
+  equals(s: Cylinder) {
+    if (this === s) {
+      return true;
+    }
+
+    return (
+      super.equals(s) &&
+      this.minimum === s.minimum &&
+      this.maximum === s.maximum &&
+      this.closed === s.closed
     );
   }
 }

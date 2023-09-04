@@ -106,6 +106,7 @@ export class Shape extends BaseShape<ShapeParent> implements Serializable {
 
     return (
       this.constructor.name === s.constructor.name &&
+      this.hasShadow === s.hasShadow &&
       this.areParentsEqual(s.parent) &&
       this.transform.equals(s.transform) &&
       this.origin.equals(s.origin) &&

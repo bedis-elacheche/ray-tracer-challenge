@@ -56,9 +56,9 @@ export class AreaLight extends Light implements Serializable {
       ...super.serialize(),
       __type: AreaLight.__name__,
       corner: this.corner.serialize(),
-      uvec: this.uvec.serialize(),
+      uvec: this.uvec.multiply(this.usteps).serialize(),
       usteps: this.usteps,
-      vvec: this.vvec.serialize(),
+      vvec: this.vvec.multiply(this.vsteps).serialize(),
       vsteps: this.vsteps,
       jitter: this.jitter,
     };
@@ -72,6 +72,7 @@ export class AreaLight extends Light implements Serializable {
     vvec,
     vsteps,
     jitter,
+    jitterSequence,
     ...rest
   }: JSONObject) {
     if (__type === AreaLight.__name__) {

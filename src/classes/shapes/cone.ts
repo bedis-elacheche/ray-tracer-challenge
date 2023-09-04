@@ -13,6 +13,7 @@ export class Cone extends Shape {
     transform,
     material,
     parent,
+    hasShadow,
     minimum = -Infinity,
     maximum = Infinity,
     closed = false,
@@ -21,7 +22,7 @@ export class Cone extends Shape {
     maximum?: number;
     closed?: boolean;
   } = {}) {
-    super({ origin, transform, material, parent });
+    super({ origin, transform, material, parent, hasShadow });
 
     this.minimum = minimum;
     this.maximum = maximum;
@@ -46,10 +47,11 @@ export class Cone extends Shape {
     ...rest
   }: JSONObject) {
     if (__type === Cone.__name__) {
-      const { origin, transform, material, parent } = Shape.deserialize({
-        __type: Shape.__name__,
-        ...rest,
-      });
+      const { origin, transform, material, parent, hasShadow } =
+        Shape.deserialize({
+          __type: Shape.__name__,
+          ...rest,
+        });
 
       return new Cone({
         minimum: +minimum,
@@ -59,6 +61,7 @@ export class Cone extends Shape {
         transform,
         material,
         parent,
+        hasShadow,
       });
     }
 
@@ -156,6 +159,19 @@ export class Cone extends Shape {
         return intersections;
       },
       [],
+    );
+  }
+
+  equals(s: Cone) {
+    if (this === s) {
+      return true;
+    }
+
+    return (
+      super.equals(s) &&
+      this.minimum === s.minimum &&
+      this.maximum === s.maximum &&
+      this.closed === s.closed
     );
   }
 }

@@ -14,16 +14,18 @@ export class Plane extends Shape {
 
   static deserialize({ __type, ...rest }: JSONObject) {
     if (__type === Plane.__name__) {
-      const { origin, transform, material, parent } = Shape.deserialize({
-        __type: Shape.__name__,
-        ...rest,
-      });
+      const { origin, transform, material, parent, hasShadow } =
+        Shape.deserialize({
+          __type: Shape.__name__,
+          ...rest,
+        });
 
       return new Plane({
         origin,
         transform,
         material,
         parent,
+        hasShadow,
       });
     }
 

@@ -25,12 +25,14 @@ export class Triangle extends Shape {
     transform,
     material,
     parent,
+    hasShadow,
   }: TriangleProps) {
     super({
       origin,
       transform,
       material,
       parent,
+      hasShadow,
     });
 
     this.p1 = p1;
@@ -54,10 +56,11 @@ export class Triangle extends Shape {
 
   static deserialize({ __type, p1, p2, p3, ...rest }: JSONObject) {
     if (__type === Triangle.__name__) {
-      const { origin, transform, material, parent } = Shape.deserialize({
-        __type: Shape.__name__,
-        ...rest,
-      });
+      const { origin, transform, material, parent, hasShadow } =
+        Shape.deserialize({
+          __type: Shape.__name__,
+          ...rest,
+        });
 
       return new Triangle({
         p1: Point.deserialize(p1),
@@ -67,6 +70,7 @@ export class Triangle extends Shape {
         transform,
         material,
         parent,
+        hasShadow,
       });
     }
 
@@ -112,5 +116,21 @@ export class Triangle extends Shape {
 
   localNormalAt(_localPoint: Point, _intersection?: Intersection) {
     return this.normal;
+  }
+
+  equals(s: Triangle) {
+    if (this === s) {
+      return true;
+    }
+
+    return (
+      super.equals(s) &&
+      this.p1.equals(s.p1) &&
+      this.p2.equals(s.p2) &&
+      this.p3.equals(s.p3) &&
+      this.e1.equals(s.e1) &&
+      this.e2.equals(s.e2) &&
+      this.normal.equals(s.normal)
+    );
   }
 }

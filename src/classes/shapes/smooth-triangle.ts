@@ -21,6 +21,7 @@ export class SmoothTriangle extends Triangle {
     transform,
     material,
     parent,
+    hasShadow,
   }: TriangleProps & {
     n1: Vector;
     n2: Vector;
@@ -34,6 +35,7 @@ export class SmoothTriangle extends Triangle {
       transform,
       material,
       parent,
+      hasShadow,
     });
 
     this.n1 = n1;
@@ -53,7 +55,7 @@ export class SmoothTriangle extends Triangle {
 
   static deserialize({ __type, n1, n2, n3, ...rest }: JSONObject) {
     if (__type === SmoothTriangle.__name__) {
-      const { p1, p2, p3, origin, transform, material, parent } =
+      const { p1, p2, p3, origin, transform, material, parent, hasShadow } =
         Triangle.deserialize({
           __type: Triangle.__name__,
           ...rest,
@@ -70,6 +72,7 @@ export class SmoothTriangle extends Triangle {
         transform,
         material,
         parent,
+        hasShadow,
       });
     }
 
@@ -85,5 +88,20 @@ export class SmoothTriangle extends Triangle {
       .multiply(intersection.u)
       .add(this.n3.multiply(intersection.v))
       .add(this.n1.multiply(1 - intersection.u - intersection.v));
+  }
+
+  equals(s: SmoothTriangle) {
+    if (this === s) {
+      return true;
+    }
+
+    return (
+      super.equals(s) &&
+      this.n1.equals(s.n1) &&
+      this.n2.equals(s.n2) &&
+      this.n3.equals(s.n3) &&
+      this.u === s.u &&
+      this.v === s.v
+    );
   }
 }

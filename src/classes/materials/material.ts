@@ -82,7 +82,7 @@ export class Material implements Serializable {
   }: JSONObject) {
     if (__type === Material.__name__) {
       return new Material({
-        color: color && Color.deserialize(color),
+        color: Color.deserialize(color),
         pattern: pattern && PatternDeserializer.deserialize(pattern),
         ambient,
         diffuse,
