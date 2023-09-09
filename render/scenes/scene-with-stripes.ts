@@ -10,9 +10,9 @@ import {
   Vector,
   World,
 } from "../../src";
-import { ProgressBar } from "../progress";
+import { Scene } from "../types";
 
-export const sceneWithStripes = (name: string, progress: ProgressBar) => {
+export const sceneWithStripes: Scene = () => {
   const pattern = new Stripes({
     colors: [new Color(1, 0, 0.2), new Color(1, 1, 1)],
     transform: Transformations.scale(0.05, 1, 1),
@@ -100,11 +100,5 @@ export const sceneWithStripes = (name: string, progress: ProgressBar) => {
     ),
   });
 
-  progress.start(name, camera.height * camera.width);
-
-  camera.on("pixel-rendered", () => {
-    progress.increment("current");
-  });
-
-  return camera.render(world);
+  return { camera, world };
 };

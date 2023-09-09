@@ -11,9 +11,9 @@ import {
   Vector,
   World,
 } from "../../src";
-import { ProgressBar } from "../progress";
+import { Scene } from "../types";
 
-export const sceneWithReflections = (name: string, progress: ProgressBar) => {
+export const sceneWithReflections: Scene = () => {
   const floor = new Plane({
     transform: Transformations.scale(10, 0.01, 10),
     material: new Material({
@@ -95,11 +95,5 @@ export const sceneWithReflections = (name: string, progress: ProgressBar) => {
     ),
   });
 
-  progress.start(name, camera.height * camera.width);
-
-  camera.on("pixel-rendered", () => {
-    progress.increment("current");
-  });
-
-  return camera.render(world);
+  return { camera, world };
 };

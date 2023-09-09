@@ -14,12 +14,9 @@ import {
   Vector,
   World,
 } from "../../src";
-import { ProgressBar } from "../progress";
+import { Scene } from "../types";
 
-export const sceneWithInfiniteCylinders = (
-  name: string,
-  progress: ProgressBar,
-) => {
+export const sceneWithInfiniteCylinders: Scene = () => {
   const floor = new Plane({
     transform: Transformations.scale(10, 0.01, 10),
     material: new Material({
@@ -117,17 +114,12 @@ export const sceneWithInfiniteCylinders = (
     ),
   });
 
-  progress.start(name, camera.height * camera.width);
-
-  camera.on("pixel-rendered", () => {
-    progress.increment("current");
-  });
-
-  return camera.render(world);
+  return { camera, world };
 };
 
 const makeSceneWithFiniteCylinders =
-  (closed: boolean) => (name: string, progress: ProgressBar) => {
+  (closed: boolean): Scene =>
+  () => {
     const floor = new Plane({
       transform: Transformations.scale(10, 0.01, 10),
       material: new Material({
@@ -234,13 +226,7 @@ const makeSceneWithFiniteCylinders =
       ),
     });
 
-    progress.start(name, camera.height * camera.width);
-
-    camera.on("pixel-rendered", () => {
-      progress.increment("current");
-    });
-
-    return camera.render(world);
+    return { camera, world };
   };
 
 export const sceneWithFiniteCylinders = makeSceneWithFiniteCylinders(false);

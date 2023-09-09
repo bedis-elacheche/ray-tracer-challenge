@@ -1,6 +1,5 @@
 import { Matrix, Point, Serializable, Vector } from "../../core";
 import { Intersection, Ray } from "../../engine";
-import { ShapeDeserializer } from "../shape-deserializer";
 
 export type BaseShapeProps<TParent> = {
   origin?: Point;
@@ -31,16 +30,14 @@ export class BaseShape<TParent extends Serializable = Serializable>
       __type: BaseShape.__name__,
       transform: this.transform.serialize(),
       origin: this.origin.serialize(),
-      parent: this.parent && this.parent.serialize(),
     };
   }
 
-  static deserialize({ __type, origin, transform, parent }: JSONObject) {
+  static deserialize({ __type, origin, transform }: JSONObject) {
     if (__type === BaseShape.__name__) {
       return new BaseShape({
         origin: Point.deserialize(origin),
         transform: Matrix.deserialize(transform),
-        parent: parent && ShapeDeserializer.deserialize(parent),
       });
     }
     throw new Error("Cannot deserialize object.");
