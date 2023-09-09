@@ -19,9 +19,9 @@ export type CSGProps = BaseShapeProps<CSGParent> & {
 
 export class CSG extends BaseShape<CSGParent> implements CompositeShape {
   public static readonly __name__ = "csg";
-  public operation: CSGOperation;
-  public left: CSGOperand;
-  public right: CSGOperand;
+  private _operation: CSGOperation;
+  private _left: CSGOperand;
+  private _right: CSGOperand;
 
   constructor({ operation, left, right, origin, transform, parent }: CSGProps) {
     super({
@@ -30,22 +30,22 @@ export class CSG extends BaseShape<CSGParent> implements CompositeShape {
       parent,
     });
 
-    this.operation = operation;
+    this._operation = operation;
 
-    this.left = left;
-    this.left.parent = this;
+    this._left = left;
+    this._left.parent = this;
 
-    this.right = right;
-    this.right.parent = this;
+    this._right = right;
+    this._right.parent = this;
   }
 
   serialize(): JSONObject {
     return {
       ...super.serialize(),
       __type: CSG.__name__,
-      operation: this.operation,
-      left: this.left.serialize(),
-      right: this.right.serialize(),
+      operation: this._operation,
+      left: this._left.serialize(),
+      right: this._right.serialize(),
     };
   }
 
@@ -110,7 +110,7 @@ export class CSG extends BaseShape<CSGParent> implements CompositeShape {
   }
 
   applyMaterial(material: Material) {
-    [this.left, this.right].forEach((operand) => {
+    [this._left, this._right].forEach((operand) => {
       if (operand instanceof Group || operand instanceof CSG) {
         operand.applyMaterial(material);
       } else {
@@ -120,7 +120,7 @@ export class CSG extends BaseShape<CSGParent> implements CompositeShape {
   }
 
   includes(s: BaseShape): boolean {
-    return [this.left, this.right].some((operand) => {
+    return [this._left, this._right].some((operand) => {
       if (operand instanceof CSG && operand instanceof CSG) {
         return operand.includes(s);
       }
@@ -140,7 +140,6 @@ export class CSG extends BaseShape<CSGParent> implements CompositeShape {
   filterIntersections(
     intersections: Intersection<CSGOperand>[],
   ): Intersection<CSGOperand>[] {
-    const { left, operation } = this;
     const result: Intersection<CSGOperand>[] = [];
     let isLeftShapeHit = false;
     let hitInsideLeftShape = false;
@@ -149,20 +148,20 @@ export class CSG extends BaseShape<CSGParent> implements CompositeShape {
     for (const intersection of intersections) {
       const { object } = intersection;
 
-      if (left instanceof Shape && object instanceof Shape) {
-        isLeftShapeHit = left.equals(object);
+      if (this._left instanceof Shape && object instanceof Shape) {
+        isLeftShapeHit = this._left.equals(object);
       } else if (
-        (left instanceof Group && object instanceof Group) ||
-        (left instanceof CSG && object instanceof CSG)
+        (this._left instanceof Group && object instanceof Group) ||
+        (this._left instanceof CSG && object instanceof CSG)
       ) {
-        isLeftShapeHit = left.includes(object);
+        isLeftShapeHit = this._left.includes(object);
       } else {
         isLeftShapeHit = false;
       }
 
       if (
         CSG.isIntersectionAllowed(
-          operation,
+          this._operation,
           isLeftShapeHit,
           hitInsideLeftShape,
           hitInsideRightShape,
@@ -182,19 +181,59 @@ export class CSG extends BaseShape<CSGParent> implements CompositeShape {
   }
 
   protected areParentsEqual(sParent: CSGParent) {
-    if (this.parent === null && sParent === null) {
+    if (this._parent === null && sParent === null) {
       return true;
     }
 
-    if (this.parent instanceof Group && sParent instanceof Group) {
-      return this.parent.equals(sParent);
+    if (this._parent instanceof Group && sParent instanceof Group) {
+      return this._parent.equals(sParent);
     }
 
-    if (this.parent instanceof CSG && sParent instanceof CSG) {
-      return this.parent.equals(sParent);
+    if (this._parent instanceof CSG && sParent instanceof CSG) {
+      return this._parent.equals(sParent);
     }
 
     return false;
+  }
+
+  private areChildrenEqual(child: CSGOperand, sChild: CSGOperand) {
+    if (child === null && sChild === null) {
+      return true;
+    }
+
+    if (child instanceof Group && sChild instanceof Group) {
+      return child.equals(sChild);
+    }
+
+    if (child instanceof CSG && sChild instanceof CSG) {
+      return child.equals(sChild);
+    }
+
+    return false;
+  }
+
+  get operation(): CSGOperation {
+    return this._operation;
+  }
+
+  set operation(value: CSGOperation) {
+    this._operation = value;
+  }
+
+  get left(): CSGOperand {
+    return this._left;
+  }
+
+  set left(value: CSGOperand) {
+    this._left = value;
+  }
+
+  get right(): CSGOperand {
+    return this._right;
+  }
+
+  set right(value: CSGOperand) {
+    this._right = value;
   }
 
   equals(csg: CSG): boolean {
@@ -203,10 +242,10 @@ export class CSG extends BaseShape<CSGParent> implements CompositeShape {
     }
 
     return (
-      this.operation === csg.operation &&
-      this.areParentsEqual(csg.parent) &&
-      this.left === csg.left &&
-      this.right === csg.right
+      this._operation === csg._operation &&
+      this.areParentsEqual(csg._parent) &&
+      this.areChildrenEqual(this._left, csg._left) &&
+      this.areChildrenEqual(this._right, csg._right)
     );
   }
 }

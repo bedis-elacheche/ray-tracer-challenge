@@ -4,11 +4,11 @@ import { Triangle, TriangleProps } from "./triangle";
 
 export class SmoothTriangle extends Triangle {
   public static readonly __name__ = "smooth-triangle";
-  public n1: Vector;
-  public n2: Vector;
-  public n3: Vector;
-  public u: number;
-  public v: number;
+  private _n1: Vector;
+  private _n2: Vector;
+  private _n3: Vector;
+  private _u: number;
+  private _v: number;
 
   constructor({
     n1,
@@ -38,18 +38,18 @@ export class SmoothTriangle extends Triangle {
       hasShadow,
     });
 
-    this.n1 = n1;
-    this.n2 = n2;
-    this.n3 = n3;
+    this._n1 = n1;
+    this._n2 = n2;
+    this._n3 = n3;
   }
 
   serialize(): JSONObject {
     return {
       ...super.serialize(),
       __type: SmoothTriangle.__name__,
-      n1: this.n1.serialize(),
-      n2: this.n2.serialize(),
-      n3: this.n3.serialize(),
+      n1: this._n1.serialize(),
+      n2: this._n2.serialize(),
+      n3: this._n3.serialize(),
     };
   }
 
@@ -79,15 +79,55 @@ export class SmoothTriangle extends Triangle {
     throw new Error("Cannot deserialize object.");
   }
 
+  get n1(): Vector {
+    return this._n1;
+  }
+
+  set n1(value: Vector) {
+    this._n1 = value;
+  }
+
+  get n2(): Vector {
+    return this._n2;
+  }
+
+  set n2(value: Vector) {
+    this._n2 = value;
+  }
+
+  get n3(): Vector {
+    return this._n3;
+  }
+
+  set n3(value: Vector) {
+    this._n3 = value;
+  }
+
+  get u(): number {
+    return this._u;
+  }
+
+  set u(value: number) {
+    this._u = value;
+  }
+
+  get v(): number {
+    return this._v;
+  }
+
+  set v(value: number) {
+    this._v = value;
+  }
+
   localIntersect(localRay: Ray): Intersection<SmoothTriangle>[] {
     return this.mollerTrumboreIntersection(localRay, { smoothTriangle: true });
   }
 
   localNormalAt(_localPoint: Point, intersection: Intersection) {
-    return this.n2
+    return this._n2
       .multiply(intersection.u)
-      .add(this.n3.multiply(intersection.v))
-      .add(this.n1.multiply(1 - intersection.u - intersection.v));
+      .add(this._n3.multiply(intersection.v))
+      .add(this._n1.multiply(1 - intersection.u - intersection.v));
   }
 
   equals(s: SmoothTriangle) {
@@ -97,11 +137,11 @@ export class SmoothTriangle extends Triangle {
 
     return (
       super.equals(s) &&
-      this.n1.equals(s.n1) &&
-      this.n2.equals(s.n2) &&
-      this.n3.equals(s.n3) &&
-      this.u === s.u &&
-      this.v === s.v
+      this._n1.equals(s._n1) &&
+      this._n2.equals(s._n2) &&
+      this._n3.equals(s._n3) &&
+      this._u === s._u &&
+      this._v === s._v
     );
   }
 }

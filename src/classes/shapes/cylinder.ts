@@ -4,10 +4,9 @@ import { Shape, ShapeProps } from "./shape";
 
 export class Cylinder extends Shape {
   public static readonly __name__ = "cylinder";
-
-  public maximum: number;
-  public minimum: number;
-  public closed: boolean;
+  private _maximum: number;
+  private _minimum: number;
+  private _closed: boolean;
 
   constructor({
     origin,
@@ -25,18 +24,18 @@ export class Cylinder extends Shape {
   } = {}) {
     super({ hasShadow, origin, transform, material, parent });
 
-    this.minimum = minimum;
-    this.maximum = maximum;
-    this.closed = closed;
+    this._minimum = minimum;
+    this._maximum = maximum;
+    this._closed = closed;
   }
 
   serialize(): JSONObject {
     return {
       ...super.serialize(),
       __type: Cylinder.__name__,
-      minimum: this.minimum,
-      maximum: this.maximum,
-      closed: this.closed,
+      minimum: this._minimum,
+      maximum: this._maximum,
+      closed: this._closed,
     };
   }
 
@@ -69,15 +68,39 @@ export class Cylinder extends Shape {
     throw new Error("Cannot deserialize object.");
   }
 
+  get minimum() {
+    return this._minimum;
+  }
+
+  set minimum(value: number) {
+    this._minimum = value;
+  }
+
+  get maximum() {
+    return this._maximum;
+  }
+
+  set maximum(value: number) {
+    this._maximum = value;
+  }
+
+  get closed() {
+    return this._closed;
+  }
+
+  set closed(value: boolean) {
+    this._closed = value;
+  }
+
   localNormalAt(localPoint: Point) {
     const dist = localPoint.x ** 2 + localPoint.z ** 2;
 
     if (dist < 1) {
-      if (Math.abs(localPoint.y - this.maximum) <= EPSILON) {
+      if (Math.abs(localPoint.y - this._maximum) <= EPSILON) {
         return new Vector(0, 1, 0);
       }
 
-      if (Math.abs(localPoint.y - this.minimum) <= EPSILON) {
+      if (Math.abs(localPoint.y - this._minimum) <= EPSILON) {
         return new Vector(0, -1, 0);
       }
     }
@@ -115,7 +138,7 @@ export class Cylinder extends Shape {
     ].reduce<Intersection<Cylinder>[]>((intersections, t) => {
       const y = localRay.origin.y + t * localRay.direction.y;
 
-      if (this.minimum < y && y < this.maximum) {
+      if (this._minimum < y && y < this._maximum) {
         intersections.push(new Intersection(t, this));
       }
 
@@ -131,11 +154,11 @@ export class Cylinder extends Shape {
   }
 
   private intersectCaps(localRay: Ray): Intersection<Cylinder>[] {
-    if (!this.closed || Math.abs(localRay.direction.y) <= EPSILON) {
+    if (!this._closed || Math.abs(localRay.direction.y) <= EPSILON) {
       return [];
     }
 
-    return [this.minimum, this.maximum].reduce<Intersection<Cylinder>[]>(
+    return [this._minimum, this._maximum].reduce<Intersection<Cylinder>[]>(
       (intersections, b) => {
         const t = (b - localRay.origin.y) / localRay.direction.y;
 
@@ -156,9 +179,9 @@ export class Cylinder extends Shape {
 
     return (
       super.equals(s) &&
-      this.minimum === s.minimum &&
-      this.maximum === s.maximum &&
-      this.closed === s.closed
+      this._minimum === s._minimum &&
+      this._maximum === s._maximum &&
+      this._closed === s._closed
     );
   }
 }

@@ -1,5 +1,5 @@
-import { EPSILON } from "./constants";
 import { Serializable } from "./serializable";
+import { isEqual } from "./utils";
 
 export class Tuple implements Serializable {
   public static __name__ = "tuple";
@@ -102,10 +102,10 @@ export class Tuple implements Serializable {
     }
 
     return (
-      Math.abs(this.x - tuple.x) <= EPSILON &&
-      Math.abs(this.y - tuple.y) <= EPSILON &&
-      Math.abs(this.z - tuple.z) <= EPSILON &&
-      Math.abs(this.w - tuple.w) <= EPSILON
+      isEqual(this.x, tuple.x) &&
+      isEqual(this.y, tuple.y) &&
+      isEqual(this.z, tuple.z) &&
+      isEqual(this.w, tuple.w)
     );
   }
 }

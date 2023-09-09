@@ -11,25 +11,25 @@ export class BaseShape<TParent extends Serializable = Serializable>
   implements Serializable
 {
   public static __name__ = "base-shape";
-  public transform: Matrix;
-  public origin: Point;
-  public parent: TParent | null;
+  protected _transform: Matrix;
+  protected _origin: Point;
+  protected _parent: TParent | null;
 
   constructor({
     origin = new Point(0, 0, 0),
     transform = Matrix.identity(4),
     parent = null,
   }: BaseShapeProps<TParent> = {}) {
-    this.origin = origin;
-    this.transform = transform;
-    this.parent = parent;
+    this._origin = origin;
+    this._transform = transform;
+    this._parent = parent;
   }
 
   serialize(): JSONObject {
     return {
       __type: BaseShape.__name__,
-      transform: this.transform.serialize(),
-      origin: this.origin.serialize(),
+      transform: this._transform.serialize(),
+      origin: this._origin.serialize(),
     };
   }
 
@@ -41,6 +41,30 @@ export class BaseShape<TParent extends Serializable = Serializable>
       });
     }
     throw new Error("Cannot deserialize object.");
+  }
+
+  get origin() {
+    return this._origin;
+  }
+
+  set origin(value: Point) {
+    this._origin = value;
+  }
+
+  get transform() {
+    return this._transform;
+  }
+
+  set transform(value: Matrix) {
+    this._transform = value;
+  }
+
+  get parent() {
+    return this._parent;
+  }
+
+  set parent(value: TParent) {
+    this._parent = value;
   }
 
   normalAt(_point: Point, _intersection?: Intersection): Vector {

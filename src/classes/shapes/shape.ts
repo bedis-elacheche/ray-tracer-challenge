@@ -14,8 +14,8 @@ export type ShapeProps = BaseShapeProps<ShapeParent> & {
 
 export class Shape extends BaseShape<ShapeParent> implements Serializable {
   public static __name__ = "shape";
-  public material: Material;
-  public hasShadow: boolean;
+  protected _material: Material;
+  protected _hasShadow: boolean;
 
   constructor({
     material = new Material(),
@@ -30,16 +30,16 @@ export class Shape extends BaseShape<ShapeParent> implements Serializable {
       parent,
     });
 
-    this.material = material;
-    this.hasShadow = hasShadow;
+    this._material = material;
+    this._hasShadow = hasShadow;
   }
 
   serialize(): JSONObject {
     return {
       ...super.serialize(),
       __type: Shape.__name__,
-      material: this.material.serialize(),
-      hasShadow: this.hasShadow,
+      material: this._material.serialize(),
+      hasShadow: this._hasShadow,
     };
   }
 
@@ -60,6 +60,22 @@ export class Shape extends BaseShape<ShapeParent> implements Serializable {
     }
 
     throw new Error("Cannot deserialize object.");
+  }
+
+  get material(): Material {
+    return this._material;
+  }
+
+  set material(value: Material) {
+    this._material = value;
+  }
+
+  get hasShadow(): boolean {
+    return this._hasShadow;
+  }
+
+  set hasShadow(value: boolean) {
+    this._hasShadow = value;
   }
 
   normalAt(point: Point, intersection?: Intersection): Vector {
@@ -106,11 +122,11 @@ export class Shape extends BaseShape<ShapeParent> implements Serializable {
 
     return (
       this.constructor.name === s.constructor.name &&
-      this.hasShadow === s.hasShadow &&
+      this._hasShadow === s._hasShadow &&
       this.areParentsEqual(s.parent) &&
       this.transform.equals(s.transform) &&
       this.origin.equals(s.origin) &&
-      this.material.equals(s.material)
+      this._material.equals(s._material)
     );
   }
 }

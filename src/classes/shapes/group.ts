@@ -16,8 +16,8 @@ export type GroupProps = BaseShapeProps<GroupParent> & {
 
 export class Group extends BaseShape<GroupParent> implements CompositeShape {
   public static readonly __name__ = "group";
-  public name: string;
-  public children: GroupChild[];
+  private _name: string;
+  private _children: GroupChild[];
 
   constructor({
     name = `Group ${Date.now()}`,
@@ -31,10 +31,10 @@ export class Group extends BaseShape<GroupParent> implements CompositeShape {
       transform,
       parent,
     });
-    this.name = name;
-    this.children = children;
+    this._name = name;
+    this._children = children;
 
-    this.children.forEach((child) => {
+    this._children.forEach((child) => {
       child.parent = this;
     });
   }
@@ -43,8 +43,8 @@ export class Group extends BaseShape<GroupParent> implements CompositeShape {
     return {
       ...super.serialize(),
       __type: Group.__name__,
-      name: this.name,
-      children: this.children.map((child) => child.serialize()),
+      name: this._name,
+      children: this._children.map((child) => child.serialize()),
     };
   }
 
@@ -68,7 +68,7 @@ export class Group extends BaseShape<GroupParent> implements CompositeShape {
   }
 
   applyMaterial(material: Material) {
-    this.children.forEach((child) => {
+    this._children.forEach((child) => {
       if (child instanceof Group || child instanceof CSG) {
         child.applyMaterial(material);
       } else {
@@ -82,7 +82,7 @@ export class Group extends BaseShape<GroupParent> implements CompositeShape {
       shape.parent = this;
     });
 
-    this.children.push(...shapes);
+    this._children.push(...shapes);
   }
 
   intersect(r: Ray): Intersection<GroupChild>[] {
@@ -97,24 +97,36 @@ export class Group extends BaseShape<GroupParent> implements CompositeShape {
       .sort((a, z) => a.t - z.t);
   }
 
+  get name(): string {
+    return this._name;
+  }
+
+  set name(value: string) {
+    this._name = value;
+  }
+
+  get children(): GroupChild[] {
+    return this._children;
+  }
+
   protected areParentsEqual(sParent: GroupParent) {
-    if (this.parent === null && sParent === null) {
+    if (this._parent === null && sParent === null) {
       return true;
     }
 
-    if (this.parent instanceof Group && sParent instanceof Group) {
-      return this.parent.equals(sParent);
+    if (this._parent instanceof Group && sParent instanceof Group) {
+      return this._parent.equals(sParent);
     }
 
-    if (this.parent instanceof CSG && sParent instanceof CSG) {
-      return this.parent.equals(sParent);
+    if (this._parent instanceof CSG && sParent instanceof CSG) {
+      return this._parent.equals(sParent);
     }
 
     return false;
   }
 
   includes(s: BaseShape): boolean {
-    return this.children.some((operand) => {
+    return this._children.some((operand) => {
       if (operand instanceof CSG && operand instanceof CSG) {
         return operand.includes(s);
       }
@@ -137,11 +149,11 @@ export class Group extends BaseShape<GroupParent> implements CompositeShape {
     }
 
     return (
-      this.name === group.name &&
-      this.areParentsEqual(group.parent) &&
-      this.transform.equals(group.transform) &&
-      this.children.every((item, index) => {
-        const otherChild = group.children[index];
+      this._name === group._name &&
+      this.areParentsEqual(group._parent) &&
+      this.transform.equals(group._transform) &&
+      this._children.every((item, index) => {
+        const otherChild = group._children[index];
 
         if (item instanceof Group && otherChild instanceof Group) {
           return item.equals(otherChild);

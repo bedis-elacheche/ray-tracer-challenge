@@ -1,6 +1,7 @@
 import { Point, Vector } from "../core";
 import { Intersection, Ray } from "../engine";
 import { Shape } from "./shape";
+import { checkAxis } from "./utils";
 
 export class Cube extends Shape {
   public static readonly __name__ = "cube";
@@ -49,30 +50,24 @@ export class Cube extends Shape {
     }
   }
 
-  private static checkAxis(
-    origin: number,
-    direction: number,
-  ): [number, number] {
-    const tminNumerator = -1 - origin;
-    const tmaxNumerator = 1 - origin;
-    const tmin = tminNumerator / direction;
-    const tmax = tmaxNumerator / direction;
-
-    return tmin > tmax ? [tmax, tmin] : [tmin, tmax];
-  }
-
   localIntersect(localRay: Ray): Intersection<Cube>[] {
-    const [xtmin, xtmax] = Cube.checkAxis(
+    const [xtmin, xtmax] = checkAxis(
       localRay.origin.x,
       localRay.direction.x,
+      -1,
+      1,
     );
-    const [ytmin, ytmax] = Cube.checkAxis(
+    const [ytmin, ytmax] = checkAxis(
       localRay.origin.y,
       localRay.direction.y,
+      -1,
+      1,
     );
-    const [ztmin, ztmax] = Cube.checkAxis(
+    const [ztmin, ztmax] = checkAxis(
       localRay.origin.z,
       localRay.direction.z,
+      -1,
+      1,
     );
     const tmin = Math.max(xtmin, ytmin, ztmin);
     const tmax = Math.min(xtmax, ytmax, ztmax);

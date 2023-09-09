@@ -1,8 +1,7 @@
-import { EPSILON } from "./constants";
 import { Point } from "./point";
 import { Serializable } from "./serializable";
 import { Tuple } from "./tuple";
-import { clamp } from "./utils";
+import { clamp, isEqual } from "./utils";
 import { Vector } from "./vector";
 
 export class Matrix implements Serializable {
@@ -86,7 +85,7 @@ export class Matrix implements Serializable {
     }
 
     return this.items.every((row, y) =>
-      row.every((item, x) => Math.abs(item - matrix.get(y, x)) < EPSILON),
+      row.every((item, x) => isEqual(item, matrix.get(y, x))),
     );
   }
 
