@@ -57,11 +57,21 @@ When(
 
 When(
   "{word} ← render\\({word}, {word})",
-  function (varName: string, cameraVarName: string, worldVarName: string) {
+  function (
+    varName: string,
+    cameraVarName: string,
+    worldVarName: string,
+    done: () => void,
+  ) {
     const camera = getCamera(this, cameraVarName);
     const world = getWorld(this, worldVarName);
 
-    this[varName] = camera.render(world);
+    camera.on("image-rendered", (image) => {
+      this[varName] = image;
+      done();
+    });
+
+    camera.render(world);
   },
 );
 

@@ -196,8 +196,6 @@ export class Camera extends EventEmitter<CameraEvents> implements Serializable {
 
       this.emit("image-rendered", image);
     }
-
-    return image;
   }
 
   equals(c: Camera) {
