@@ -1,6 +1,7 @@
 import { Intersection, Ray } from "../engine";
 import { Material } from "../materials";
 import { BaseShape, BaseShapeProps, CompositeShape } from "./abstract";
+import { BoundingBox } from "./bounding-box";
 import { Group } from "./group";
 import { Shape } from "./shape";
 import { ShapeDeserializer } from "./shape-deserializer";
@@ -102,7 +103,13 @@ export class CSG extends BaseShape<CSGParent> implements CompositeShape {
   }
 
   localIntersect(localRay: Ray): Intersection<CSGOperand>[] {
-    const xs = [this.left, this.right]
+    const didBoundsIntersect = this.bounds.intersect(localRay);
+
+    if (!didBoundsIntersect) {
+      return [];
+    }
+
+    const xs = [this._left, this._right]
       .flatMap((item) => item.intersect(localRay))
       .sort((a, z) => a.t - z.t);
 
@@ -226,6 +233,7 @@ export class CSG extends BaseShape<CSGParent> implements CompositeShape {
 
   set left(value: CSGOperand) {
     this._left = value;
+    this.resetBounds();
   }
 
   get right(): CSGOperand {
@@ -234,6 +242,19 @@ export class CSG extends BaseShape<CSGParent> implements CompositeShape {
 
   set right(value: CSGOperand) {
     this._right = value;
+    this.resetBounds();
+  }
+
+  get bounds() {
+    if (!this._bounds) {
+      this._bounds = new BoundingBox();
+
+      [this._left, this._right].forEach((operand) => {
+        this._bounds.add(operand.parentSpaceBounds);
+      });
+    }
+
+    return this._bounds;
   }
 
   equals(csg: CSG): boolean {
@@ -247,5 +268,10 @@ export class CSG extends BaseShape<CSGParent> implements CompositeShape {
       this.areChildrenEqual(this._left, csg._left) &&
       this.areChildrenEqual(this._right, csg._right)
     );
+  }
+
+  divide(threshold: number) {
+    this._left.divide(threshold);
+    this._right.divide(threshold);
   }
 }

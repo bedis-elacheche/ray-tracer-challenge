@@ -52,6 +52,19 @@ Given(
 );
 
 Given(
+  "{word} ← rotation_x\\(π \\/ {float}) * rotation_y\\(π \\/ {float})",
+  function (
+    varName: string,
+    rotationXDivisor: number,
+    rotationYDivisor: number,
+  ) {
+    this[varName] = Transformations.rotateX(
+      Math.PI / rotationXDivisor,
+    ).multiply(Transformations.rotateY(Math.PI / rotationYDivisor));
+  },
+);
+
+Given(
   "{word} ← rotation_z\\(π \\/ {float})",
   function (varName: string, divisor: number) {
     this[varName] = Transformations.rotateZ(Math.PI / divisor);

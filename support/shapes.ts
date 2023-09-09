@@ -21,6 +21,23 @@ Given("{word} has:", function (varName: string, dataTable: DataTable) {
   customizeShapeWith(shape, dataTable);
 });
 
+Given(
+  "set_transform\\({word}, translation\\({float}, {float}, {float}) * scaling\\({float}, {float}, {float}))",
+  function (
+    varName: string,
+    tx: number,
+    ty: number,
+    tz: number,
+    sx: number,
+    sy: number,
+    sz: number,
+  ) {
+    this[varName].transform = Transformations.translation(tx, ty, tz).multiply(
+      Transformations.scale(sx, sy, sz),
+    );
+  },
+);
+
 When(
   "{word} ← local_normal_at\\({word}, {word})",
   function (varName: string, shapeName: string, pointName: string) {

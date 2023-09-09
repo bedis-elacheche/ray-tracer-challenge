@@ -1,5 +1,6 @@
 import { EPSILON, Point, Vector } from "../core";
 import { Intersection, Ray } from "../engine";
+import { BoundingBox } from "./bounding-box";
 import { Shape, ShapeProps } from "./shape";
 
 export class Cone extends Shape {
@@ -74,6 +75,7 @@ export class Cone extends Shape {
 
   set minimum(value: number) {
     this._minimum = value;
+    this.resetBounds();
   }
 
   get maximum() {
@@ -82,6 +84,7 @@ export class Cone extends Shape {
 
   set maximum(value: number) {
     this._maximum = value;
+    this.resetBounds();
   }
 
   get closed() {
@@ -90,6 +93,20 @@ export class Cone extends Shape {
 
   set closed(value: boolean) {
     this._closed = value;
+    this.resetBounds();
+  }
+
+  get bounds() {
+    if (!this._bounds) {
+      const limit = Math.max(Math.abs(this._minimum), Math.abs(this._maximum));
+
+      this._bounds = new BoundingBox({
+        min: new Point(-limit, this._minimum, -limit),
+        max: new Point(limit, this._maximum, limit),
+      });
+    }
+
+    return this._bounds;
   }
 
   localNormalAt(localPoint: Point) {

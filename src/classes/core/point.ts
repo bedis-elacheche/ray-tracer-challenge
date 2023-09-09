@@ -55,4 +55,16 @@ export class Point extends Tuple {
 
     return tuple;
   }
+
+  static max(a: Point, b: Point) {
+    const { x, y, z } = Tuple.max(a, b);
+
+    return new Point(x, y, z);
+  }
+
+  static min(a: Point, b: Point) {
+    const { x, y, z } = Tuple.min(a, b);
+
+    return new Point(x, y, z);
+  }
 }

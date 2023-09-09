@@ -36,3 +36,9 @@ Feature: Planes
     Then xs.count = 1
     And xs[0].t = 1
     And xs[0].object = p
+
+  Scenario: A plane has a bounding box
+    Given shape ← plane()
+    When box ← bounds_of(shape)
+    Then box.min = point(-infinity, 0, -infinity)
+    And box.max = point(infinity, 0, infinity)

@@ -1,5 +1,6 @@
 import { EPSILON, Point, Vector } from "../core";
 import { Intersection, Ray } from "../engine";
+import { BoundingBox } from "./bounding-box";
 import { Shape, ShapeProps } from "./shape";
 
 export class Cylinder extends Shape {
@@ -74,6 +75,7 @@ export class Cylinder extends Shape {
 
   set minimum(value: number) {
     this._minimum = value;
+    this.resetBounds();
   }
 
   get maximum() {
@@ -82,6 +84,7 @@ export class Cylinder extends Shape {
 
   set maximum(value: number) {
     this._maximum = value;
+    this.resetBounds();
   }
 
   get closed() {
@@ -90,6 +93,17 @@ export class Cylinder extends Shape {
 
   set closed(value: boolean) {
     this._closed = value;
+  }
+
+  get bounds() {
+    if (!this._bounds) {
+      this._bounds = new BoundingBox({
+        min: new Point(-1, this._minimum, -1),
+        max: new Point(1, this._maximum, 1),
+      });
+    }
+
+    return this._bounds;
   }
 
   localNormalAt(localPoint: Point) {

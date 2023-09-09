@@ -50,3 +50,9 @@ Feature: Cubes
       | point(0.4, 0.4, -1)  | vector(0, 0, -1) |
       | point(1, 1, 1)       | vector(1, 0, 0)  |
       | point(-1, -1, -1)    | vector(-1, 0, 0) |
+
+  Scenario: A cube has a bounding box
+    Given shape ← cube()
+    When box ← bounds_of(shape)
+    Then box.min = point(-1, -1, -1)
+    And box.max = point(1, 1, 1)

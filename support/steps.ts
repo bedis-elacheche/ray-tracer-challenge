@@ -2,7 +2,22 @@ import { Given, Then, When } from "@cucumber/cucumber";
 import { expect } from "chai";
 
 import { Color, EPSILON, Group, Point, Vector } from "../src";
-import { float, int, lowercase, mapKey, mapValue } from "./utils";
+import {
+  float,
+  floatOrInfinity,
+  getBoundingBox,
+  getMatrix,
+  getPoint,
+  getShape,
+  getShapeOrGroupOrCSG,
+  getSphere,
+  getTuple,
+  getWorld,
+  int,
+  lowercase,
+  mapKey,
+  mapValue,
+} from "./utils";
 
 Given(
   new RegExp(`^${lowercase.source} ← ${float.source}$`),
@@ -52,6 +67,38 @@ Given(
   },
 );
 
+Given(
+  "{word} ← transform\\({word}, {word})",
+  function (varName: string, objName: string, matrixName: string) {
+    const matrix = getMatrix(this, matrixName);
+
+    this[varName] = this[objName].transform(matrix);
+  },
+);
+
+Given(
+  "{word} is added to {word}",
+  function (varName: string, secondVarName: string) {
+    try {
+      const world = getWorld(this, secondVarName);
+      const shape = getShape(this, varName);
+
+      world.children.push(shape);
+    } catch (e) {
+      const boundingBox = getBoundingBox(this, secondVarName);
+      try {
+        const point = getPoint(this, varName);
+
+        boundingBox.add(point);
+      } catch (e) {
+        const box = getBoundingBox(this, varName);
+
+        boundingBox.add(box);
+      }
+    }
+  },
+);
+
 When(
   new RegExp(
     `^${lowercase.source}\\.${lowercase.source} ← ${lowercase.source}$`,
@@ -69,6 +116,12 @@ When(
     this[firstVarName] = mapValue(this[secondVarName], mapKey(key));
   },
 );
+
+When("divide\\({word}, {int})", function (shapeVarName: string, n: number) {
+  const shape = getShapeOrGroupOrCSG(this, shapeVarName);
+
+  shape.divide(n);
+});
 
 Then(
   new RegExp(`^${lowercase.source} = ${float.source}$`),
@@ -88,6 +141,8 @@ Then(
 
     if (Array.isArray(variable) && key === "count") {
       expect(variable).to.have.length(parseInt(value, 10));
+    } else if (variable instanceof Group && key === "count") {
+      expect(variable.children).to.have.length(parseInt(value, 10));
     } else {
       expect(
         Math.abs(variable[mapKey(key)] - parseFloat(value)),
@@ -316,7 +371,7 @@ Then(
 
 Then(
   new RegExp(
-    `^${lowercase.source}\\.${lowercase.source} = (point|vector|color)\\(${float.source}, ${float.source}, ${float.source}\\)$`,
+    `^${lowercase.source}\\.${lowercase.source} = (point|vector|color)\\((${floatOrInfinity.source}), (${floatOrInfinity.source}), (${floatOrInfinity.source})\\)$`,
   ),
   function (
     varName: string,
@@ -326,7 +381,19 @@ Then(
     y: string,
     z: string,
   ) {
-    const parsed = [x, y, z].map(parseFloat) as [number, number, number];
+    const parseValue = (val: string) => {
+      if (val === "infinity") {
+        return Infinity;
+      }
+
+      if (val === "-infinity") {
+        return -Infinity;
+      }
+
+      return parseFloat(val);
+    };
+
+    const parsed = [x, y, z].map(parseValue) as [number, number, number];
 
     switch (instanceType) {
       case "point":
@@ -448,3 +515,24 @@ Then(
     expect(firstValue).to.be.lessThan(secondValue);
   },
 );
+
+Then("{word} is a {word}", function (varName: string, type: string) {
+  switch (type) {
+    case "sphere": {
+      getSphere(this, varName);
+      break;
+    }
+    case "point": {
+      const tuple = getTuple(this, varName);
+
+      expect(Point.isPoint(tuple)).to.be.true;
+      break;
+    }
+    case "vector": {
+      const tuple = getTuple(this, varName);
+
+      expect(Vector.isVector(tuple)).to.be.true;
+      break;
+    }
+  }
+});

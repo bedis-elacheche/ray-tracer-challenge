@@ -1,5 +1,6 @@
 import { EPSILON, Point, Vector } from "../core";
 import { Intersection, Ray } from "../engine";
+import { BoundingBox } from "./bounding-box";
 import { Shape, ShapeProps } from "./shape";
 
 export type TriangleProps = ShapeProps & {
@@ -81,6 +82,7 @@ export class Triangle extends Shape {
     this._e1 = this._p2.subtract(this._p1);
     this._e2 = this._p3.subtract(this._p1);
     this._normal = this._e2.cross(this._e1).normalize();
+    this.resetBounds();
   }
 
   get p1(): Point {
@@ -120,6 +122,18 @@ export class Triangle extends Shape {
 
   get normal(): Vector {
     return this._normal;
+  }
+
+  get bounds() {
+    if (!this._bounds) {
+      this._bounds = new BoundingBox();
+
+      this._bounds.add(this._p1);
+      this._bounds.add(this._p2);
+      this._bounds.add(this._p3);
+    }
+
+    return this._bounds;
   }
 
   protected mollerTrumboreIntersection(

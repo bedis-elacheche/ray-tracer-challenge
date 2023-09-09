@@ -88,22 +88,10 @@ When(
   },
 );
 
-Then("{word} is a point", function (varName: string) {
-  const tuple = getTuple(this, varName);
-
-  expect(Point.isPoint(tuple)).to.be.true;
-});
-
 Then("{word} is not a point", function (varName: string) {
   const tuple = getTuple(this, varName);
 
   expect(Point.isPoint(tuple)).to.be.false;
-});
-
-Then("{word} is a vector", function (varName: string) {
-  const tuple = getTuple(this, varName);
-
-  expect(Vector.isVector(tuple)).to.be.true;
 });
 
 Then("{word} is not a vector", function (varName: string) {

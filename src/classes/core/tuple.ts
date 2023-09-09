@@ -108,4 +108,22 @@ export class Tuple implements Serializable {
       isEqual(this.w, tuple.w)
     );
   }
+
+  static max(a: Tuple, b: Tuple) {
+    return new Tuple(
+      Math.max(a.x, b.x),
+      Math.max(a.y, b.y),
+      Math.max(a.z, b.z),
+      Math.max(a.w, b.w),
+    );
+  }
+
+  static min(a: Tuple, b: Tuple) {
+    return new Tuple(
+      Math.min(a.x, b.x),
+      Math.min(a.y, b.y),
+      Math.min(a.z, b.z),
+      Math.min(a.w, b.w),
+    );
+  }
 }

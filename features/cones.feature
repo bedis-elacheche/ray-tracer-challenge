@@ -50,3 +50,17 @@ Feature: Cones
       #                    vector(1, -√2                , 1)
       | point(1, 1, 1)   | vector(1, -1.4142135623730951, 1) |
       | point(-1, -1, 0) | vector(-1, 1, 0)                  |
+
+  Scenario: An unbounded cone has a bounding box
+    Given shape ← cone()
+    When box ← bounds_of(shape)
+    Then box.min = point(-infinity, -infinity, -infinity)
+    And box.max = point(infinity, infinity, infinity)
+
+  Scenario: A bounded cone has a bounding box
+    Given shape ← cone()
+    And shape.minimum ← -5
+    And shape.maximum ← 3
+    When box ← bounds_of(shape)
+    Then box.min = point(-5, -5, -5)
+    And box.max = point(5, 3, 5)

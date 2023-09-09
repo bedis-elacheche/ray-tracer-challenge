@@ -3,6 +3,7 @@ import { expect } from "chai";
 
 import {
   AreaLight,
+  BoundingBox,
   Camera,
   Canvas,
   Color,
@@ -30,6 +31,7 @@ import {
 
 export const int = /([+-]?[0-9]+)/;
 export const float = /([+-]?[0-9]*[.]?[0-9]+)/;
+export const floatOrInfinity = /(([+-]?[0-9]*[.]?[0-9]+)|-?infinity)/;
 export const lowercase = /([a-z_]+\d*)/;
 export const uppercase = /([A-Z]+\d*)/;
 
@@ -71,6 +73,7 @@ export const getCube = getInstance(Cube);
 export const getGroup = getInstance(Group);
 export const getOBJParserResult = getInstance(OBJParserResult);
 export const getCSG = getInstance(CSG);
+export const getBoundingBox = getInstance(BoundingBox);
 export const getShapeOrGroup = (world: IWorld, name: string) => {
   try {
     return getShape(world, name);
@@ -78,11 +81,15 @@ export const getShapeOrGroup = (world: IWorld, name: string) => {
     return getGroup(world, name);
   }
 };
-export const getCSGOperand = (world: IWorld, name: string) => {
+export const getShapeOrGroupOrCSG = (world: IWorld, name: string) => {
   try {
     return getShape(world, name);
   } catch (e) {
-    return getCSG(world, name);
+    try {
+      return getGroup(world, name);
+    } catch (e) {
+      return getCSG(world, name);
+    }
   }
 };
 

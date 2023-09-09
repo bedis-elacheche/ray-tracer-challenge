@@ -1,5 +1,6 @@
 import { Matrix, Point, Serializable, Vector } from "../../core";
 import { Intersection, Ray } from "../../engine";
+import { BoundingBox } from "../bounding-box";
 
 export type BaseShapeProps<TParent> = {
   origin?: Point;
@@ -14,6 +15,8 @@ export class BaseShape<TParent extends Serializable = Serializable>
   protected _transform: Matrix;
   protected _origin: Point;
   protected _parent: TParent | null;
+  protected _bounds: BoundingBox;
+  protected _parentSpaceBounds: BoundingBox;
 
   constructor({
     origin = new Point(0, 0, 0),
@@ -49,6 +52,8 @@ export class BaseShape<TParent extends Serializable = Serializable>
 
   set origin(value: Point) {
     this._origin = value;
+    this._bounds = null;
+    this._parentSpaceBounds = null;
   }
 
   get transform() {
@@ -57,6 +62,8 @@ export class BaseShape<TParent extends Serializable = Serializable>
 
   set transform(value: Matrix) {
     this._transform = value;
+    this._bounds = null;
+    this._parentSpaceBounds = null;
   }
 
   get parent() {
@@ -65,6 +72,37 @@ export class BaseShape<TParent extends Serializable = Serializable>
 
   set parent(value: TParent) {
     this._parent = value;
+    this._bounds = null;
+    this._parentSpaceBounds = null;
+  }
+
+  get bounds(): BoundingBox {
+    return this._bounds;
+  }
+
+  set bounds(_value: never) {
+    throw new Error("bounds is a readonly prop");
+  }
+
+  get parentSpaceBounds(): BoundingBox {
+    if (!this._parentSpaceBounds) {
+      this._parentSpaceBounds = this.bounds.transform(this._transform);
+    }
+
+    return this._parentSpaceBounds;
+  }
+
+  set parentSpaceBounds(_value: never) {
+    throw new Error("parentSpaceBounds is a readonly prop");
+  }
+
+  protected resetBounds() {
+    this._bounds = null;
+    this._parentSpaceBounds = null;
+  }
+
+  divide(_threshold: number) {
+    throw new Error("divide can only be called on concrete shapes");
   }
 
   normalAt(_point: Point, _intersection?: Intersection): Vector {

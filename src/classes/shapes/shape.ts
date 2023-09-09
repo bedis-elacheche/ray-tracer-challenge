@@ -2,6 +2,7 @@ import { Point, Serializable, Transformations, Vector } from "../core";
 import { Intersection, Ray } from "../engine";
 import { Material } from "../materials";
 import { BaseShape, BaseShapeProps } from "./abstract/base-shape";
+import { BoundingBox } from "./bounding-box";
 import { CSG } from "./csg";
 import { Group } from "./group";
 
@@ -77,6 +78,19 @@ export class Shape extends BaseShape<ShapeParent> implements Serializable {
   set hasShadow(value: boolean) {
     this._hasShadow = value;
   }
+
+  get bounds() {
+    if (!this._bounds) {
+      this._bounds = new BoundingBox({
+        min: new Point(-1, -1, -1),
+        max: new Point(1, 1, 1),
+      });
+    }
+
+    return this._bounds;
+  }
+
+  divide(_threshold: number) {}
 
   normalAt(point: Point, intersection?: Intersection): Vector {
     const localPoint = Transformations.worldToObject(this, point);

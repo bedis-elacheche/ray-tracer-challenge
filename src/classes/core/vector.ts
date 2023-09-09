@@ -58,4 +58,16 @@ export class Vector extends Tuple {
   reflect(normal: Vector) {
     return this.subtract(normal.multiply(2 * this.dot(normal)));
   }
+
+  static max(a: Vector, b: Vector) {
+    const { x, y, z } = Tuple.max(a, b);
+
+    return new Vector(x, y, z);
+  }
+
+  static min(a: Vector, b: Vector) {
+    const { x, y, z } = Tuple.min(a, b);
+
+    return new Vector(x, y, z);
+  }
 }

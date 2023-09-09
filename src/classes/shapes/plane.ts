@@ -1,5 +1,6 @@
 import { EPSILON, Point, Vector } from "../core";
 import { Intersection, Ray } from "../engine";
+import { BoundingBox } from "./bounding-box";
 import { Shape } from "./shape";
 
 export class Plane extends Shape {
@@ -30,6 +31,17 @@ export class Plane extends Shape {
     }
 
     throw new Error("Cannot deserialize object.");
+  }
+
+  get bounds() {
+    if (!this._bounds) {
+      this._bounds = new BoundingBox({
+        min: new Point(-Infinity, 0, -Infinity),
+        max: new Point(Infinity, 0, Infinity),
+      });
+    }
+
+    return this._bounds;
   }
 
   localNormalAt(_localPoint: Point) {

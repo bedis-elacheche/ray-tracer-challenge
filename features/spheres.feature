@@ -131,3 +131,9 @@ Feature: Spheres
     Then s.transform = identity_matrix
     And s.material.transparency = 1.0
     And s.material.refractive_index = 1.5
+
+  Scenario: A sphere has a bounding box
+    Given shape ← sphere()
+    When box ← bounds_of(shape)
+    Then box.min = point(-1, -1, -1)
+    And box.max = point(1, 1, 1)

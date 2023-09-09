@@ -101,3 +101,17 @@ Feature: Cylinders
       | point(0, 2, 0)   | vector(0, 1, 0)  |
       | point(0.5, 2, 0) | vector(0, 1, 0)  |
       | point(0, 2, 0.5) | vector(0, 1, 0)  |
+
+  Scenario: An unbounded cylinder has a bounding box
+    Given shape ← cylinder()
+    When box ← bounds_of(shape)
+    Then box.min = point(-1, -infinity, -1)
+    And box.max = point(1, infinity, 1)
+
+  Scenario: A bounded cylinder has a bounding box
+    Given shape ← cylinder()
+    And shape.minimum ← -5
+    And shape.maximum ← 3
+    When box ← bounds_of(shape)
+    Then box.min = point(-1, -5, -1)
+    And box.max = point(1, 3, 1)

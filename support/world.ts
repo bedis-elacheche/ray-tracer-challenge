@@ -8,7 +8,6 @@ import {
   getPoint,
   getPointLight,
   getRay,
-  getShape,
   getShapeOrGroup,
   getWorld,
   int,
@@ -34,16 +33,6 @@ Given(
     const world = getWorld(this, worldVarName);
 
     this[varName] = world.children[1];
-  },
-);
-
-Given(
-  "{word} is added to {word}",
-  function (varName: string, worldVarName: string) {
-    const world = getWorld(this, worldVarName);
-    const shape = getShape(this, varName);
-
-    world.children.push(shape);
   },
 );
 

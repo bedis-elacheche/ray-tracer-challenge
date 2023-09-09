@@ -9,7 +9,7 @@ import {
   Intersection,
   Sphere,
 } from "../src";
-import { getArray, getCSG, getCSGOperand, lowercase } from "./utils";
+import { getArray, getCSG, getShapeOrGroupOrCSG, lowercase } from "./utils";
 
 const operation = /"(union|intersection|difference)"/;
 
@@ -34,8 +34,8 @@ When(
     firstShapeVarName: string,
     secondShapeVarName: string,
   ) {
-    const first = getCSGOperand(this, firstShapeVarName);
-    const second = getCSGOperand(this, secondShapeVarName);
+    const first = getShapeOrGroupOrCSG(this, firstShapeVarName);
+    const second = getShapeOrGroupOrCSG(this, secondShapeVarName);
 
     this[varName] = new CSG({
       operation,

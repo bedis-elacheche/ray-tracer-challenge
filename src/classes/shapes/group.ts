@@ -1,6 +1,7 @@
 import { Intersection, Ray } from "../engine";
 import { Material } from "../materials";
 import { BaseShape, BaseShapeProps, CompositeShape } from "./abstract";
+import { BoundingBox } from "./bounding-box";
 import { CSG } from "./csg";
 import { Shape } from "./shape";
 import { ShapeDeserializer } from "./shape-deserializer";
@@ -83,6 +84,7 @@ export class Group extends BaseShape<GroupParent> implements CompositeShape {
     });
 
     this._children.push(...shapes);
+    this.resetBounds();
   }
 
   intersect(r: Ray): Intersection<GroupChild>[] {
@@ -92,7 +94,13 @@ export class Group extends BaseShape<GroupParent> implements CompositeShape {
   }
 
   localIntersect(localRay: Ray): Intersection<GroupChild>[] {
-    return this.children
+    const didBoundsIntersect = this.bounds.intersect(localRay);
+
+    if (!didBoundsIntersect) {
+      return [];
+    }
+
+    return this._children
       .flatMap((item) => item.intersect(localRay))
       .sort((a, z) => a.t - z.t);
   }
@@ -107,6 +115,16 @@ export class Group extends BaseShape<GroupParent> implements CompositeShape {
 
   get children(): GroupChild[] {
     return this._children;
+  }
+
+  get bounds() {
+    const box = new BoundingBox();
+
+    this._children.forEach((item) => {
+      box.add(item.parentSpaceBounds);
+    });
+
+    return box;
   }
 
   protected areParentsEqual(sParent: GroupParent) {
@@ -170,5 +188,52 @@ export class Group extends BaseShape<GroupParent> implements CompositeShape {
         return false;
       })
     );
+  }
+
+  partitionChildren(): [GroupChild[], GroupChild[]] {
+    const left: GroupChild[] = [];
+    const right: GroupChild[] = [];
+    const children: GroupChild[] = [];
+    const [leftBBox, rightBBox] = this.bounds.split();
+
+    this._children.forEach((child) => {
+      const childBounds = child.parentSpaceBounds;
+
+      if (leftBBox.contains(childBounds)) {
+        left.push(child);
+      } else if (rightBBox.contains(childBounds)) {
+        right.push(child);
+      } else {
+        children.push(child);
+      }
+    });
+
+    this._children = children;
+    this.resetBounds();
+
+    return [left, right];
+  }
+
+  makeSubGroup(shapes: GroupChild[]) {
+    const subGroup = new Group({
+      children: shapes,
+    });
+
+    this.addChildren([subGroup]);
+  }
+
+  divide(threshold: number) {
+    if (threshold <= this._children.length) {
+      const [left, right] = this.partitionChildren();
+      if (left.length) {
+        this.makeSubGroup(left);
+      }
+
+      if (right.length) {
+        this.makeSubGroup(right);
+      }
+    }
+
+    this._children.forEach((child) => child.divide(threshold));
   }
 }

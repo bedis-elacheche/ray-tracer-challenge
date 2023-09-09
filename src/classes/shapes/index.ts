@@ -1,4 +1,5 @@
 export * from "./abstract";
+export * from "./bounding-box";
 export * from "./cone";
 export * from "./csg";
 export * from "./cube";

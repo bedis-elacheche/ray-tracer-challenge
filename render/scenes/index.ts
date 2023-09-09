@@ -5,6 +5,7 @@ export * from "./index";
 export * from "./projectile";
 export * from "./scene";
 export * from "./scene-with-area-light";
+export * from "./scene-with-bounding-box";
 export * from "./scene-with-cylinders";
 export * from "./scene-with-finite-cones";
 export * from "./scene-with-patterns";
