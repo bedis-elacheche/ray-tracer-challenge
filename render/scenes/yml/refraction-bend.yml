@@ -1,0 +1,151 @@
+# ======================================================
+# refraction-bend.yml
+#
+# This file describes the scene illustrated at the start
+# of the "Transparency and Refraction" section, in
+# chapter 11 ("Reflection and Refraction") of
+# "The Ray Tracer Challenge"
+#
+# by Jamis Buck <jamis@jamisbuck.org>
+# ======================================================
+
+# ======================================================
+# the camera
+# ======================================================
+
+- add: camera
+  width: 200
+  height: 200
+  field-of-view: 0.5
+  from: [-4.5, 0.85, -4]
+  to: [0, 0.85, 0]
+  up: [0, 1, 0]
+
+
+# ======================================================
+# light sources
+# ======================================================
+
+- add: light
+  at: [-4.9, 4.9, 1]
+  intensity: [1, 1, 1]
+
+# ======================================================
+# define some constants to avoid duplication
+# ======================================================
+
+- define: wall
+  value:
+    pattern:
+      type: checkers
+      colors:
+        - [ 0.00, 0.00, 0.00 ]
+        - [ 0.75, 0.75, 0.75 ]
+      transform:
+        - [ scale, 0.5, 0.5, 0.5 ]
+    specular: 0
+
+# ======================================================
+# describe the scene
+# ======================================================
+
+# floor
+- add: plane
+  transform:
+    - [ rotate-y, 0.31415 ]
+  material:
+    pattern:
+      type: checkers
+      colors:
+        - [0.00, 0.00, 0.00]
+        - [0.75, 0.75, 0.75]
+    ambient: 0.5
+    diffuse: 0.4
+    specular: 0.8
+    reflective: 0.1
+
+# ceiling
+- add: plane
+  transform:
+    - [ translate, 0, 5, 0 ]
+  material:
+    pattern:
+      type: checkers
+      colors:
+        - [0.85, 0.85, 0.85]
+        - [1.00, 1.00, 1.00]
+      transform:
+        - [ scale, 0.2, 0.2, 0.2 ]
+    ambient: 0.5
+    specular: 0
+
+# west wall
+- add: plane
+  transform:
+    - [ rotate-y, 1.5708 ] # orient texture
+    - [ rotate-z, 1.5708 ] # rotate to vertical
+    - [ translate, -5, 0, 0 ]
+  material: wall
+
+# east wall
+- add: plane
+  transform:
+    - [ rotate-y, 1.5708 ] # orient texture
+    - [ rotate-z, 1.5708 ] # rotate to vertical
+    - [ translate, 5, 0, 0 ]
+  material: wall
+
+# north wall
+- add: plane
+  transform:
+    - [ rotate-x, 1.5708 ] # rotate to vertical
+    - [ translate, 0, 0, 5 ]
+  material: wall
+
+# south wall
+- add: plane
+  transform:
+    - [ rotate-x, 1.5708 ] # rotate to vertical
+    - [ translate, 0, 0, -5 ]
+  material: wall
+
+# background ball
+- add: sphere
+  transform:
+    - [ translate, 4, 1, 4 ]
+  material:
+    color: [ 0.8, 0.1, 0.3 ]
+    specular: 0
+
+# background ball
+- add: sphere
+  transform:
+    - [ scale, 0.4, 0.4, 0.4 ]
+    - [ translate, 4.6, 0.4, 2.9 ]
+  material:
+    color: [ 0.1, 0.8, 0.2 ]
+    shininess: 200
+
+# background ball
+- add: sphere
+  transform:
+    - [ scale, 0.6, 0.6, 0.6 ]
+    - [ translate, 2.6, 0.6, 4.4 ]
+  material:
+    color: [ 0.2, 0.1, 0.8 ]
+    shininess: 10
+    specular: 0.4
+
+# glass ball
+- add: sphere
+  transform:
+    - [ scale, 1, 1, 1 ]
+    - [ translate, 0.25, 1, 0 ]
+  material:
+    color: [ 0.8, 0.8, 0.9 ]
+    ambient: 0
+    diffuse: 0.2
+    specular: 0.9
+    shininess: 300
+    transparency: 0.8
+    refractive-index: 1.57
