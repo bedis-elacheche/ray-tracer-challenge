@@ -1,20 +1,20 @@
-import { Matrix, Point } from "../../core";
-import { Color } from "../color";
+import { EPSILON, Matrix, mod, Point } from "../../../core";
+import { Color } from "../../color";
 import { Pattern } from "./pattern";
 
-export class Ring extends Pattern {
-  public static readonly __name__ = "ring";
+export class Stripes extends Pattern {
+  public static readonly __name__ = "stripes-pattern";
 
   serialize(): JSONObject {
     return {
       ...super.serialize(),
-      __type: Ring.__name__,
+      __type: Stripes.__name__,
     };
   }
 
   static deserialize({ __type, colors, transform }: JSONObject) {
-    if (__type === Ring.__name__) {
-      return new Ring({
+    if (__type === Stripes.__name__) {
+      return new Stripes({
         transform: Matrix.deserialize(transform),
         colors: colors.map(Color.deserialize),
       });
@@ -26,6 +26,6 @@ export class Ring extends Pattern {
   localColorAt(p: Point): Color {
     const [a, b] = this.colors;
 
-    return Math.floor(Math.sqrt(p.x ** 2 + p.z ** 2)) % 2 ? b : a;
+    return mod(Math.floor(p.x), 2) <= EPSILON ? a : b;
   }
 }

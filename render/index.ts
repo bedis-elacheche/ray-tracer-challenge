@@ -8,6 +8,9 @@ import {
   scene,
   sceneWithAreaLight,
   sceneWithBoundingBox,
+  sceneWithCheckeredCylinder,
+  sceneWithCheckeredPlane,
+  sceneWithCheckeredSphere,
   sceneWithFiniteClosedCylinders,
   sceneWithFiniteCones,
   sceneWithFiniteCylinders,
@@ -34,6 +37,9 @@ const scenes: Record<SceneKey, Scene> = {
   "15-01-3d-scene-with-pyramid": sceneWithPyramid,
   "16-01-3d-scene-with-area-light": sceneWithAreaLight,
   "17-01-3d-scene-with-bounding-box": sceneWithBoundingBox,
+  "18-01-scene-with-checkered-sphere": sceneWithCheckeredSphere,
+  "18-02-scene-with-checkered-plane": sceneWithCheckeredPlane,
+  "18-03-scene-with-checkered-cylinder": sceneWithCheckeredCylinder,
 };
 
 const getLastScene = (dict: Record<SceneKey, Scene>): string =>

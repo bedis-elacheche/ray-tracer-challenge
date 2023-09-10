@@ -23,8 +23,10 @@ import {
   Shape,
   Sphere,
   Stripes,
+  TextureMap,
   Transformations,
   Tuple,
+  UVPattern,
   Vector,
   World,
 } from "../src";
@@ -68,12 +70,21 @@ export const getWorld = getInstance(World);
 export const getCamera = getInstance(Camera);
 export const getPlane = getInstance(Plane);
 export const getPattern = getInstance(Pattern);
+export const getUVPattern = getInstance(UVPattern);
+export const getTextureMap = getInstance(TextureMap);
 export const getStripe = getInstance(Stripes);
 export const getCube = getInstance(Cube);
 export const getGroup = getInstance(Group);
 export const getOBJParserResult = getInstance(OBJParserResult);
 export const getCSG = getInstance(CSG);
 export const getBoundingBox = getInstance(BoundingBox);
+export const getPatternOrTextureMap = (world: IWorld, name: string) => {
+  try {
+    return getPattern(world, name);
+  } catch (e) {
+    return getTextureMap(world, name);
+  }
+};
 export const getShapeOrGroup = (world: IWorld, name: string) => {
   try {
     return getShape(world, name);

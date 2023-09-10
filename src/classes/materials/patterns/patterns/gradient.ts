@@ -1,20 +1,20 @@
-import { Matrix, Point } from "../../core";
-import { Color } from "../color";
+import { Matrix, Point } from "../../../core";
+import { Color } from "../../color";
 import { Pattern } from "./pattern";
 
-export class Stripes extends Pattern {
-  public static readonly __name__ = "stripes";
+export class Gradient extends Pattern {
+  public static readonly __name__: "gradient-pattern";
 
   serialize(): JSONObject {
     return {
       ...super.serialize(),
-      __type: Stripes.__name__,
+      __type: Gradient.__name__,
     };
   }
 
   static deserialize({ __type, colors, transform }: JSONObject) {
-    if (__type === Stripes.__name__) {
-      return new Stripes({
+    if (__type === Gradient.__name__) {
+      return new Gradient({
         transform: Matrix.deserialize(transform),
         colors: colors.map(Color.deserialize),
       });
@@ -25,7 +25,9 @@ export class Stripes extends Pattern {
 
   localColorAt(p: Point): Color {
     const [a, b] = this.colors;
+    const distance = b.subtract(a);
+    const fraction = p.x - Math.floor(p.x);
 
-    return Math.floor(p.x) % 2 ? b : a;
+    return a.add(distance.multiply(fraction));
   }
 }

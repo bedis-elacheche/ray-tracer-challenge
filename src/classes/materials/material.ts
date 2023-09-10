@@ -1,11 +1,11 @@
 import { EPSILON, Serializable } from "../core";
 import { Color } from "./color";
-import { Pattern, PatternDeserializer } from "./patterns";
+import { BasePattern, PatternDeserializer } from "./patterns";
 
 export class Material implements Serializable {
   public static readonly __name__ = "material";
   public color: Color | null;
-  public pattern: Pattern | null;
+  public pattern: BasePattern | null;
   public ambient: number;
   public diffuse: number;
   public specular: number;
@@ -29,7 +29,7 @@ export class Material implements Serializable {
     ambient?: number;
     diffuse?: number;
     specular?: number;
-    pattern?: Pattern;
+    pattern?: BasePattern;
     shininess?: number;
     reflective?: number;
     transparency?: number;

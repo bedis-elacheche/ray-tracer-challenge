@@ -13,3 +13,5 @@ export const isEqual = (a: number, b: number) => {
 
   return Math.abs(a - b) < EPSILON;
 };
+
+export const mod = (a: number, n: number) => ((a % n) + n) % n;

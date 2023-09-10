@@ -9,14 +9,21 @@ import {
   Point,
   Ring,
   Stripes,
+  TextureMap,
   Transformations,
+  UVCheckers,
+  UVMap,
+  UVMapper,
 } from "../src";
 import {
   getColor,
   getMaterial,
   getPattern,
+  getPatternOrTextureMap,
+  getPoint,
   getShape,
   getStripe,
+  getUVPattern,
 } from "./utils";
 
 Given("{word} ← test_pattern\\()", function (varName: string) {
@@ -72,6 +79,26 @@ Given(
 );
 
 Given(
+  "{word} ← uv_checkers\\({float}, {float}, {word}, {word})",
+  function (
+    varName: string,
+    width: number,
+    height: number,
+    firstColorName: string,
+    secondColorName: string,
+  ) {
+    const firstColor = getColor(this, firstColorName);
+    const secondColor = getColor(this, secondColorName);
+
+    this[varName] = new UVCheckers({
+      height,
+      width,
+      colors: [firstColor, secondColor],
+    });
+  },
+);
+
+Given(
   "{word}.pattern ← stripe_pattern\\(color\\({float}, {float}, {float}), color\\({float}, {float}, {float}))",
   function (
     varName: string,
@@ -105,6 +132,34 @@ Given(
     const pattern = getPattern(this, patternVarName);
 
     pattern.transform = Transformations.translation(x, y, z);
+  },
+);
+
+Given(
+  "{word} ← texture_map\\({word}, {word})",
+  function (varName: string, uvPatternVarName: string, uvMapperType: string) {
+    const pattern = getUVPattern(this, uvPatternVarName);
+    let uvMapper: UVMapper;
+
+    switch (uvMapperType) {
+      case "spherical_map": {
+        uvMapper = UVMap.spherical;
+        break;
+      }
+      case "planar_map": {
+        uvMapper = UVMap.planar;
+        break;
+      }
+      case "cylindrical_map": {
+        uvMapper = UVMap.cylindrical;
+        break;
+      }
+      default: {
+        throw "Not supported";
+      }
+    }
+
+    this[varName] = new TextureMap({ pattern, uvMapper });
   },
 );
 
@@ -142,6 +197,48 @@ When(
   },
 );
 
+When(
+  "{word} ← uv_pattern_at\\({word}, {float}, {float})",
+  function (varName: string, patternVarName: string, u: number, v: number) {
+    const pattern = getUVPattern(this, patternVarName);
+
+    this[varName] = pattern.colorAt(u, v);
+  },
+);
+
+When(
+  "\\({word}, {word}) ← spherical_map\\({word})",
+  function (uVarName: string, vVarName: string, pointVarName: string) {
+    const point = getPoint(this, pointVarName);
+    const [u, v] = UVMap.spherical(point);
+
+    this[uVarName] = u;
+    this[vVarName] = v;
+  },
+);
+
+When(
+  "\\({word}, {word}) ← planar_map\\({word})",
+  function (uVarName: string, vVarName: string, pointVarName: string) {
+    const point = getPoint(this, pointVarName);
+    const [u, v] = UVMap.planar(point);
+
+    this[uVarName] = u;
+    this[vVarName] = v;
+  },
+);
+
+When(
+  "\\({word}, {word}) ← cylindrical_map\\({word})",
+  function (uVarName: string, vVarName: string, pointVarName: string) {
+    const point = getPoint(this, pointVarName);
+    const [u, v] = UVMap.cylindrical(point);
+
+    this[uVarName] = u;
+    this[vVarName] = v;
+  },
+);
+
 Then(
   "stripe_at\\({word}, point\\({float}, {float}, {float})) = {word}",
   function (
@@ -168,7 +265,7 @@ Then(
     z: number,
     colorName: string,
   ) {
-    const pattern = getPattern(this, varName);
+    const pattern = getPatternOrTextureMap(this, varName);
     const color = getColor(this, colorName);
     const point = new Point(x, y, z);
 

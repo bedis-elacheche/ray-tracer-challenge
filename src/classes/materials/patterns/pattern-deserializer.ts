@@ -1,12 +1,12 @@
-import { Checkers } from "./checkers";
-import { Gradient } from "./gradient";
-import { Pattern } from "./pattern";
-import { Ring } from "./ring";
-import { Stripes } from "./stripes";
+import { BasePattern } from "./abstract";
+import { Checkers, Gradient, Pattern, Ring, Stripes } from "./patterns";
+import { TextureMap } from "./uv-patterns";
 
 export class PatternDeserializer {
-  static deserialize(item: JSONObject): Pattern {
+  static deserialize(item: JSONObject): BasePattern {
     switch (item.__type) {
+      case TextureMap.__name__:
+        return TextureMap.deserialize(item);
       case Gradient.__name__:
         return Gradient.deserialize(item);
       case Checkers.__name__:

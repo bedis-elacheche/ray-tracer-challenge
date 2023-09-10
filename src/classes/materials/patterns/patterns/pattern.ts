@@ -1,8 +1,9 @@
-import { Matrix, Point, Serializable, Transformations } from "../../core";
-import { BaseShape } from "../../shapes";
-import { Color } from "../color";
+import { Matrix, Point, Transformations } from "../../../core";
+import { BaseShape } from "../../../shapes";
+import { Color } from "../../color";
+import { BasePattern } from "../abstract";
 
-export class Pattern implements Serializable {
+export class Pattern implements BasePattern {
   public static __name__ = "pattern";
   public transform: Matrix;
   public colors: Color[];
