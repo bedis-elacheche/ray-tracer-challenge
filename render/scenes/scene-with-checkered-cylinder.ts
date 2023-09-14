@@ -8,7 +8,6 @@ import {
   TextureMap,
   Transformations,
   UVCheckers,
-  UVMap,
   Vector,
   World,
 } from "../../src";
@@ -23,12 +22,14 @@ export const sceneWithCheckeredCylinder: Scene = () => {
     ),
     material: new Material({
       pattern: new TextureMap({
-        uvMapper: UVMap.cylindrical,
-        pattern: new UVCheckers({
-          width: 16,
-          height: 8,
-          colors: [new Color(0, 0.5, 0), new Color(1, 1, 1)],
-        }),
+        map: "cylindrical",
+        patterns: {
+          main: new UVCheckers({
+            width: 16,
+            height: 8,
+            colors: [new Color(0, 0.5, 0), new Color(1, 1, 1)],
+          }),
+        },
       }),
       ambient: 0.1,
       specular: 0.4,

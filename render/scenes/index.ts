@@ -6,6 +6,7 @@ export * from "./projectile";
 export * from "./scene";
 export * from "./scene-with-area-light";
 export * from "./scene-with-bounding-box";
+export * from "./scene-with-checkered-cube";
 export * from "./scene-with-checkered-cylinder";
 export * from "./scene-with-checkered-plane";
 export * from "./scene-with-checkered-sphere";

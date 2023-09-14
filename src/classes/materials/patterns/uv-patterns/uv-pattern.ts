@@ -8,14 +8,14 @@ export class UVPattern implements Serializable {
   public height: number;
 
   constructor({
-    width,
-    height,
+    width = 1,
+    height = 1,
     colors = [new Color(0, 0, 0), new Color(1, 1, 1)],
   }: {
-    width: number;
-    height: number;
+    width?: number;
+    height?: number;
     colors?: Color[];
-  }) {
+  } = {}) {
     this.colors = colors;
     this.height = height;
     this.width = width;

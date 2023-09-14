@@ -8,7 +8,6 @@ import {
   TextureMap,
   Transformations,
   UVCheckers,
-  UVMap,
   Vector,
   World,
 } from "../../src";
@@ -18,12 +17,14 @@ export const sceneWithCheckeredPlane: Scene = () => {
   const plane = new Plane({
     material: new Material({
       pattern: new TextureMap({
-        uvMapper: UVMap.planar,
-        pattern: new UVCheckers({
-          width: 2,
-          height: 2,
-          colors: [new Color(0, 0.5, 0), new Color(1, 1, 1)],
-        }),
+        map: "planar",
+        patterns: {
+          main: new UVCheckers({
+            width: 2,
+            height: 2,
+            colors: [new Color(0, 0.5, 0), new Color(1, 1, 1)],
+          }),
+        },
       }),
       ambient: 0.1,
       specular: 0.4,

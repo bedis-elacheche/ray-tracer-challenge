@@ -2,84 +2,115 @@ import { Point, Transformations } from "../../../core";
 import { BaseShape } from "../../../shapes";
 import { Color } from "../../color";
 import { BasePattern } from "../abstract";
-import { UVMap, UVMapper } from "./uv-map";
+import { Face, UVMap, UVMapType } from "./uv-mapper";
 import { UVPattern } from "./uv-pattern";
 import { UVPatternDeserializer } from "./uv-pattern-deserializer";
 
+type CubicTextureMapProps = {
+  patterns: {
+    left: UVPattern;
+    right: UVPattern;
+    front: UVPattern;
+    back: UVPattern;
+    up: UVPattern;
+    down: UVPattern;
+    main?: never;
+  };
+  map: "cubic";
+};
+
+type GenericTextureMapProps = {
+  patterns: {
+    main: UVPattern;
+  };
+  map: Exclude<UVMapType, "cubic">;
+};
+
+type TextureMapProps = GenericTextureMapProps | CubicTextureMapProps;
+
 export class TextureMap implements BasePattern {
   public static readonly __name__ = "texture-map";
-  public pattern: UVPattern;
-  public uvMapper: UVMapper;
+  public patterns: TextureMapProps["patterns"];
+  public map: UVMapType;
 
-  constructor({
-    pattern,
-    uvMapper,
-  }: {
-    pattern: UVPattern;
-    uvMapper: UVMapper;
-  }) {
-    this.pattern = pattern;
-    this.uvMapper = uvMapper;
+  constructor({ patterns, map }: TextureMapProps) {
+    this.map = map;
+    this.patterns = patterns;
   }
 
   colorAt(p: Point, s?: BaseShape): Color {
     const objectPoint = s ? Transformations.worldToObject(s, p) : p;
-    const [u, v] = this.uvMapper(objectPoint);
+    const [[u, v], face] = UVMap.map(objectPoint, this.map);
+    const pattern = this.getPattern(face);
 
-    return this.pattern.colorAt(u, v);
+    return pattern.colorAt(u, v);
   }
 
-  serialize(): JSONObject {
-    let map: string;
+  isCubicTextureMap(): this is this & CubicTextureMapProps {
+    return this.map === "cubic";
+  }
 
-    switch (this.uvMapper) {
-      case UVMap.spherical: {
-        map = "spherical";
-        break;
-      }
-      case UVMap.planar: {
-        map = "planar";
-        break;
-      }
-      case UVMap.cylindrical: {
-        map = "cylindrical";
-        break;
+  private getPattern(face: string) {
+    if (this.isCubicTextureMap()) {
+      switch (face) {
+        case Face.LEFT:
+          return this.patterns.left;
+        case Face.RIGHT:
+          return this.patterns.right;
+        case Face.FRONT:
+          return this.patterns.front;
+        case Face.BACK:
+          return this.patterns.back;
+        case Face.UP:
+          return this.patterns.up;
+        default:
+          return this.patterns.down;
       }
     }
 
+    return this.patterns.main;
+  }
+
+  serialize(): JSONObject {
     return {
       __type: TextureMap.__name__,
-      pattern: this.pattern.serialize(),
-      map,
+      patterns: Object.entries(this.patterns).reduce<
+        Record<string, JSONObject>
+      >(
+        (acc, [key, pattern]) => ({
+          ...acc,
+          [key]: pattern.serialize(),
+        }),
+        {},
+      ),
+      map: this.map,
     };
   }
 
-  static deserialize({ __type, pattern, map }: JSONObject): TextureMap {
+  static deserialize({ __type, patterns, map }: JSONObject): TextureMap {
     if (__type === TextureMap.__name__) {
-      let uvMapper: UVMapper;
+      const { left, right, front, back, up, down, main } = patterns;
 
-      switch (map) {
-        case "spherical": {
-          uvMapper = UVMap.spherical;
-          break;
-        }
-        case "planar": {
-          uvMapper = UVMap.planar;
-          break;
-        }
-        case "cylindrical": {
-          uvMapper = UVMap.cylindrical;
-          break;
-        }
-        default: {
-          throw "Not supported";
-        }
-      }
-
-      return new TextureMap({
-        pattern: UVPatternDeserializer.deserialize(pattern),
-        uvMapper,
-      });
+      return new TextureMap(
+        map === "cubic"
+          ? {
+              map: "cubic",
+              patterns: {
+                right: UVPatternDeserializer.deserialize(right),
+                left: UVPatternDeserializer.deserialize(left),
+                front: UVPatternDeserializer.deserialize(front),
+                back: UVPatternDeserializer.deserialize(back),
+                up: UVPatternDeserializer.deserialize(up),
+                down: UVPatternDeserializer.deserialize(down),
+              },
+            }
+          : {
+              map,
+              patterns: {
+                main: UVPatternDeserializer.deserialize(main),
+              },
+            },
+      );
     }
 
     throw new Error("Cannot deserialize object.");
@@ -90,6 +121,19 @@ export class TextureMap implements BasePattern {
       return true;
     }
 
-    return this.uvMapper === p.uvMapper && this.pattern.equals(p.pattern);
+    return (
+      this.map === p.map &&
+      Object.entries(this.patterns).every(
+        ([key, pattern]: [keyof TextureMapProps["patterns"], UVPattern]) => {
+          const otherPattern: UVPattern = p.patterns[key];
+
+          if (!otherPattern) {
+            return false;
+          }
+
+          return pattern.equals(otherPattern);
+        },
+      )
+    );
   }
 }

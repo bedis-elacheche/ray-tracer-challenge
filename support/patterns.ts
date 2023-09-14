@@ -4,6 +4,13 @@ import { expect } from "chai";
 import {
   Checkers,
   Color,
+  cubicBackFace,
+  cubicDownFace,
+  cubicFaceFromPoint,
+  cubicFrontFace,
+  cubicLeftFace,
+  cubicRightFace,
+  cubicUpFace,
   Gradient,
   Pattern,
   Point,
@@ -11,9 +18,10 @@ import {
   Stripes,
   TextureMap,
   Transformations,
+  UVAlignCheck,
   UVCheckers,
   UVMap,
-  UVMapper,
+  UVMapType,
 } from "../src";
 import {
   getColor,
@@ -22,8 +30,10 @@ import {
   getPatternOrTextureMap,
   getPoint,
   getShape,
+  getString,
   getStripe,
   getUVPattern,
+  lowercase,
 } from "./utils";
 
 Given("{word} ← test_pattern\\()", function (varName: string) {
@@ -137,21 +147,21 @@ Given(
 
 Given(
   "{word} ← texture_map\\({word}, {word})",
-  function (varName: string, uvPatternVarName: string, uvMapperType: string) {
+  function (varName: string, uvPatternVarName: string, uvMapType: string) {
     const pattern = getUVPattern(this, uvPatternVarName);
-    let uvMapper: UVMapper;
+    let map: UVMapType;
 
-    switch (uvMapperType) {
+    switch (uvMapType) {
       case "spherical_map": {
-        uvMapper = UVMap.spherical;
+        map = "spherical";
         break;
       }
       case "planar_map": {
-        uvMapper = UVMap.planar;
+        map = "planar";
         break;
       }
       case "cylindrical_map": {
-        uvMapper = UVMap.cylindrical;
+        map = "cylindrical";
         break;
       }
       default: {
@@ -159,7 +169,33 @@ Given(
       }
     }
 
-    this[varName] = new TextureMap({ pattern, uvMapper });
+    this[varName] = new TextureMap({ patterns: { main: pattern }, map });
+  },
+);
+
+Given(
+  "{word} ← uv_align_check\\({word}, {word}, {word}, {word}, {word})",
+  function (
+    varName: string,
+    mainVarName: string,
+    ulVarName: string,
+    urVarName: string,
+    blVarName: string,
+    brVarName: string,
+  ) {
+    const main = getColor(this, mainVarName);
+    const ul = getColor(this, ulVarName);
+    const ur = getColor(this, urVarName);
+    const bl = getColor(this, blVarName);
+    const br = getColor(this, brVarName);
+
+    this[varName] = new UVAlignCheck({
+      main,
+      ul,
+      ur,
+      bl,
+      br,
+    });
   },
 );
 
@@ -210,7 +246,110 @@ When(
   "\\({word}, {word}) ← spherical_map\\({word})",
   function (uVarName: string, vVarName: string, pointVarName: string) {
     const point = getPoint(this, pointVarName);
-    const [u, v] = UVMap.spherical(point);
+    const [[u, v]] = UVMap.map(point, "spherical");
+
+    this[uVarName] = u;
+    this[vVarName] = v;
+  },
+);
+
+When(
+  "{word} ← face_from_point\\(point\\({float}, {float}, {float}))",
+  function (varName: string, x: number, y: number, z: number) {
+    this[varName] = cubicFaceFromPoint(new Point(x, y, z));
+  },
+);
+
+When(
+  "\\({word}, {word}) ← cube_uv_front\\(point\\({float}, {float}, {float}))",
+  function (
+    uVarName: string,
+    vVarName: string,
+    x: number,
+    y: number,
+    z: number,
+  ) {
+    const [[u, v]] = cubicFrontFace(new Point(x, y, z));
+
+    this[uVarName] = u;
+    this[vVarName] = v;
+  },
+);
+
+When(
+  "\\({word}, {word}) ← cube_uv_back\\(point\\({float}, {float}, {float}))",
+  function (
+    uVarName: string,
+    vVarName: string,
+    x: number,
+    y: number,
+    z: number,
+  ) {
+    const [[u, v]] = cubicBackFace(new Point(x, y, z));
+
+    this[uVarName] = u;
+    this[vVarName] = v;
+  },
+);
+
+When(
+  "\\({word}, {word}) ← cube_uv_left\\(point\\({float}, {float}, {float}))",
+  function (
+    uVarName: string,
+    vVarName: string,
+    x: number,
+    y: number,
+    z: number,
+  ) {
+    const [[u, v]] = cubicLeftFace(new Point(x, y, z));
+
+    this[uVarName] = u;
+    this[vVarName] = v;
+  },
+);
+
+When(
+  "\\({word}, {word}) ← cube_uv_right\\(point\\({float}, {float}, {float}))",
+  function (
+    uVarName: string,
+    vVarName: string,
+    x: number,
+    y: number,
+    z: number,
+  ) {
+    const [[u, v]] = cubicRightFace(new Point(x, y, z));
+
+    this[uVarName] = u;
+    this[vVarName] = v;
+  },
+);
+
+When(
+  "\\({word}, {word}) ← cube_uv_up\\(point\\({float}, {float}, {float}))",
+  function (
+    uVarName: string,
+    vVarName: string,
+    x: number,
+    y: number,
+    z: number,
+  ) {
+    const [[u, v]] = cubicUpFace(new Point(x, y, z));
+
+    this[uVarName] = u;
+    this[vVarName] = v;
+  },
+);
+
+When(
+  "\\({word}, {word}) ← cube_uv_down\\(point\\({float}, {float}, {float}))",
+  function (
+    uVarName: string,
+    vVarName: string,
+    x: number,
+    y: number,
+    z: number,
+  ) {
+    const [[u, v]] = cubicDownFace(new Point(x, y, z));
 
     this[uVarName] = u;
     this[vVarName] = v;
@@ -221,7 +360,7 @@ When(
   "\\({word}, {word}) ← planar_map\\({word})",
   function (uVarName: string, vVarName: string, pointVarName: string) {
     const point = getPoint(this, pointVarName);
-    const [u, v] = UVMap.planar(point);
+    const [[u, v]] = UVMap.map(point, "planar");
 
     this[uVarName] = u;
     this[vVarName] = v;
@@ -232,10 +371,44 @@ When(
   "\\({word}, {word}) ← cylindrical_map\\({word})",
   function (uVarName: string, vVarName: string, pointVarName: string) {
     const point = getPoint(this, pointVarName);
-    const [u, v] = UVMap.cylindrical(point);
+    const [[u, v]] = UVMap.map(point, "cylindrical");
 
     this[uVarName] = u;
     this[vVarName] = v;
+  },
+);
+
+When(
+  "{word} ← cube_map\\({word}, {word}, {word}, {word}, {word}, {word})",
+  function (
+    varName: string,
+    leftVarName: string,
+    frontVarName: string,
+    rightVarName: string,
+    backVarName: string,
+    upVarName: string,
+    downVarName: string,
+  ) {
+    const left = getUVPattern(this, leftVarName);
+    const front = getUVPattern(this, frontVarName);
+    const right = getUVPattern(this, rightVarName);
+    const back = getUVPattern(this, backVarName);
+    const up = getUVPattern(this, upVarName);
+    const down = getUVPattern(this, downVarName);
+
+    this[varName] = new TextureMap({
+      map: "cubic",
+      patterns: { left, front, right, back, up, down },
+    });
+  },
+);
+
+Then(
+  new RegExp(`^${lowercase.source} = "${lowercase.source}"$`),
+  function (varName: string, value: string) {
+    const string = getString(this, varName);
+
+    expect(string).to.be.equal(value);
   },
 );
 

@@ -8,7 +8,6 @@ import {
   TextureMap,
   Transformations,
   UVCheckers,
-  UVMap,
   Vector,
   World,
 } from "../../src";
@@ -18,12 +17,14 @@ export const sceneWithCheckeredSphere: Scene = () => {
   const sphere = new Sphere({
     material: new Material({
       pattern: new TextureMap({
-        uvMapper: UVMap.spherical,
-        pattern: new UVCheckers({
-          width: 20,
-          height: 10,
-          colors: [new Color(0, 0.5, 0), new Color(1, 1, 1)],
-        }),
+        map: "spherical",
+        patterns: {
+          main: new UVCheckers({
+            width: 20,
+            height: 10,
+            colors: [new Color(0, 0.5, 0), new Color(1, 1, 1)],
+          }),
+        },
       }),
       ambient: 0.1,
       specular: 0.4,

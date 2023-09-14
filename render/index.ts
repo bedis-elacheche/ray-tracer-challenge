@@ -8,6 +8,7 @@ import {
   scene,
   sceneWithAreaLight,
   sceneWithBoundingBox,
+  sceneWithCheckeredCube,
   sceneWithCheckeredCylinder,
   sceneWithCheckeredPlane,
   sceneWithCheckeredSphere,
@@ -40,6 +41,7 @@ const scenes: Record<SceneKey, Scene> = {
   "18-01-scene-with-checkered-sphere": sceneWithCheckeredSphere,
   "18-02-scene-with-checkered-plane": sceneWithCheckeredPlane,
   "18-03-scene-with-checkered-cylinder": sceneWithCheckeredCylinder,
+  "18-04-scene-with-checkered-cube": sceneWithCheckeredCube,
 };
 
 const getLastScene = (dict: Record<SceneKey, Scene>): string =>

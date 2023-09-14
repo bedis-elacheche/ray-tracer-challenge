@@ -198,3 +198,146 @@ Feature: Patterns
       | point(-0.70711, 0.5, 0.70711)  | 0.625 | 0.5  |
       | point(-1, 1.25, 0)             | 0.75  | 0.25 |
       | point(-0.70711, 0.5, -0.70711) | 0.875 | 0.5  |
+
+  Scenario Outline: Layout of the "align check" pattern
+    Given main ← color(1, 1, 1)
+    And ul ← color(1, 0, 0)
+    And ur ← color(1, 1, 0)
+    And bl ← color(0, 1, 0)
+    And br ← color(0, 1, 1)
+    And pattern ← uv_align_check(main, ul, ur, bl, br)
+    When c ← uv_pattern_at(pattern, <u>, <v>)
+    Then c = <expected>
+
+    Examples:
+      | u   | v   | expected |
+      | 0.5 | 0.5 | main     |
+      | 0.1 | 0.9 | ul       |
+      | 0.9 | 0.9 | ur       |
+      | 0.1 | 0.1 | bl       |
+      | 0.9 | 0.1 | br       |
+
+  Scenario Outline: Identifying the face of a cube from a point
+    When face ← face_from_point(<point>)
+    Then face = <face>
+
+    Examples:
+      | point                  | face    |
+      | point(-1, 0.5, -0.25)  | "left"  |
+      | point(1.1, -0.75, 0.8) | "right" |
+      | point(0.1, 0.6, 0.9)   | "front" |
+      | point(-0.7, 0, -2)     | "back"  |
+      | point(0.5, 1, 0.9)     | "up"    |
+      | point(-0.2, -1.3, 1.1) | "down"  |
+
+  Scenario Outline: UV mapping the front face of a cube
+    When (u, v) ← cube_uv_front(<point>)
+    Then u = <u>
+    And v = <v>
+
+    Examples:
+      | point               | u    | v    |
+      | point(-0.5, 0.5, 1) | 0.25 | 0.75 |
+      | point(0.5, -0.5, 1) | 0.75 | 0.25 |
+
+  Scenario Outline: UV mapping the back face of a cube
+    When (u, v) ← cube_uv_back(<point>)
+    Then u = <u>
+    And v = <v>
+
+    Examples:
+      | point                 | u    | v    |
+      | point(0.5, 0.5, -1)   | 0.25 | 0.75 |
+      | point(-0.5, -0.5, -1) | 0.75 | 0.25 |
+
+  Scenario Outline: UV mapping the left face of a cube
+    When (u, v) ← cube_uv_left(<point>)
+    Then u = <u>
+    And v = <v>
+
+    Examples:
+      | point                | u    | v    |
+      | point(-1, 0.5, -0.5) | 0.25 | 0.75 |
+      | point(-1, -0.5, 0.5) | 0.75 | 0.25 |
+
+  Scenario Outline: UV mapping the right face of a cube
+    When (u, v) ← cube_uv_right(<point>)
+    Then u = <u>
+    And v = <v>
+
+    Examples:
+      | point                | u    | v    |
+      | point(1, 0.5, 0.5)   | 0.25 | 0.75 |
+      | point(1, -0.5, -0.5) | 0.75 | 0.25 |
+
+  Scenario Outline: UV mapping the upper face of a cube
+    When (u, v) ← cube_uv_up(<point>)
+    Then u = <u>
+    And v = <v>
+
+    Examples:
+      | point                | u    | v    |
+      | point(-0.5, 1, -0.5) | 0.25 | 0.75 |
+      | point(0.5, 1, 0.5)   | 0.75 | 0.25 |
+
+  Scenario Outline: UV mapping the lower face of a cube
+    When (u, v) ← cube_uv_down(<point>)
+    Then u = <u>
+    And v = <v>
+
+    Examples:
+      | point                | u    | v    |
+      | point(-0.5, -1, 0.5) | 0.25 | 0.75 |
+      | point(0.5, -1, -0.5) | 0.75 | 0.25 |
+
+
+  Scenario Outline: Finding the colors on a mapped cube
+    When red ← color(1, 0, 0)
+    And yellow ← color(1, 1, 0)
+    And brown ← color(1, 0.5, 0)
+    And green ← color(0, 1, 0)
+    And cyan ← color(0, 1, 1)
+    And blue ← color(0, 0, 1)
+    And purple ← color(1, 0, 1)
+    And white ← color(1, 1, 1)
+    And left ← uv_align_check(yellow, cyan, red, blue, brown)
+    And front ← uv_align_check(cyan, red, yellow, brown, green)
+    And right ← uv_align_check(red, yellow, purple, green, white)
+    And back ← uv_align_check(green, purple, cyan, white, blue)
+    And up ← uv_align_check(brown, cyan, purple, red, yellow)
+    And down ← uv_align_check(purple, brown, green, blue, white)
+    And pattern ← cube_map(left, front, right, back, up, down)
+    Then pattern_at(pattern, <point>) = <color>
+
+    Examples:
+      |   | point                 | color  |
+      | L | point(-1, 0, 0)       | yellow |
+      |   | point(-1, 0.9, -0.9)  | cyan   |
+      |   | point(-1, 0.9, 0.9)   | red    |
+      |   | point(-1, -0.9, -0.9) | blue   |
+      |   | point(-1, -0.9, 0.9)  | brown  |
+      | F | point(0, 0, 1)        | cyan   |
+      |   | point(-0.9, 0.9, 1)   | red    |
+      |   | point(0.9, 0.9, 1)    | yellow |
+      |   | point(-0.9, -0.9, 1)  | brown  |
+      |   | point(0.9, -0.9, 1)   | green  |
+      | R | point(1, 0, 0)        | red    |
+      |   | point(1, 0.9, 0.9)    | yellow |
+      |   | point(1, 0.9, -0.9)   | purple |
+      |   | point(1, -0.9, 0.9)   | green  |
+      |   | point(1, -0.9, -0.9)  | white  |
+      | B | point(0, 0, -1)       | green  |
+      |   | point(0.9, 0.9, -1)   | purple |
+      |   | point(-0.9, 0.9, -1)  | cyan   |
+      |   | point(0.9, -0.9, -1)  | white  |
+      |   | point(-0.9, -0.9, -1) | blue   |
+      | U | point(0, 1, 0)        | brown  |
+      |   | point(-0.9, 1, -0.9)  | cyan   |
+      |   | point(0.9, 1, -0.9)   | purple |
+      |   | point(-0.9, 1, 0.9)   | red    |
+      |   | point(0.9, 1, 0.9)    | yellow |
+      | D | point(0, -1, 0)       | purple |
+      |   | point(-0.9, -1, 0.9)  | brown  |
+      |   | point(0.9, -1, 0.9)   | green  |
+      |   | point(-0.9, -1, -0.9) | blue   |
+      |   | point(0.9, -1, -0.9)  | white  |
