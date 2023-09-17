@@ -7,7 +7,7 @@ export class Canvas implements Serializable {
   public height: number;
   private pixels: Color[][];
 
-  constructor(width: number, height: number) {
+  constructor({ width, height }: { width: number; height: number }) {
     this.width = width;
     this.height = height;
     this.pixels = Array.from({ length: height }, () =>
@@ -15,28 +15,98 @@ export class Canvas implements Serializable {
     );
   }
 
-  static from(pixels: Color[][]) {
-    const allColsHaveSameLength = pixels.every(
-      (row) => row.length === pixels[0].length,
-    );
+  static from(ppm: string): Canvas;
+  static from(pixels: Color[][]): Canvas;
+  static from(input: string | Color[][]): Canvas {
+    if (typeof input === "string") {
+      const lines = input
+        .split("\n")
+        .filter((line) => !line.startsWith("#") && line !== "");
 
-    if (!allColsHaveSameLength) {
-      return null;
-    }
-
-    const canvas = new Canvas(pixels.length, pixels[0].length);
-
-    for (let y = 0; y < canvas.height; y++) {
-      for (let x = 0; x < canvas.width; x++) {
-        canvas.writePixel(x, y, pixels.at(y).at(x));
+      if (lines[0] !== "P3") {
+        throw new Error("Parse error");
       }
-    }
 
-    return canvas;
+      const [width, height] = lines[1].split(" ").map(parseFloat);
+      const canvas = new Canvas({ width, height });
+      const scale = parseFloat(lines[2]);
+
+      const { x, y, color } = lines
+        .slice(3)
+        .join(" ")
+        .split(/\s+/)
+        .reduce<{
+          x: number;
+          y: number;
+          color: number[];
+        }>(
+          ({ x, y, color }, item) => {
+            const component = parseFloat(item) / scale;
+
+            color.push(component);
+
+            if (color.length === 3) {
+              canvas.writePixel(x, y, new Color(color[0], color[1], color[2]));
+              color = [];
+              x++;
+
+              if (x >= canvas.width) {
+                x = 0;
+                y++;
+              }
+            }
+
+            return {
+              x,
+              y,
+              color,
+            };
+          },
+          {
+            x: 0,
+            y: 0,
+            color: [],
+          },
+        );
+
+      if (color.length) {
+        canvas.writePixel(
+          x,
+          y,
+          new Color(color[0], color[1] ?? 0, color[2] ?? 0),
+        );
+      }
+
+      return canvas;
+    } else {
+      const allColsHaveSameLength = input.every(
+        (row) => row.length === input[0].length,
+      );
+
+      if (!allColsHaveSameLength) {
+        return null;
+      }
+
+      const canvas = new Canvas({
+        width: input.length,
+        height: input[0].length,
+      });
+
+      for (let y = 0; y < canvas.height; y++) {
+        for (let x = 0; x < canvas.width; x++) {
+          canvas.writePixel(x, y, input.at(y).at(x));
+        }
+      }
+
+      return canvas;
+    }
   }
 
   serialize(): JSONObject {
-    return { __type: Canvas.__name__, pixels: this.pixels };
+    return {
+      __type: Canvas.__name__,
+      pixels: this.pixels.map((row) => row.map((color) => color.serialize())),
+    };
   }
 
   static deserialize({ __type, pixels }: JSONObject) {
@@ -102,14 +172,14 @@ export class Canvas implements Serializable {
   }
 
   toPPM() {
-    const max = 255;
+    const scale = 255;
     const exportColor = (color: number) =>
-      Math.round(clamp(0, 1, color) * max).toString();
+      Math.round(clamp(0, 1, color) * scale).toString();
 
     return [
       "P3",
       `${this.width} ${this.height}`,
-      max,
+      scale,
       ...this.pixels.flatMap((row) => {
         const words = row.flatMap((color) => [
           exportColor(color.red),

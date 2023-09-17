@@ -4,7 +4,7 @@ import { ProgressBar } from "../progress";
 export const clock = (name: string, progress: ProgressBar) => {
   const white = new Color(1, 1, 1);
   const red = new Color(1, 0, 0);
-  const canvas = new Canvas(400, 400);
+  const canvas = new Canvas({ height: 400, width: 400 });
   const translateToCenter = Transformations.translation(
     canvas.width / 2,
     canvas.height / 2,

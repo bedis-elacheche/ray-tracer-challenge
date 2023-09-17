@@ -19,7 +19,7 @@ export const projectile = (name: string, progress: ProgressBar) => {
   const wind = new Vector(-0.01, 0, 0);
   const environment = new Environment(gravity, wind);
 
-  const canvas = new Canvas(900, 500);
+  const canvas = new Canvas({ width: 900, height: 500 });
   const color = new Color(1, 1, 1);
 
   progress.start(name, canvas.height * canvas.width);

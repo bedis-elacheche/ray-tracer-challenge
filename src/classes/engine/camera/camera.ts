@@ -168,11 +168,11 @@ export class Camera extends EventEmitter<CameraEvents> implements Serializable {
   }
 
   render(world: World, options?: RenderOptions) {
-    const image = new Canvas(this.width, this.height);
+    const image = new Canvas({ width: this.width, height: this.height });
 
     if (options?.parallel) {
       const workers = new Set<number>();
-      const image = new Canvas(this.width, this.height);
+      const image = new Canvas({ width: this.width, height: this.height });
       const pixelCoordinates = Camera.shufflePixels(image.height, image.width);
 
       for (let i = 0; i < options.workers; i++) {

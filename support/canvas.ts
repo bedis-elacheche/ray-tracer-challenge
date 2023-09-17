@@ -5,14 +5,14 @@ import { Canvas, Color } from "../src";
 import { getCanvas, getColor, getString } from "./utils";
 
 Given(
-  "{word} ← canvas\\({float}, {float})",
-  function (varName: string, w: number, h: number) {
-    this[varName] = new Canvas(w, h);
+  "{word} ← canvas\\({int}, {int})",
+  function (varName: string, width: number, height: number) {
+    this[varName] = new Canvas({ width, height });
   },
 );
 
 When(
-  "write_pixel\\({word}, {float}, {float}, {word})",
+  "write_pixel\\({word}, {int}, {int}, {word})",
   function (canvasVarName: string, x: number, y: number, colorVarName: string) {
     const canvas = getCanvas(this, canvasVarName);
     const color = getColor(this, colorVarName);
@@ -44,6 +44,15 @@ When(
   },
 );
 
+When(
+  "{word} ← canvas_from_ppm\\({word})",
+  function (canvasVarName: string, varName: string) {
+    const str = getString(this, varName);
+
+    this[canvasVarName] = Canvas.from(str);
+  },
+);
+
 Then(
   "every pixel of {word} is color\\({float}, {float}, {float})",
   function (varName: string, r: number, g: number, b: number) {
@@ -59,7 +68,7 @@ Then(
 );
 
 Then(
-  "pixel_at\\({word}, {float}, {float}) = {word}",
+  "pixel_at\\({word}, {int}, {int}) = {word}",
   function (canvasVarName: string, x: number, y: number, colorVarName: string) {
     const canvas = getCanvas(this, canvasVarName);
     const color = getColor(this, colorVarName);
@@ -91,4 +100,10 @@ Then("{word} ends with a newline character", function (varName: string) {
   const file = getString(this, varName);
 
   expect(file.endsWith("\n")).to.be.true;
+});
+
+Then("canvas_from_ppm\\({word}) should fail", function (varName: string) {
+  const str = getString(this, varName);
+
+  expect(() => Canvas.from(str)).throw;
 });

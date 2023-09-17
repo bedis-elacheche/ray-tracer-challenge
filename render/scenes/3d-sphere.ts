@@ -15,7 +15,7 @@ import { ProgressBar } from "../progress";
 
 const makeScene =
   (transform?: Matrix) => (name: string, progress: ProgressBar) => {
-    const canvas = new Canvas(800, 800);
+    const canvas = new Canvas({ height: 800, width: 800 });
     const rayOrigin = new Point(0, 0, -5);
     const wallZ = 10;
     const wallSize = 10;
