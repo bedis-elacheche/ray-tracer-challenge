@@ -1,5 +1,6 @@
 export * from "./3d-sphere";
 export * from "./clock";
+export * from "./earth";
 export * from "./hexagon";
 export * from "./index";
 export * from "./projectile";

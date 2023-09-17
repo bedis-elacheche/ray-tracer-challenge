@@ -16,6 +16,7 @@ import {
   sceneWithFiniteCones,
   sceneWithFiniteCylinders,
   sceneWithInfiniteCylinders,
+  sceneWithMappedEarth,
   sceneWithPatterns,
   sceneWithPlanes,
   sceneWithPyramid,
@@ -42,6 +43,7 @@ const scenes: Record<SceneKey, Scene> = {
   "18-02-scene-with-checkered-plane": sceneWithCheckeredPlane,
   "18-03-scene-with-checkered-cylinder": sceneWithCheckeredCylinder,
   "18-04-scene-with-checkered-cube": sceneWithCheckeredCube,
+  "18-05-scene-with-mapped-earth": sceneWithMappedEarth,
 };
 
 const getLastScene = (dict: Record<SceneKey, Scene>): string =>

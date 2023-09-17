@@ -20,10 +20,12 @@ import {
   Transformations,
   UVAlignCheck,
   UVCheckers,
+  UVImage,
   UVMap,
   UVMapType,
 } from "../src";
 import {
+  getCanvas,
   getColor,
   getMaterial,
   getPattern,
@@ -105,6 +107,15 @@ Given(
       width,
       colors: [firstColor, secondColor],
     });
+  },
+);
+
+Given(
+  "{word} ← uv_image\\({word})",
+  function (varName: string, canvasVarName: string) {
+    const canvas = getCanvas(this, canvasVarName);
+
+    this[varName] = new UVImage({ canvas });
   },
 );
 
