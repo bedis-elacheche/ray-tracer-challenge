@@ -17,5 +17,6 @@ export * from "./scene-with-patterns";
 export * from "./scene-with-planes";
 export * from "./scene-with-pyramid";
 export * from "./scene-with-reflections";
+export * from "./scene-with-skybox";
 export * from "./scene-with-stripes";
 export * from "./sphere";
