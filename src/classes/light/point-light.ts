@@ -51,9 +51,7 @@ export class PointLight extends Light implements Serializable {
     normal: Vector,
     shadowIntensity: number,
   ) {
-    const color = material.pattern
-      ? material.pattern.colorAt(point, object)
-      : material.color;
+    const color = material.pattern.colorAt(point, object);
     const effectiveColor = color.multiply(this.intensity);
     const lightVector = this.position.subtract(point).normalize();
     const ambient = effectiveColor.multiply(material.ambient);

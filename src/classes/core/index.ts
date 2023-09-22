@@ -6,4 +6,5 @@ export * from "./serializable";
 export * from "./transformations";
 export * from "./tuple";
 export * from "./utils";
+export * from "./uv-mapper";
 export * from "./vector";

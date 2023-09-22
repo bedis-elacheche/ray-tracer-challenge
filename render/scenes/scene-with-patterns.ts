@@ -1,14 +1,15 @@
 import {
   Camera,
-  Checkers,
+  CheckersPattern,
   Color,
-  Gradient,
+  GradientPattern,
   Material,
   Point,
   PointLight,
-  Ring,
+  RingPattern,
+  SolidPattern,
   Sphere,
-  Stripes,
+  StripesPattern,
   Transformations,
   Vector,
   World,
@@ -19,8 +20,8 @@ export const sceneWithPatterns: Scene = () => {
   const floor = new Sphere({
     transform: Transformations.scale(10, 0.01, 10),
     material: new Material({
-      pattern: new Checkers({
-        colors: [new Color(1, 0, 0.2), new Color(1, 1, 1)],
+      pattern: new CheckersPattern({
+        patterns: [SolidPattern.from(1, 0, 0.2), SolidPattern.from(1, 1, 1)],
         transform: Transformations.scale(0.25, 0.25, 0.25),
       }),
       specular: 0,
@@ -28,8 +29,8 @@ export const sceneWithPatterns: Scene = () => {
   });
 
   const wallMaterial = new Material({
-    pattern: new Stripes({
-      colors: [new Color(1, 0, 0.2), new Color(1, 1, 1)],
+    pattern: new StripesPattern({
+      patterns: [SolidPattern.from(1, 0, 0.2), SolidPattern.from(1, 1, 1)],
       transform: Transformations.scale(0.05, 1, 1),
     }),
     specular: 0,
@@ -54,8 +55,8 @@ export const sceneWithPatterns: Scene = () => {
   const middle = new Sphere({
     transform: Transformations.translation(-0.5, 1, 0.5),
     material: new Material({
-      pattern: new Stripes({
-        colors: [new Color(0.2, 0, 1), new Color(1, 1, 1)],
+      pattern: new StripesPattern({
+        patterns: [SolidPattern.from(0.2, 0, 1), SolidPattern.from(1, 1, 1)],
         transform: Transformations.rotateZ(Math.PI / 2).multiply(
           Transformations.scale(0.15, 1, 1),
         ),
@@ -70,8 +71,8 @@ export const sceneWithPatterns: Scene = () => {
       Transformations.scale(0.5, 0.5, 0.5),
     ),
     material: new Material({
-      pattern: new Gradient({
-        colors: [new Color(1, 0, 1), new Color(1, 1, 1)],
+      pattern: new GradientPattern({
+        patterns: [SolidPattern.from(1, 0, 1), SolidPattern.from(1, 1, 1)],
       }),
       diffuse: 0.7,
       specular: 0.3,
@@ -83,8 +84,8 @@ export const sceneWithPatterns: Scene = () => {
       Transformations.scale(0.33, 0.33, 0.33),
     ),
     material: new Material({
-      pattern: new Ring({
-        colors: [new Color(0, 1, 1), new Color(0, 0, 0)],
+      pattern: new RingPattern({
+        patterns: [SolidPattern.from(0, 1, 1), SolidPattern.from(0, 0, 0)],
         transform: Transformations.scale(0.25, 1, 0.25),
       }),
       diffuse: 0.7,

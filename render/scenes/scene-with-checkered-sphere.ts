@@ -4,10 +4,11 @@ import {
   Material,
   Point,
   PointLight,
+  SolidPattern,
   Sphere,
-  TextureMap,
+  TextureMapPattern,
   Transformations,
-  UVCheckers,
+  UVCheckersPattern,
   Vector,
   World,
 } from "../../src";
@@ -16,13 +17,16 @@ import { Scene } from "../types";
 export const sceneWithCheckeredSphere: Scene = () => {
   const sphere = new Sphere({
     material: new Material({
-      pattern: new TextureMap({
+      pattern: new TextureMapPattern({
         map: "spherical",
         patterns: {
-          main: new UVCheckers({
+          main: new UVCheckersPattern({
             width: 20,
             height: 10,
-            colors: [new Color(0, 0.5, 0), new Color(1, 1, 1)],
+            patterns: [
+              SolidPattern.from(0, 0.5, 0),
+              SolidPattern.from(1, 1, 1),
+            ],
           }),
         },
       }),

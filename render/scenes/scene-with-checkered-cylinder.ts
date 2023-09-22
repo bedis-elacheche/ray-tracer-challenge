@@ -5,9 +5,10 @@ import {
   Material,
   Point,
   PointLight,
-  TextureMap,
+  SolidPattern,
+  TextureMapPattern,
   Transformations,
-  UVCheckers,
+  UVCheckersPattern,
   Vector,
   World,
 } from "../../src";
@@ -21,13 +22,16 @@ export const sceneWithCheckeredCylinder: Scene = () => {
       Transformations.translation(0, -0.5, 0),
     ),
     material: new Material({
-      pattern: new TextureMap({
+      pattern: new TextureMapPattern({
         map: "cylindrical",
         patterns: {
-          main: new UVCheckers({
+          main: new UVCheckersPattern({
             width: 16,
             height: 8,
-            colors: [new Color(0, 0.5, 0), new Color(1, 1, 1)],
+            patterns: [
+              SolidPattern.from(0, 0.5, 0),
+              SolidPattern.from(1, 1, 1),
+            ],
           }),
         },
       }),

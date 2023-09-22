@@ -1,3 +1,5 @@
-export * from "./abstract";
-export * from "./patterns";
+export * from "./pattern";
+export * from "./solid-pattern";
+export * from "./solid-pattern";
 export * from "./uv-patterns";
+export * from "./xyz-patterns";

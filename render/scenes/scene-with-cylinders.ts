@@ -1,15 +1,16 @@
 import {
   Camera,
-  Checkers,
+  CheckersPattern,
   Color,
   Cylinder,
-  Gradient,
+  GradientPattern,
   Material,
   Plane,
   Point,
   PointLight,
-  Ring,
-  Stripes,
+  RingPattern,
+  SolidPattern,
+  StripesPattern,
   Transformations,
   Vector,
   World,
@@ -20,8 +21,8 @@ export const sceneWithInfiniteCylinders: Scene = () => {
   const floor = new Plane({
     transform: Transformations.scale(10, 0.01, 10),
     material: new Material({
-      pattern: new Checkers({
-        colors: [new Color(1, 0, 0.2), new Color(1, 1, 1)],
+      pattern: new CheckersPattern({
+        patterns: [SolidPattern.from(1, 0, 0.2), SolidPattern.from(1, 1, 1)],
         transform: Transformations.scale(0.25, 0.25, 0.25),
       }),
       specular: 0,
@@ -29,8 +30,8 @@ export const sceneWithInfiniteCylinders: Scene = () => {
   });
 
   const wallMaterial = new Material({
-    pattern: new Stripes({
-      colors: [new Color(1, 0, 0.2), new Color(1, 1, 1)],
+    pattern: new StripesPattern({
+      patterns: [SolidPattern.from(1, 0, 0.2), SolidPattern.from(1, 1, 1)],
       transform: Transformations.scale(0.05, 1, 1),
     }),
     specular: 0,
@@ -55,8 +56,8 @@ export const sceneWithInfiniteCylinders: Scene = () => {
   const middle = new Cylinder({
     transform: Transformations.translation(-0.5, 1, 0.5),
     material: new Material({
-      pattern: new Stripes({
-        colors: [new Color(0.2, 0, 1), new Color(1, 1, 1)],
+      pattern: new StripesPattern({
+        patterns: [SolidPattern.from(0.2, 0, 1), SolidPattern.from(1, 1, 1)],
         transform: Transformations.rotateZ(Math.PI / 2).multiply(
           Transformations.scale(0.15, 1, 1),
         ),
@@ -71,8 +72,8 @@ export const sceneWithInfiniteCylinders: Scene = () => {
       Transformations.scale(0.5, 0.5, 0.5),
     ),
     material: new Material({
-      pattern: new Gradient({
-        colors: [new Color(1, 0, 1), new Color(1, 1, 1)],
+      pattern: new GradientPattern({
+        patterns: [SolidPattern.from(1, 0, 1), SolidPattern.from(1, 1, 1)],
       }),
       diffuse: 0.7,
       specular: 0.3,
@@ -84,8 +85,8 @@ export const sceneWithInfiniteCylinders: Scene = () => {
       Transformations.scale(0.33, 0.33, 0.33),
     ),
     material: new Material({
-      pattern: new Ring({
-        colors: [new Color(0, 1, 1), new Color(0, 0, 0)],
+      pattern: new RingPattern({
+        patterns: [SolidPattern.from(0, 1, 1), SolidPattern.from(0, 0, 0)],
         transform: Transformations.scale(0.25, 1, 0.25),
       }),
       diffuse: 0.7,
@@ -123,8 +124,8 @@ const makeSceneWithFiniteCylinders =
     const floor = new Plane({
       transform: Transformations.scale(10, 0.01, 10),
       material: new Material({
-        pattern: new Checkers({
-          colors: [new Color(1, 0, 0.2), new Color(1, 1, 1)],
+        pattern: new CheckersPattern({
+          patterns: [SolidPattern.from(1, 0, 0.2), SolidPattern.from(1, 1, 1)],
           transform: Transformations.scale(0.25, 0.25, 0.25),
         }),
         specular: 0,
@@ -132,8 +133,8 @@ const makeSceneWithFiniteCylinders =
     });
 
     const wallMaterial = new Material({
-      pattern: new Stripes({
-        colors: [new Color(1, 0, 0.2), new Color(1, 1, 1)],
+      pattern: new StripesPattern({
+        patterns: [SolidPattern.from(1, 0, 0.2), SolidPattern.from(1, 1, 1)],
         transform: Transformations.scale(0.05, 1, 1),
       }),
       specular: 0,
@@ -158,8 +159,8 @@ const makeSceneWithFiniteCylinders =
     const middle = new Cylinder({
       transform: Transformations.translation(-0.5, 1, 0.5),
       material: new Material({
-        pattern: new Stripes({
-          colors: [new Color(0.2, 0, 1), new Color(1, 1, 1)],
+        pattern: new StripesPattern({
+          patterns: [SolidPattern.from(0.2, 0, 1), SolidPattern.from(1, 1, 1)],
           transform: Transformations.rotateZ(Math.PI / 2).multiply(
             Transformations.scale(0.15, 1, 1),
           ),
@@ -177,8 +178,8 @@ const makeSceneWithFiniteCylinders =
         Transformations.scale(0.5, 0.5, 0.5),
       ),
       material: new Material({
-        pattern: new Gradient({
-          colors: [new Color(1, 0, 1), new Color(1, 1, 1)],
+        pattern: new GradientPattern({
+          patterns: [SolidPattern.from(1, 0, 1), SolidPattern.from(1, 1, 1)],
         }),
         diffuse: 0.7,
         specular: 0.3,
@@ -193,9 +194,9 @@ const makeSceneWithFiniteCylinders =
         .multiply(Transformations.scale(0.33, 0.33, 0.33))
         .multiply(Transformations.rotateX(Math.PI / 2)),
       material: new Material({
-        pattern: new Ring({
+        pattern: new RingPattern({
           transform: Transformations.scale(0.25, 1, 0.25),
-          colors: [new Color(0, 1, 1), new Color(0, 0, 0)],
+          patterns: [SolidPattern.from(0, 1, 1), SolidPattern.from(0, 0, 0)],
         }),
         diffuse: 0.7,
         specular: 0.3,

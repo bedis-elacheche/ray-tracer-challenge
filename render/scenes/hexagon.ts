@@ -7,6 +7,7 @@ import {
   Matrix,
   Point,
   PointLight,
+  SolidPattern,
   Sphere,
   Transformations,
   Vector,
@@ -52,7 +53,7 @@ export const hexagon: Scene = () => {
 
   hexagon.applyMaterial(
     new Material({
-      color: new Color(1, 0.5, 0.38),
+      pattern: SolidPattern.from(1, 0.5, 0.38),
     }),
   );
 

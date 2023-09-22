@@ -1,22 +1,36 @@
-import { BasePattern } from "./abstract";
-import { Checkers, Gradient, Pattern, Ring, Stripes } from "./patterns";
-import { TextureMap } from "./uv-patterns";
+import { Pattern } from "./pattern";
+import { SolidPattern } from "./solid-pattern";
+import { TextureMapPattern } from "./uv-patterns";
+import {
+  BlendedPattern,
+  CheckersPattern,
+  GradientPattern,
+  RingPattern,
+  StripesPattern,
+  XYZPattern,
+} from "./xyz-patterns";
 
 export class PatternDeserializer {
-  static deserialize(item: JSONObject): BasePattern {
+  static deserialize(item: JSONObject): Pattern {
     switch (item.__type) {
-      case TextureMap.__name__:
-        return TextureMap.deserialize(item);
-      case Gradient.__name__:
-        return Gradient.deserialize(item);
-      case Checkers.__name__:
-        return Checkers.deserialize(item);
-      case Stripes.__name__:
-        return Stripes.deserialize(item);
-      case Ring.__name__:
-        return Ring.deserialize(item);
+      case SolidPattern.__name__:
+        return SolidPattern.deserialize(item);
+      case TextureMapPattern.__name__:
+        return TextureMapPattern.deserialize(item);
+      case GradientPattern.__name__:
+        return GradientPattern.deserialize(item);
+      case CheckersPattern.__name__:
+        return CheckersPattern.deserialize(item);
+      case StripesPattern.__name__:
+        return StripesPattern.deserialize(item);
+      case RingPattern.__name__:
+        return RingPattern.deserialize(item);
+      case BlendedPattern.__name__:
+        return BlendedPattern.deserialize(item);
+      case XYZPattern.__name__:
+        return XYZPattern.deserialize(item);
       default:
-        return Pattern.deserialize(item);
+        throw new Error("Pattern type not recognized.");
     }
   }
 }

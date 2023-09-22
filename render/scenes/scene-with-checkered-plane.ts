@@ -5,9 +5,10 @@ import {
   Plane,
   Point,
   PointLight,
-  TextureMap,
+  SolidPattern,
+  TextureMapPattern,
   Transformations,
-  UVCheckers,
+  UVCheckersPattern,
   Vector,
   World,
 } from "../../src";
@@ -16,13 +17,16 @@ import { Scene } from "../types";
 export const sceneWithCheckeredPlane: Scene = () => {
   const plane = new Plane({
     material: new Material({
-      pattern: new TextureMap({
+      pattern: new TextureMapPattern({
         map: "planar",
         patterns: {
-          main: new UVCheckers({
+          main: new UVCheckersPattern({
             width: 2,
             height: 2,
-            colors: [new Color(0, 0.5, 0), new Color(1, 1, 1)],
+            patterns: [
+              SolidPattern.from(0, 0.5, 0),
+              SolidPattern.from(1, 1, 1),
+            ],
           }),
         },
       }),

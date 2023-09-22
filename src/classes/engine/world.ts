@@ -1,6 +1,6 @@
 import { EPSILON, Point, Serializable, Transformations, Vector } from "../core";
 import { Light, LightDeserializer, PointLight } from "../light";
-import { Color, Material } from "../materials";
+import { Color, Material, SolidPattern } from "../materials";
 import { BaseShape, Shape, ShapeDeserializer, Sphere } from "../shapes";
 import { Environment } from "./environment";
 import { Intersection } from "./intersection";
@@ -47,7 +47,7 @@ export class World implements Serializable {
   static default() {
     const s1 = new Sphere({
       material: new Material({
-        color: new Color(0.8, 1, 0.6),
+        pattern: SolidPattern.from(0.8, 1, 0.6),
         diffuse: 0.7,
         specular: 0.2,
       }),

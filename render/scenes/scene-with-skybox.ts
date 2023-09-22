@@ -10,9 +10,9 @@ import {
   Point,
   PointLight,
   Sphere,
-  TextureMap,
+  TextureMapPattern,
   Transformations,
-  UVImage,
+  UVImagePattern,
   Vector,
   World,
 } from "../../src";
@@ -65,15 +65,15 @@ export const sceneWithSkybox: Scene = () => {
   const skybox = new Cube({
     transform: Transformations.scale(1000, 1000, 1000),
     material: new Material({
-      pattern: new TextureMap({
+      pattern: new TextureMapPattern({
         map: "cubic",
         patterns: {
-          left: new UVImage({ canvas: Canvas.from(negx) }),
-          right: new UVImage({ canvas: Canvas.from(posx) }),
-          front: new UVImage({ canvas: Canvas.from(posz) }),
-          back: new UVImage({ canvas: Canvas.from(negz) }),
-          up: new UVImage({ canvas: Canvas.from(posy) }),
-          down: new UVImage({ canvas: Canvas.from(negy) }),
+          left: new UVImagePattern({ canvas: Canvas.from(negx) }),
+          right: new UVImagePattern({ canvas: Canvas.from(posx) }),
+          front: new UVImagePattern({ canvas: Canvas.from(posz) }),
+          back: new UVImagePattern({ canvas: Canvas.from(negz) }),
+          up: new UVImagePattern({ canvas: Canvas.from(posy) }),
+          down: new UVImagePattern({ canvas: Canvas.from(negy) }),
         },
       }),
       diffuse: 0,

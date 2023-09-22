@@ -1,7 +1,7 @@
-import { Color } from "../../color";
-import { UVPattern } from "./uv-pattern";
+import { PatternDeserializer } from "../xyz-patterns";
+import { UVPattern, UVPatternPatternType } from "./uv-pattern";
 
-export class UVAlignCheck extends UVPattern {
+export class UVAlignCheckPattern extends UVPattern {
   public static readonly __name__ = "uv-align-check-pattern";
 
   constructor({
@@ -11,53 +11,55 @@ export class UVAlignCheck extends UVPattern {
     bl,
     br,
   }: {
-    main: Color;
-    ul: Color;
-    ur: Color;
-    bl: Color;
-    br: Color;
+    main: UVPatternPatternType;
+    ul: UVPatternPatternType;
+    ur: UVPatternPatternType;
+    bl: UVPatternPatternType;
+    br: UVPatternPatternType;
   }) {
     super({
-      colors: [main, ul, ur, bl, br],
+      patterns: [main, ul, ur, bl, br],
     });
   }
 
   colorAt(u: number, v: number) {
     if (v > 0.8) {
       if (u < 0.2) {
-        return this.colors[1];
+        return this.patterns[1].colorAt(u, v);
       }
 
       if (u > 0.8) {
-        return this.colors[2];
+        return this.patterns[2].colorAt(u, v);
       }
     }
 
     if (v < 0.2) {
       if (u < 0.2) {
-        return this.colors[3];
+        return this.patterns[3].colorAt(u, v);
       }
 
       if (u > 0.8) {
-        return this.colors[4];
+        return this.patterns[4].colorAt(u, v);
       }
     }
 
-    return this.colors[0];
+    return this.patterns[0].colorAt(u, v);
   }
 
   serialize(): JSONObject {
     return {
       ...super.serialize(),
-      __type: UVAlignCheck.__name__,
+      __type: UVAlignCheckPattern.__name__,
     };
   }
 
-  static deserialize({ __type, colors }: JSONObject) {
-    const [main, ul, ur, bl, br] = colors.map(Color.deserialize);
+  static deserialize({ __type, patterns }: JSONObject) {
+    const [main, ul, ur, bl, br] = patterns.map(
+      PatternDeserializer.deserialize,
+    );
 
-    if (__type === UVAlignCheck.__name__) {
-      return new UVAlignCheck({
+    if (__type === UVAlignCheckPattern.__name__) {
+      return new UVAlignCheckPattern({
         main,
         ul,
         ur,

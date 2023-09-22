@@ -1,11 +1,12 @@
 import {
   Camera,
-  Checkers,
+  CheckersPattern,
   Color,
   Material,
   Plane,
   Point,
   PointLight,
+  SolidPattern,
   Sphere,
   Transformations,
   Vector,
@@ -17,8 +18,11 @@ export const sceneWithReflections: Scene = () => {
   const floor = new Plane({
     transform: Transformations.scale(10, 0.01, 10),
     material: new Material({
-      pattern: new Checkers({
-        colors: [new Color(0.25, 0.25, 0.22), new Color(0.5, 0.5, 0.5)],
+      pattern: new CheckersPattern({
+        patterns: [
+          SolidPattern.from(0.25, 0.25, 0.22),
+          SolidPattern.from(0.5, 0.5, 0.5),
+        ],
         transform: Transformations.scale(0.25, 0.25, 0.25),
       }),
       specular: 0.5,
@@ -27,7 +31,7 @@ export const sceneWithReflections: Scene = () => {
   });
 
   const wallMaterial = new Material({
-    color: new Color(0.8, 0.8, 0.8),
+    pattern: SolidPattern.from(0.8, 0.8, 0.8),
     specular: 0.5,
     diffuse: 0.5,
   });
@@ -51,7 +55,7 @@ export const sceneWithReflections: Scene = () => {
   const outer = new Sphere({
     transform: Transformations.translation(-0.5, 1, 0.5),
     material: new Material({
-      color: new Color(0, 0, 0),
+      pattern: SolidPattern.from(0, 0, 0),
       diffuse: 0.7,
       specular: 1,
       shininess: 250,
@@ -65,7 +69,7 @@ export const sceneWithReflections: Scene = () => {
       Transformations.scale(0.5, 0.5, 0.5),
     ),
     material: new Material({
-      color: new Color(0.25, 0, 0),
+      pattern: SolidPattern.from(0.25, 0, 0),
       diffuse: 0.7,
       specular: 1,
       shininess: 250,

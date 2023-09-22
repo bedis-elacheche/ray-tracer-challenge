@@ -72,7 +72,6 @@ export class AreaLight extends Light implements Serializable {
     vvec,
     vsteps,
     jitter,
-    jitterSequence,
     ...rest
   }: JSONObject) {
     if (__type === AreaLight.__name__) {
@@ -103,9 +102,7 @@ export class AreaLight extends Light implements Serializable {
     normal: Vector,
     shadowIntensity: number,
   ): Color {
-    const color = material.pattern
-      ? material.pattern.colorAt(point, object)
-      : material.color;
+    const color = material.pattern.colorAt(point, object);
     const effectiveColor = color.multiply(this.intensity);
     const ambient = effectiveColor.multiply(material.ambient);
     const black = new Color(0, 0, 0);

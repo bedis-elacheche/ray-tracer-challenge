@@ -1,7 +1,7 @@
 import { Given, Then, When } from "@cucumber/cucumber";
 import { expect } from "chai";
 
-import { Color, EPSILON, Group, Point, Vector } from "../src";
+import { Color, EPSILON, Group, Point, SolidPattern, Vector } from "../src";
 import {
   float,
   floatOrInfinity,
@@ -63,7 +63,11 @@ Given(
   ) {
     const parsed = [r, g, b].map(parseFloat) as [number, number, number];
 
-    this[firstVarName][key][subKey] = new Color(...parsed);
+    if (key === "material" && subKey === "color") {
+      this[firstVarName].material.pattern = SolidPattern.from(...parsed);
+    } else {
+      this[firstVarName][key][subKey] = new Color(...parsed);
+    }
   },
 );
 
@@ -224,7 +228,10 @@ Then(
     subKey: string,
   ) {
     const first = this[firstVarName];
-    const second = this[secondVarName][key][subKey];
+    const second = mapValue(
+      mapValue(this[secondVarName], mapKey(key)),
+      mapKey(subKey),
+    );
 
     if (typeof first !== "object" && typeof second !== "object") {
       expect(first).to.eql(second);
@@ -397,13 +404,19 @@ Then(
 
     switch (instanceType) {
       case "point":
-        expect(this[varName][key].equals(new Point(...parsed))).to.be.true;
+        expect(
+          mapValue(this[varName], mapKey(key)).equals(new Point(...parsed)),
+        ).to.be.true;
         break;
       case "color":
-        expect(this[varName][key].equals(new Color(...parsed))).to.be.true;
+        expect(
+          mapValue(this[varName], mapKey(key)).equals(new Color(...parsed)),
+        ).to.be.true;
         break;
       case "vector":
-        expect(this[varName][key].equals(new Vector(...parsed))).to.be.true;
+        expect(
+          mapValue(this[varName], mapKey(key)).equals(new Vector(...parsed)),
+        ).to.be.true;
     }
   },
 );

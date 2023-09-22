@@ -1,11 +1,9 @@
 import { EPSILON, Serializable } from "../core";
-import { Color } from "./color";
-import { BasePattern, PatternDeserializer } from "./patterns";
+import { Pattern, PatternDeserializer, SolidPattern } from "./patterns";
 
 export class Material implements Serializable {
   public static readonly __name__ = "material";
-  public color: Color | null;
-  public pattern: BasePattern | null;
+  public pattern: Pattern;
   public ambient: number;
   public diffuse: number;
   public specular: number;
@@ -15,8 +13,7 @@ export class Material implements Serializable {
   public reflective: number;
 
   constructor({
-    color = new Color(1, 1, 1),
-    pattern = null,
+    pattern = new SolidPattern(),
     ambient = 0.1,
     diffuse = 0.9,
     specular = 0.9,
@@ -25,17 +22,15 @@ export class Material implements Serializable {
     transparency = 0.0,
     refractiveIndex = 1.0,
   }: {
-    color?: Color;
     ambient?: number;
     diffuse?: number;
     specular?: number;
-    pattern?: BasePattern;
+    pattern?: Pattern;
     shininess?: number;
     reflective?: number;
     transparency?: number;
     refractiveIndex?: number;
   } = {}) {
-    this.color = color;
     this.ambient = ambient;
     this.diffuse = diffuse;
     this.pattern = pattern;
@@ -63,14 +58,12 @@ export class Material implements Serializable {
       reflective: this.reflective,
       transparency: this.transparency,
       refractiveIndex: this.refractiveIndex,
-      color: this.color && this.color.serialize(),
-      pattern: this.pattern && this.pattern.serialize(),
+      pattern: this.pattern.serialize(),
     };
   }
 
   static deserialize({
     __type,
-    color,
     pattern,
     ambient,
     diffuse,
@@ -82,8 +75,7 @@ export class Material implements Serializable {
   }: JSONObject) {
     if (__type === Material.__name__) {
       return new Material({
-        color: Color.deserialize(color),
-        pattern: pattern && PatternDeserializer.deserialize(pattern),
+        pattern: PatternDeserializer.deserialize(pattern),
         ambient,
         diffuse,
         specular,
@@ -102,18 +94,8 @@ export class Material implements Serializable {
       return true;
     }
 
-    const areColorsEqual = Boolean(
-      (!this.color && !m.color) ||
-        (this.color && m.color && this.color.equals(m.color)),
-    );
-    const arePatternsEqual = Boolean(
-      (!this.pattern && !m.pattern) ||
-        (this.pattern && m.pattern && this.pattern.equals(m.pattern)),
-    );
-
     return (
-      areColorsEqual &&
-      arePatternsEqual &&
+      this.pattern.equals(m.pattern) &&
       Math.abs(this.ambient - m.ambient) <= EPSILON &&
       Math.abs(this.diffuse - m.diffuse) <= EPSILON &&
       Math.abs(this.specular - m.specular) <= EPSILON &&

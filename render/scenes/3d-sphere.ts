@@ -8,6 +8,7 @@ import {
   PointLight,
   Ray,
   Shape,
+  SolidPattern,
   Sphere,
   Transformations,
 } from "../../src";
@@ -21,8 +22,7 @@ const makeScene =
     const wallSize = 10;
     const pixelSize = wallSize / canvas.height;
     const half = wallSize / 2;
-    const color = new Color(1, 0.2, 1);
-    const material = new Material({ color });
+    const material = new Material({ pattern: SolidPattern.from(1, 0.2, 1) });
     const shape = new Sphere({ transform, material });
     const light = new PointLight({
       position: new Point(-10, 10, -10),

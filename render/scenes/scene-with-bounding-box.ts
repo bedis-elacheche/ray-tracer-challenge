@@ -8,6 +8,7 @@ import {
   Plane,
   Point,
   PointLight,
+  SolidPattern,
   Sphere,
   Transformations,
   Vector,
@@ -33,7 +34,7 @@ export const sceneWithBoundingBox: Scene = () => {
             z - maxZ / 2,
           ).multiply(Transformations.scale(0.5, 0.5, 0.5)),
           material: new Material({
-            color: new Color(x / maxX, y / maxY, z / maxZ),
+            pattern: SolidPattern.from(x / maxX, y / maxY, z / maxZ),
             diffuse: 0.7,
             ambient: 0.1,
             specular: 0,
@@ -73,7 +74,7 @@ export const sceneWithBoundingBox: Scene = () => {
 
   const plane = new Plane({
     material: new Material({
-      color: new Color(1, 1, 1),
+      pattern: SolidPattern.from(1, 1, 1),
       ambient: 0.025,
       diffuse: 0.67,
       specular: 0,

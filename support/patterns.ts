@@ -2,7 +2,7 @@ import { Given, Then, When } from "@cucumber/cucumber";
 import { expect } from "chai";
 
 import {
-  Checkers,
+  CheckersPattern,
   Color,
   cubicBackFace,
   cubicDownFace,
@@ -11,35 +11,36 @@ import {
   cubicLeftFace,
   cubicRightFace,
   cubicUpFace,
-  Gradient,
-  Pattern,
+  GradientPattern,
   Point,
-  Ring,
-  Stripes,
-  TextureMap,
+  RingPattern,
+  SolidPattern,
+  StripesPattern,
+  TextureMapPattern,
   Transformations,
-  UVAlignCheck,
-  UVCheckers,
-  UVImage,
+  UVAlignCheckPattern,
+  UVCheckersPattern,
+  UVImagePattern,
   UVMap,
   UVMapType,
+  XYZPattern,
 } from "../src";
 import {
   getCanvas,
   getColor,
   getMaterial,
-  getPattern,
   getPatternOrTextureMap,
   getPoint,
   getShape,
   getString,
   getStripe,
   getUVPattern,
+  getXYZPattern,
   lowercase,
 } from "./utils";
 
 Given("{word} ← test_pattern\\()", function (varName: string) {
-  this[varName] = new Pattern();
+  this[varName] = new XYZPattern();
 });
 
 Given(
@@ -48,8 +49,11 @@ Given(
     const firstColor = getColor(this, firstColorName);
     const secondColor = getColor(this, secondColorName);
 
-    this[varName] = new Stripes({
-      colors: [firstColor, secondColor],
+    this[varName] = new StripesPattern({
+      patterns: [
+        new SolidPattern({ color: firstColor }),
+        new SolidPattern({ color: secondColor }),
+      ],
     });
   },
 );
@@ -60,8 +64,11 @@ Given(
     const firstColor = getColor(this, firstColorName);
     const secondColor = getColor(this, secondColorName);
 
-    this[varName] = new Gradient({
-      colors: [firstColor, secondColor],
+    this[varName] = new GradientPattern({
+      patterns: [
+        new SolidPattern({ color: firstColor }),
+        new SolidPattern({ color: secondColor }),
+      ],
     });
   },
 );
@@ -72,8 +79,11 @@ Given(
     const firstColor = getColor(this, firstColorName);
     const secondColor = getColor(this, secondColorName);
 
-    this[varName] = new Ring({
-      colors: [firstColor, secondColor],
+    this[varName] = new RingPattern({
+      patterns: [
+        new SolidPattern({ color: firstColor }),
+        new SolidPattern({ color: secondColor }),
+      ],
     });
   },
 );
@@ -84,8 +94,11 @@ Given(
     const firstColor = getColor(this, firstColorName);
     const secondColor = getColor(this, secondColorName);
 
-    this[varName] = new Checkers({
-      colors: [firstColor, secondColor],
+    this[varName] = new CheckersPattern({
+      patterns: [
+        new SolidPattern({ color: firstColor }),
+        new SolidPattern({ color: secondColor }),
+      ],
     });
   },
 );
@@ -102,10 +115,13 @@ Given(
     const firstColor = getColor(this, firstColorName);
     const secondColor = getColor(this, secondColorName);
 
-    this[varName] = new UVCheckers({
+    this[varName] = new UVCheckersPattern({
       height,
       width,
-      colors: [firstColor, secondColor],
+      patterns: [
+        new SolidPattern({ color: firstColor }),
+        new SolidPattern({ color: secondColor }),
+      ],
     });
   },
 );
@@ -115,7 +131,7 @@ Given(
   function (varName: string, canvasVarName: string) {
     const canvas = getCanvas(this, canvasVarName);
 
-    this[varName] = new UVImage({ canvas });
+    this[varName] = new UVImagePattern({ canvas });
   },
 );
 
@@ -132,8 +148,11 @@ Given(
   ) {
     const material = getMaterial(this, varName);
 
-    material.pattern = new Stripes({
-      colors: [new Color(ra, ga, ba), new Color(rb, gb, bb)],
+    material.pattern = new StripesPattern({
+      patterns: [
+        new SolidPattern({ color: new Color(ra, ga, ba) }),
+        new SolidPattern({ color: new Color(rb, gb, bb) }),
+      ],
     });
   },
 );
@@ -141,7 +160,7 @@ Given(
 Given(
   "set_pattern_transform\\({word}, scaling\\({float}, {float}, {float}))",
   function (patternVarName: string, x: number, y: number, z: number) {
-    const pattern = getPattern(this, patternVarName);
+    const pattern = getXYZPattern(this, patternVarName);
 
     pattern.transform = Transformations.scale(x, y, z);
   },
@@ -150,7 +169,7 @@ Given(
 Given(
   "set_pattern_transform\\({word}, translation\\({float}, {float}, {float}))",
   function (patternVarName: string, x: number, y: number, z: number) {
-    const pattern = getPattern(this, patternVarName);
+    const pattern = getXYZPattern(this, patternVarName);
 
     pattern.transform = Transformations.translation(x, y, z);
   },
@@ -180,7 +199,7 @@ Given(
       }
     }
 
-    this[varName] = new TextureMap({ patterns: { main: pattern }, map });
+    this[varName] = new TextureMapPattern({ patterns: { main: pattern }, map });
   },
 );
 
@@ -200,12 +219,12 @@ Given(
     const bl = getColor(this, blVarName);
     const br = getColor(this, brVarName);
 
-    this[varName] = new UVAlignCheck({
-      main,
-      ul,
-      ur,
-      bl,
-      br,
+    this[varName] = new UVAlignCheckPattern({
+      main: new SolidPattern({ color: main }),
+      ul: new SolidPattern({ color: ul }),
+      ur: new SolidPattern({ color: ur }),
+      bl: new SolidPattern({ color: bl }),
+      br: new SolidPattern({ color: br }),
     });
   },
 );
@@ -237,7 +256,7 @@ When(
     y: number,
     z: number,
   ) {
-    const pattern = getPattern(this, patternVarName);
+    const pattern = getXYZPattern(this, patternVarName);
     const shape = getShape(this, shapeVarName);
 
     this[varName] = pattern.colorAt(new Point(x, y, z), shape);
@@ -407,7 +426,7 @@ When(
     const up = getUVPattern(this, upVarName);
     const down = getUVPattern(this, downVarName);
 
-    this[varName] = new TextureMap({
+    this[varName] = new TextureMapPattern({
       map: "cubic",
       patterns: { left, front, right, back, up, down },
     });
@@ -468,7 +487,7 @@ Then(
     g: number,
     b: number,
   ) {
-    const pattern = getPattern(this, varName);
+    const pattern = getXYZPattern(this, varName);
     const point = new Point(x, y, z);
     const color = new Color(r, g, b);
 

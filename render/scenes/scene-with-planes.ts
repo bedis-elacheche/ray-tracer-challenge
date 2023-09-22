@@ -5,6 +5,7 @@ import {
   Plane,
   Point,
   PointLight,
+  SolidPattern,
   Sphere,
   Transformations,
   Vector,
@@ -16,7 +17,7 @@ export const sceneWithPlanes: Scene = () => {
   const floor = new Plane({
     transform: Transformations.scale(10, 0.01, 10),
     material: new Material({
-      color: new Color(1, 0.9, 0.9),
+      pattern: SolidPattern.from(1, 0.9, 0.9),
       specular: 0,
     }),
   });
@@ -24,7 +25,7 @@ export const sceneWithPlanes: Scene = () => {
   const middle = new Sphere({
     transform: Transformations.translation(-0.5, 1, 0.5),
     material: new Material({
-      color: new Color(0.1, 1, 0.5),
+      pattern: SolidPattern.from(0.1, 1, 0.5),
       diffuse: 0.7,
       specular: 0.3,
     }),
@@ -35,7 +36,7 @@ export const sceneWithPlanes: Scene = () => {
       Transformations.scale(0.5, 0.5, 0.5),
     ),
     material: new Material({
-      color: new Color(0.5, 1, 0.1),
+      pattern: SolidPattern.from(0.5, 1, 0.1),
       diffuse: 0.7,
       specular: 0.3,
     }),
@@ -46,7 +47,7 @@ export const sceneWithPlanes: Scene = () => {
       Transformations.scale(0.33, 0.33, 0.33),
     ),
     material: new Material({
-      color: new Color(1, 0.8, 0.1),
+      pattern: SolidPattern.from(1, 0.8, 0.1),
       diffuse: 0.7,
       specular: 0.3,
     }),

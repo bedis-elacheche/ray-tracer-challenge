@@ -6,6 +6,7 @@ import {
   Material,
   Plane,
   Point,
+  SolidPattern,
   Sphere,
   Transformations,
   Vector,
@@ -17,7 +18,7 @@ export const sceneWithAreaLight: Scene = () => {
   const cube = new Cube({
     hasShadow: false,
     material: new Material({
-      color: new Color(1.5, 1.5, 1.5),
+      pattern: SolidPattern.from(1.5, 1.5, 1.5),
       ambient: 1,
       diffuse: 0,
       specular: 0,
@@ -29,7 +30,7 @@ export const sceneWithAreaLight: Scene = () => {
 
   const plane = new Plane({
     material: new Material({
-      color: new Color(1, 1, 1),
+      pattern: SolidPattern.from(1, 1, 1),
       ambient: 0.025,
       diffuse: 0.67,
       specular: 0,
@@ -38,7 +39,7 @@ export const sceneWithAreaLight: Scene = () => {
 
   const redSphere = new Sphere({
     material: new Material({
-      color: new Color(1, 0, 0),
+      pattern: SolidPattern.from(1, 0, 0),
       ambient: 0.1,
       specular: 0,
       diffuse: 0.6,
@@ -51,7 +52,7 @@ export const sceneWithAreaLight: Scene = () => {
 
   const purpleSphere = new Sphere({
     material: new Material({
-      color: new Color(0.5, 0.5, 1),
+      pattern: SolidPattern.from(0.5, 0.5, 1),
       ambient: 0.1,
       specular: 0,
       diffuse: 0.6,

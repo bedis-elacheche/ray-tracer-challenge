@@ -1,39 +1,41 @@
-import { Point, Transformations } from "../../../core";
+import { Face, Point, Transformations, UVMap, UVMapType } from "../../../core";
 import { BaseShape } from "../../../shapes";
 import { Color } from "../../color";
-import { BasePattern } from "../abstract";
-import { Face, UVMap, UVMapType } from "./uv-mapper";
-import { UVPattern } from "./uv-pattern";
+import { Pattern } from "../pattern";
+import { SolidPattern } from "../solid-pattern";
+import { UVPattern, UVPatternPatternType } from "./uv-pattern";
 import { UVPatternDeserializer } from "./uv-pattern-deserializer";
 
-type CubicTextureMapProps = {
+type CubicTextureMapPatternProps = {
   patterns: {
-    left: UVPattern;
-    right: UVPattern;
-    front: UVPattern;
-    back: UVPattern;
-    up: UVPattern;
-    down: UVPattern;
+    left: UVPatternPatternType;
+    right: UVPatternPatternType;
+    front: UVPatternPatternType;
+    back: UVPatternPatternType;
+    up: UVPatternPatternType;
+    down: UVPatternPatternType;
     main?: never;
   };
   map: "cubic";
 };
 
-type GenericTextureMapProps = {
+type GenericTextureMapPatternProps = {
   patterns: {
-    main: UVPattern;
+    main: UVPatternPatternType;
   };
   map: Exclude<UVMapType, "cubic">;
 };
 
-type TextureMapProps = GenericTextureMapProps | CubicTextureMapProps;
+type TextureMapPatternProps =
+  | GenericTextureMapPatternProps
+  | CubicTextureMapPatternProps;
 
-export class TextureMap implements BasePattern {
+export class TextureMapPattern implements Pattern {
   public static readonly __name__ = "texture-map";
-  public patterns: TextureMapProps["patterns"];
+  public patterns: TextureMapPatternProps["patterns"];
   public map: UVMapType;
 
-  constructor({ patterns, map }: TextureMapProps) {
+  constructor({ patterns, map }: TextureMapPatternProps) {
     this.map = map;
     this.patterns = patterns;
   }
@@ -43,10 +45,14 @@ export class TextureMap implements BasePattern {
     const [[u, v], face] = UVMap.map(objectPoint, this.map);
     const pattern = this.getPattern(face);
 
-    return pattern.colorAt(u, v);
+    if (pattern instanceof UVPattern) {
+      return pattern.colorAt(u, v);
+    }
+
+    return pattern.colorAt(objectPoint);
   }
 
-  isCubicTextureMap(): this is this & CubicTextureMapProps {
+  isCubicTextureMap(): this is this & CubicTextureMapPatternProps {
     return this.map === "cubic";
   }
 
@@ -73,7 +79,7 @@ export class TextureMap implements BasePattern {
 
   serialize(): JSONObject {
     return {
-      __type: TextureMap.__name__,
+      __type: TextureMapPattern.__name__,
       patterns: Object.entries(this.patterns).reduce<
         Record<string, JSONObject>
       >(
@@ -87,11 +93,11 @@ export class TextureMap implements BasePattern {
     };
   }
 
-  static deserialize({ __type, patterns, map }: JSONObject): TextureMap {
-    if (__type === TextureMap.__name__) {
+  static deserialize({ __type, patterns, map }: JSONObject): TextureMapPattern {
+    if (__type === TextureMapPattern.__name__) {
       const { left, right, front, back, up, down, main } = patterns;
 
-      return new TextureMap(
+      return new TextureMapPattern(
         map === "cubic"
           ? {
               map: "cubic",
@@ -116,7 +122,7 @@ export class TextureMap implements BasePattern {
     throw new Error("Cannot deserialize object.");
   }
 
-  equals(p: TextureMap) {
+  equals(p: TextureMapPattern) {
     if (p === this) {
       return true;
     }
@@ -124,14 +130,31 @@ export class TextureMap implements BasePattern {
     return (
       this.map === p.map &&
       Object.entries(this.patterns).every(
-        ([key, pattern]: [keyof TextureMapProps["patterns"], UVPattern]) => {
-          const otherPattern: UVPattern = p.patterns[key];
+        ([key, pattern]: [
+          keyof TextureMapPatternProps["patterns"],
+          UVPatternPatternType,
+        ]) => {
+          const otherPattern: UVPatternPatternType = p.patterns[key];
 
           if (!otherPattern) {
             return false;
           }
 
-          return pattern.equals(otherPattern);
+          if (
+            pattern instanceof UVPattern &&
+            otherPattern instanceof UVPattern
+          ) {
+            return pattern.equals(otherPattern);
+          }
+
+          if (
+            pattern instanceof SolidPattern &&
+            otherPattern instanceof SolidPattern
+          ) {
+            return pattern.equals(otherPattern);
+          }
+
+          return false;
         },
       )
     );

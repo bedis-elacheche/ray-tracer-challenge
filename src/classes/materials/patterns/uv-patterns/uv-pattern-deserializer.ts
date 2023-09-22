@@ -1,17 +1,20 @@
-import { UVAlignCheck } from "./uv-align-check";
-import { UVCheckers } from "./uv-checkers";
-import { UVImage } from "./uv-image";
-import { UVPattern } from "./uv-pattern";
+import { SolidPattern } from "../solid-pattern";
+import { UVAlignCheckPattern } from "./uv-align-check";
+import { UVCheckersPattern } from "./uv-checkers";
+import { UVImagePattern } from "./uv-image";
+import { UVPattern, UVPatternPatternType } from "./uv-pattern";
 
 export class UVPatternDeserializer {
-  static deserialize(item: JSONObject): UVPattern {
+  static deserialize(item: JSONObject): UVPatternPatternType {
     switch (item.__type) {
-      case UVImage.__name__:
-        return UVImage.deserialize(item);
-      case UVAlignCheck.__name__:
-        return UVAlignCheck.deserialize(item);
-      case UVCheckers.__name__:
-        return UVCheckers.deserialize(item);
+      case SolidPattern.__name__:
+        return SolidPattern.deserialize(item);
+      case UVImagePattern.__name__:
+        return UVImagePattern.deserialize(item);
+      case UVAlignCheckPattern.__name__:
+        return UVAlignCheckPattern.deserialize(item);
+      case UVCheckersPattern.__name__:
+        return UVCheckersPattern.deserialize(item);
       default:
         return UVPattern.deserialize(item);
     }

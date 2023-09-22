@@ -6,6 +6,7 @@ import {
   Plane,
   Point,
   PointLight,
+  SolidPattern,
   Transformations,
   Triangle,
   Vector,
@@ -17,7 +18,7 @@ export const sceneWithPyramid: Scene = () => {
   const floor = new Plane({
     transform: Transformations.scale(10, 0.01, 10),
     material: new Material({
-      color: new Color(1, 0.9, 0.9),
+      pattern: SolidPattern.from(1, 0.9, 0.9),
       specular: 0,
     }),
   });
@@ -60,7 +61,7 @@ export const sceneWithPyramid: Scene = () => {
 
   pyramid.applyMaterial(
     new Material({
-      color: new Color(0, 0.75, 0.75),
+      pattern: SolidPattern.from(0, 0.75, 0.75),
       specular: 0.9,
       diffuse: 0.9,
     }),

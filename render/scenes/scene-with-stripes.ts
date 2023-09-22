@@ -4,8 +4,9 @@ import {
   Material,
   Point,
   PointLight,
+  SolidPattern,
   Sphere,
-  Stripes,
+  StripesPattern,
   Transformations,
   Vector,
   World,
@@ -13,8 +14,8 @@ import {
 import { Scene } from "../types";
 
 export const sceneWithStripes: Scene = () => {
-  const pattern = new Stripes({
-    colors: [new Color(1, 0, 0.2), new Color(1, 1, 1)],
+  const pattern = new StripesPattern({
+    patterns: [SolidPattern.from(1, 0, 0.2), SolidPattern.from(1, 1, 1)],
     transform: Transformations.scale(0.05, 1, 1),
   });
   const floor = new Sphere({
@@ -41,8 +42,8 @@ export const sceneWithStripes: Scene = () => {
     material: floor.material,
   });
 
-  const spherePattern = new Stripes({
-    colors: [new Color(0.2, 0, 1), new Color(1, 1, 1)],
+  const spherePattern = new StripesPattern({
+    patterns: [SolidPattern.from(0.2, 0, 1), SolidPattern.from(1, 1, 1)],
     transform: Transformations.rotateZ(Math.PI / 2).multiply(
       Transformations.scale(0.15, 1, 1),
     ),

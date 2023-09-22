@@ -15,20 +15,21 @@ import {
   Material,
   Matrix,
   OBJParserResult,
-  Pattern,
   Plane,
   Point,
   PointLight,
   Ray,
   Shape,
+  SolidPattern,
   Sphere,
-  Stripes,
-  TextureMap,
+  StripesPattern,
+  TextureMapPattern,
   Transformations,
   Tuple,
   UVPattern,
   Vector,
   World,
+  XYZPattern,
 } from "../src";
 
 export const int = /([+-]?[0-9]+)/;
@@ -69,10 +70,10 @@ export const getAreaLight = getInstance(AreaLight);
 export const getWorld = getInstance(World);
 export const getCamera = getInstance(Camera);
 export const getPlane = getInstance(Plane);
-export const getPattern = getInstance(Pattern);
+export const getXYZPattern = getInstance(XYZPattern);
 export const getUVPattern = getInstance(UVPattern);
-export const getTextureMap = getInstance(TextureMap);
-export const getStripe = getInstance(Stripes);
+export const getTextureMap = getInstance(TextureMapPattern);
+export const getStripe = getInstance(StripesPattern);
 export const getCube = getInstance(Cube);
 export const getGroup = getInstance(Group);
 export const getOBJParserResult = getInstance(OBJParserResult);
@@ -80,7 +81,7 @@ export const getCSG = getInstance(CSG);
 export const getBoundingBox = getInstance(BoundingBox);
 export const getPatternOrTextureMap = (world: IWorld, name: string) => {
   try {
-    return getPattern(world, name);
+    return getXYZPattern(world, name);
   } catch (e) {
     return getTextureMap(world, name);
   }
@@ -148,6 +149,7 @@ export const mapKey = (str: string) => {
   return (
     {
       count: "length",
+      color: "pattern",
       refractive_index: "refractiveIndex",
       hsize: "height",
       vsize: "width",
@@ -170,8 +172,9 @@ export const mapValue = <T extends JSONObject>(obj: T, key: string) => {
 
   /* eslint-disable @typescript-eslint/no-explicit-any */
   const getters: Record<string, (obj: T) => any> = {
-    a: (obj: any) => obj.colors[0],
-    b: (obj: any) => obj.colors[1],
+    a: (obj: any) => obj.patterns[0].colorAt(),
+    b: (obj: any) => obj.patterns[1].colorAt(),
+    pattern: (obj: any) => obj.pattern.colorAt(),
     light: (obj: any) => obj.lights[0],
   };
   /* eslint-enable @typescript-eslint/no-explicit-any */
@@ -194,7 +197,7 @@ export const customizeShapeWith = <T extends Shape>(
     switch (key) {
       case "material.color": {
         const [r, g, b] = getNumericParameters(value);
-        shape.material.color = new Color(r, g, b);
+        shape.material.pattern = SolidPattern.from(r, g, b);
         break;
       }
       case "material.diffuse": {
@@ -224,7 +227,7 @@ export const customizeShapeWith = <T extends Shape>(
       case "material.pattern": {
         switch (true) {
           case value === "test_pattern()": {
-            shape.material.pattern = new Pattern();
+            shape.material.pattern = new XYZPattern();
             break;
           }
           default:

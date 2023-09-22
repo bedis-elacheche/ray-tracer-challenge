@@ -6,9 +6,10 @@ import {
   Matrix,
   Point,
   PointLight,
-  TextureMap,
+  SolidPattern,
+  TextureMapPattern,
   Transformations,
-  UVAlignCheck,
+  UVAlignCheckPattern,
   Vector,
   World,
 } from "../../src";
@@ -32,50 +33,50 @@ export const sceneWithCheckeredCube: Scene = () => {
     new Cube({
       transform,
       material: new Material({
-        pattern: new TextureMap({
+        pattern: new TextureMapPattern({
           map: "cubic",
           patterns: {
-            left: new UVAlignCheck({
-              main: new Color(1, 1, 0),
-              ul: new Color(0, 1, 1),
-              ur: new Color(1, 0, 0),
-              bl: new Color(0, 0, 1),
-              br: new Color(1, 0.5, 0),
+            left: new UVAlignCheckPattern({
+              main: SolidPattern.from(1, 1, 0),
+              ul: SolidPattern.from(0, 1, 1),
+              ur: SolidPattern.from(1, 0, 0),
+              bl: SolidPattern.from(0, 0, 1),
+              br: SolidPattern.from(1, 0.5, 0),
             }),
-            front: new UVAlignCheck({
-              main: new Color(0, 1, 1),
-              ul: new Color(1, 0, 0),
-              ur: new Color(1, 1, 0),
-              bl: new Color(1, 0.5, 0),
-              br: new Color(0, 1, 0),
+            front: new UVAlignCheckPattern({
+              main: SolidPattern.from(0, 1, 1),
+              ul: SolidPattern.from(1, 0, 0),
+              ur: SolidPattern.from(1, 1, 0),
+              bl: SolidPattern.from(1, 0.5, 0),
+              br: SolidPattern.from(0, 1, 0),
             }),
-            right: new UVAlignCheck({
-              main: new Color(1, 0, 0),
-              ul: new Color(1, 1, 0),
-              ur: new Color(1, 0, 1),
-              bl: new Color(0, 1, 0),
-              br: new Color(1, 1, 1),
+            right: new UVAlignCheckPattern({
+              main: SolidPattern.from(1, 0, 0),
+              ul: SolidPattern.from(1, 1, 0),
+              ur: SolidPattern.from(1, 0, 1),
+              bl: SolidPattern.from(0, 1, 0),
+              br: SolidPattern.from(1, 1, 1),
             }),
-            back: new UVAlignCheck({
-              main: new Color(0, 1, 0),
-              ul: new Color(1, 0, 1),
-              ur: new Color(0, 1, 1),
-              bl: new Color(1, 1, 1),
-              br: new Color(0, 0, 1),
+            back: new UVAlignCheckPattern({
+              main: SolidPattern.from(0, 1, 0),
+              ul: SolidPattern.from(1, 0, 1),
+              ur: SolidPattern.from(0, 1, 1),
+              bl: SolidPattern.from(1, 1, 1),
+              br: SolidPattern.from(0, 0, 1),
             }),
-            up: new UVAlignCheck({
-              main: new Color(1, 0.5, 0),
-              ul: new Color(0, 1, 1),
-              ur: new Color(1, 0, 1),
-              bl: new Color(1, 0, 0),
-              br: new Color(1, 1, 0),
+            up: new UVAlignCheckPattern({
+              main: SolidPattern.from(1, 0.5, 0),
+              ul: SolidPattern.from(0, 1, 1),
+              ur: SolidPattern.from(1, 0, 1),
+              bl: SolidPattern.from(1, 0, 0),
+              br: SolidPattern.from(1, 1, 0),
             }),
-            down: new UVAlignCheck({
-              main: new Color(1, 0, 1),
-              ul: new Color(1, 0.5, 0),
-              ur: new Color(0, 1, 0),
-              bl: new Color(0, 0, 1),
-              br: new Color(1, 1, 1),
+            down: new UVAlignCheckPattern({
+              main: SolidPattern.from(1, 0, 1),
+              ul: SolidPattern.from(1, 0.5, 0),
+              ur: SolidPattern.from(0, 1, 0),
+              bl: SolidPattern.from(0, 0, 1),
+              br: SolidPattern.from(1, 1, 1),
             }),
           },
         }),

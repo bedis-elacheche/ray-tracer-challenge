@@ -10,10 +10,11 @@ import {
   Plane,
   Point,
   PointLight,
+  SolidPattern,
   Sphere,
-  TextureMap,
+  TextureMapPattern,
   Transformations,
-  UVImage,
+  UVImagePattern,
   Vector,
   World,
 } from "../../src";
@@ -38,7 +39,7 @@ export const sceneWithMappedEarth: Scene = () => {
 
   const plane = new Plane({
     material: new Material({
-      color: new Color(1, 1, 1),
+      pattern: SolidPattern.White(),
       diffuse: 0.1,
       specular: 0,
       ambient: 0,
@@ -51,7 +52,7 @@ export const sceneWithMappedEarth: Scene = () => {
     maximum: 0.1,
     closed: true,
     material: new Material({
-      color: new Color(1, 1, 1),
+      pattern: SolidPattern.White(),
       diffuse: 0.2,
       specular: 0,
       ambient: 0,
@@ -69,9 +70,9 @@ export const sceneWithMappedEarth: Scene = () => {
       .multiply(Transformations.rotateX(0.5))
       .multiply(Transformations.rotateZ(-0.1)),
     material: new Material({
-      pattern: new TextureMap({
+      pattern: new TextureMapPattern({
         patterns: {
-          main: new UVImage({ canvas }),
+          main: new UVImagePattern({ canvas }),
         },
         map: "spherical",
       }),

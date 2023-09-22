@@ -1,13 +1,13 @@
 import { Canvas } from "../../../engine";
 import { UVPattern } from "./uv-pattern";
 
-export class UVImage extends UVPattern {
+export class UVImagePattern extends UVPattern {
   public static readonly __name__ = "uv-image-pattern";
   public canvas: Canvas;
 
   constructor({ canvas }: { canvas: Canvas }) {
     super({
-      colors: [],
+      patterns: [],
     });
     this.canvas = canvas;
   }
@@ -21,14 +21,14 @@ export class UVImage extends UVPattern {
 
   serialize(): JSONObject {
     return {
-      __type: UVImage.__name__,
+      __type: UVImagePattern.__name__,
       canvas: this.canvas.serialize(),
     };
   }
 
   static deserialize({ __type, canvas }: JSONObject) {
-    if (__type === UVImage.__name__) {
-      return new UVImage({
+    if (__type === UVImagePattern.__name__) {
+      return new UVImagePattern({
         canvas: Canvas.deserialize(canvas),
       });
     }
