@@ -1,6 +1,7 @@
 export * from "./constants";
 export * from "./event";
 export * from "./matrix";
+export * from "./noise";
 export * from "./point";
 export * from "./serializable";
 export * from "./transformations";

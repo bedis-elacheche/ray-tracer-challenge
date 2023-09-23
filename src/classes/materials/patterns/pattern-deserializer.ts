@@ -5,6 +5,7 @@ import {
   BlendedPattern,
   CheckersPattern,
   GradientPattern,
+  PerturbedPattern,
   RingPattern,
   StripesPattern,
   XYZPattern,
@@ -27,6 +28,8 @@ export class PatternDeserializer {
         return RingPattern.deserialize(item);
       case BlendedPattern.__name__:
         return BlendedPattern.deserialize(item);
+      case PerturbedPattern.__name__:
+        return PerturbedPattern.deserialize(item);
       case XYZPattern.__name__:
         return XYZPattern.deserialize(item);
       default:

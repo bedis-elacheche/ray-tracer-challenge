@@ -16,6 +16,7 @@ export * from "./scene-with-composed-pattern";
 export * from "./scene-with-cylinders";
 export * from "./scene-with-finite-cones";
 export * from "./scene-with-patterns";
+export * from "./scene-with-perturbed-pattern";
 export * from "./scene-with-planes";
 export * from "./scene-with-pyramid";
 export * from "./scene-with-reflections";

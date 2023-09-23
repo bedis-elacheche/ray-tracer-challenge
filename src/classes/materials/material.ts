@@ -1,4 +1,4 @@
-import { EPSILON, Serializable } from "../core";
+import { clamp, EPSILON, Serializable } from "../core";
 import { Pattern, PatternDeserializer, SolidPattern } from "./patterns";
 
 export class Material implements Serializable {
@@ -31,14 +31,14 @@ export class Material implements Serializable {
     transparency?: number;
     refractiveIndex?: number;
   } = {}) {
-    this.ambient = ambient;
-    this.diffuse = diffuse;
     this.pattern = pattern;
-    this.specular = specular;
     this.shininess = shininess;
-    this.reflective = reflective;
-    this.transparency = transparency;
+    this.ambient = clamp(0, 1, ambient);
+    this.diffuse = clamp(0, 1, diffuse);
+    this.specular = clamp(0, 1, specular);
     this.refractiveIndex = refractiveIndex;
+    this.reflective = clamp(0, 1, reflective);
+    this.transparency = clamp(0, 1, transparency);
   }
 
   static Glass() {
