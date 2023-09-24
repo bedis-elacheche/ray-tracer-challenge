@@ -2,41 +2,42 @@ import {
   Camera,
   CheckersPattern,
   Color,
+  GradientPattern,
   Material,
-  Plane,
   Point,
   PointLight,
+  RingPattern,
   SolidPattern,
   Sphere,
+  StripesPattern,
   Transformations,
   Vector,
   World,
-} from "../../src";
-import { Scene } from "../types";
+} from "ray-tracer";
 
-export const sceneWithReflections: Scene = () => {
-  const floor = new Plane({
+import { Scene } from "./types";
+
+export const sceneWithPatterns: Scene = () => {
+  const floor = new Sphere({
     transform: Transformations.scale(10, 0.01, 10),
     material: new Material({
       pattern: new CheckersPattern({
-        patterns: [
-          SolidPattern.from(0.25, 0.25, 0.22),
-          SolidPattern.from(0.5, 0.5, 0.5),
-        ],
+        patterns: [SolidPattern.from(1, 0, 0.2), SolidPattern.from(1, 1, 1)],
         transform: Transformations.scale(0.25, 0.25, 0.25),
       }),
-      specular: 0.5,
-      reflective: 0.25,
+      specular: 0,
     }),
   });
 
   const wallMaterial = new Material({
-    pattern: SolidPattern.from(0.8, 0.8, 0.8),
-    specular: 0.5,
-    diffuse: 0.5,
+    pattern: new StripesPattern({
+      patterns: [SolidPattern.from(1, 0, 0.2), SolidPattern.from(1, 1, 1)],
+      transform: Transformations.scale(0.05, 1, 1),
+    }),
+    specular: 0,
   });
 
-  const leftWall = new Plane({
+  const leftWall = new Sphere({
     transform: Transformations.translation(0, 0, 5)
       .multiply(Transformations.rotateY(-Math.PI / 4))
       .multiply(Transformations.rotateX(Math.PI / 2))
@@ -44,7 +45,7 @@ export const sceneWithReflections: Scene = () => {
     material: wallMaterial,
   });
 
-  const rightWall = new Plane({
+  const rightWall = new Sphere({
     transform: Transformations.translation(0, 0, 5)
       .multiply(Transformations.rotateY(Math.PI / 4))
       .multiply(Transformations.rotateX(Math.PI / 2))
@@ -52,29 +53,44 @@ export const sceneWithReflections: Scene = () => {
     material: wallMaterial,
   });
 
-  const outer = new Sphere({
+  const middle = new Sphere({
     transform: Transformations.translation(-0.5, 1, 0.5),
     material: new Material({
-      pattern: SolidPattern.from(0, 0, 0),
+      pattern: new StripesPattern({
+        patterns: [SolidPattern.from(0.2, 0, 1), SolidPattern.from(1, 1, 1)],
+        transform: Transformations.rotateZ(Math.PI / 2).multiply(
+          Transformations.scale(0.15, 1, 1),
+        ),
+      }),
       diffuse: 0.7,
-      specular: 1,
-      shininess: 250,
-      transparency: 0.9,
-      reflective: 1,
+      specular: 0.3,
     }),
   });
 
-  const inner = new Sphere({
-    transform: Transformations.translation(-0.5, 1, 0.5).multiply(
+  const right = new Sphere({
+    transform: Transformations.translation(1.5, 0.5, -0.5).multiply(
       Transformations.scale(0.5, 0.5, 0.5),
     ),
     material: new Material({
-      pattern: SolidPattern.from(0.25, 0, 0),
+      pattern: new GradientPattern({
+        patterns: [SolidPattern.from(1, 0, 1), SolidPattern.from(1, 1, 1)],
+      }),
       diffuse: 0.7,
-      specular: 1,
-      shininess: 250,
-      transparency: 0.9,
-      reflective: 1,
+      specular: 0.3,
+    }),
+  });
+
+  const left = new Sphere({
+    transform: Transformations.translation(-1.5, 0.33, -0.75).multiply(
+      Transformations.scale(0.33, 0.33, 0.33),
+    ),
+    material: new Material({
+      pattern: new RingPattern({
+        patterns: [SolidPattern.from(0, 1, 1), SolidPattern.from(0, 0, 0)],
+        transform: Transformations.scale(0.25, 1, 0.25),
+      }),
+      diffuse: 0.7,
+      specular: 0.3,
     }),
   });
 
@@ -84,7 +100,7 @@ export const sceneWithReflections: Scene = () => {
   });
 
   const world = new World({
-    shapes: [floor, leftWall, rightWall, outer, inner],
+    shapes: [floor, leftWall, rightWall, middle, left, right],
     lights: [light],
   });
 

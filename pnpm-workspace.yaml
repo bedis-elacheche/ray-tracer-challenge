@@ -1,2 +1,4 @@
 packages:
   - ray-tracer
+  - scenes
+  - cli

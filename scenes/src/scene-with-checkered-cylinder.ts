@@ -11,8 +11,9 @@ import {
   UVCheckersPattern,
   Vector,
   World,
-} from "../../src";
-import { Scene } from "../types";
+} from "ray-tracer";
+
+import { Scene } from "./types";
 
 export const sceneWithCheckeredCylinder: Scene = () => {
   const cylinder = new Cylinder({

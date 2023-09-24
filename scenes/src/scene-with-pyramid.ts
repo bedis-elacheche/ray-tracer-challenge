@@ -11,8 +11,9 @@ import {
   Triangle,
   Vector,
   World,
-} from "../../src";
-import { Scene } from "../types";
+} from "ray-tracer";
+
+import { Scene } from "./types";
 
 export const sceneWithPyramid: Scene = () => {
   const floor = new Plane({

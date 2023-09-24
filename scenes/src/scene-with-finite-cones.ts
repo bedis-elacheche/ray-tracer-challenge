@@ -14,8 +14,9 @@ import {
   Transformations,
   Vector,
   World,
-} from "../../src";
-import { Scene } from "../types";
+} from "ray-tracer";
+
+import { Scene } from "./types";
 
 export const sceneWithFiniteCones: Scene = () => {
   const floor = new Plane({

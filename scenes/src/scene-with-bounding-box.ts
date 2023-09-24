@@ -13,8 +13,9 @@ import {
   Transformations,
   Vector,
   World,
-} from "../../src";
-import { Scene } from "../types";
+} from "ray-tracer";
+
+import { Scene } from "./types";
 
 export const sceneWithBoundingBox: Scene = () => {
   const cube = new Group({

@@ -1,10 +1,10 @@
 import { writeFileSync } from "node:fs";
 import { cpus } from "node:os";
 
-import { Canvas } from "../src";
-import { ProgressBar } from "./progress";
+import { Canvas } from "ray-tracer";
 import {
   hexagon,
+  Scene,
   scene,
   sceneWithAreaLight,
   sceneWithBlendedPattern,
@@ -26,8 +26,10 @@ import {
   sceneWithReflections,
   sceneWithSkybox,
   sceneWithStripes,
-} from "./scenes";
-import { Scene, SceneKey } from "./types";
+} from "scenes";
+
+import { ProgressBar } from "./progress";
+import { SceneKey } from "./types";
 
 const scenes: Record<SceneKey, Scene> = {
   "07-01-3d-scene": scene,

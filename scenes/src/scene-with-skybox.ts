@@ -15,8 +15,9 @@ import {
   UVImagePattern,
   Vector,
   World,
-} from "../../src";
-import { Scene } from "../types";
+} from "ray-tracer";
+
+import { Scene } from "./types";
 
 export const sceneWithSkybox: Scene = () => {
   const camera = new Camera({

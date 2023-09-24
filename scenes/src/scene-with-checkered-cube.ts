@@ -12,8 +12,9 @@ import {
   UVAlignCheckPattern,
   Vector,
   World,
-} from "../../src";
-import { Scene } from "../types";
+} from "ray-tracer";
+
+import { Scene } from "./types";
 
 export const sceneWithCheckeredCube: Scene = () => {
   const lights = [

@@ -1,7 +1,9 @@
 import {
   Camera,
+  CheckersPattern,
   Color,
   Material,
+  Plane,
   Point,
   PointLight,
   SolidPattern,
@@ -9,62 +11,71 @@ import {
   Transformations,
   Vector,
   World,
-} from "../../src";
-import { Scene } from "../types";
+} from "ray-tracer";
 
-export const scene: Scene = () => {
-  const floor = new Sphere({
+import { Scene } from "./types";
+
+export const sceneWithReflections: Scene = () => {
+  const floor = new Plane({
     transform: Transformations.scale(10, 0.01, 10),
     material: new Material({
-      pattern: SolidPattern.from(1, 0.9, 0.9),
-      specular: 0,
+      pattern: new CheckersPattern({
+        patterns: [
+          SolidPattern.from(0.25, 0.25, 0.22),
+          SolidPattern.from(0.5, 0.5, 0.5),
+        ],
+        transform: Transformations.scale(0.25, 0.25, 0.25),
+      }),
+      specular: 0.5,
+      reflective: 0.25,
     }),
   });
 
-  const leftWall = new Sphere({
+  const wallMaterial = new Material({
+    pattern: SolidPattern.from(0.8, 0.8, 0.8),
+    specular: 0.5,
+    diffuse: 0.5,
+  });
+
+  const leftWall = new Plane({
     transform: Transformations.translation(0, 0, 5)
       .multiply(Transformations.rotateY(-Math.PI / 4))
       .multiply(Transformations.rotateX(Math.PI / 2))
       .multiply(Transformations.scale(10, 0.01, 10)),
-    material: floor.material,
+    material: wallMaterial,
   });
 
-  const rightWall = new Sphere({
+  const rightWall = new Plane({
     transform: Transformations.translation(0, 0, 5)
       .multiply(Transformations.rotateY(Math.PI / 4))
       .multiply(Transformations.rotateX(Math.PI / 2))
       .multiply(Transformations.scale(10, 0.01, 10)),
-    material: floor.material,
+    material: wallMaterial,
   });
 
-  const middle = new Sphere({
+  const outer = new Sphere({
     transform: Transformations.translation(-0.5, 1, 0.5),
     material: new Material({
-      pattern: SolidPattern.from(0.1, 1, 0.5),
+      pattern: SolidPattern.from(0, 0, 0),
       diffuse: 0.7,
-      specular: 0.3,
+      specular: 1,
+      shininess: 250,
+      transparency: 0.9,
+      reflective: 1,
     }),
   });
 
-  const right = new Sphere({
-    transform: Transformations.translation(1.5, 0.5, -0.5).multiply(
+  const inner = new Sphere({
+    transform: Transformations.translation(-0.5, 1, 0.5).multiply(
       Transformations.scale(0.5, 0.5, 0.5),
     ),
     material: new Material({
-      pattern: SolidPattern.from(0.5, 1, 0.1),
+      pattern: SolidPattern.from(0.25, 0, 0),
       diffuse: 0.7,
-      specular: 0.3,
-    }),
-  });
-
-  const left = new Sphere({
-    transform: Transformations.translation(-1.5, 0.33, -0.75).multiply(
-      Transformations.scale(0.33, 0.33, 0.33),
-    ),
-    material: new Material({
-      pattern: SolidPattern.from(1, 0.8, 0.1),
-      diffuse: 0.7,
-      specular: 0.3,
+      specular: 1,
+      shininess: 250,
+      transparency: 0.9,
+      reflective: 1,
     }),
   });
 
@@ -74,7 +85,7 @@ export const scene: Scene = () => {
   });
 
   const world = new World({
-    shapes: [floor, leftWall, rightWall, middle, left, right],
+    shapes: [floor, leftWall, rightWall, outer, inner],
     lights: [light],
   });
 

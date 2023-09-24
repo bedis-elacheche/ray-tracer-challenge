@@ -11,8 +11,9 @@ import {
   Transformations,
   Vector,
   World,
-} from "../../src";
-import { Scene } from "../types";
+} from "ray-tracer";
+
+import { Scene } from "./types";
 
 export const sceneWithAreaLight: Scene = () => {
   const cube = new Cube({

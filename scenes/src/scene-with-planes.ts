@@ -2,57 +2,31 @@ import {
   Camera,
   Color,
   Material,
+  Plane,
   Point,
   PointLight,
   SolidPattern,
   Sphere,
-  StripesPattern,
   Transformations,
   Vector,
   World,
-} from "../../src";
-import { Scene } from "../types";
+} from "ray-tracer";
 
-export const sceneWithStripes: Scene = () => {
-  const pattern = new StripesPattern({
-    patterns: [SolidPattern.from(1, 0, 0.2), SolidPattern.from(1, 1, 1)],
-    transform: Transformations.scale(0.05, 1, 1),
-  });
-  const floor = new Sphere({
+import { Scene } from "./types";
+
+export const sceneWithPlanes: Scene = () => {
+  const floor = new Plane({
     transform: Transformations.scale(10, 0.01, 10),
     material: new Material({
-      pattern,
+      pattern: SolidPattern.from(1, 0.9, 0.9),
       specular: 0,
     }),
-  });
-
-  const leftWall = new Sphere({
-    transform: Transformations.translation(0, 0, 5)
-      .multiply(Transformations.rotateY(-Math.PI / 4))
-      .multiply(Transformations.rotateX(Math.PI / 2))
-      .multiply(Transformations.scale(10, 0.01, 10)),
-    material: floor.material,
-  });
-
-  const rightWall = new Sphere({
-    transform: Transformations.translation(0, 0, 5)
-      .multiply(Transformations.rotateY(Math.PI / 4))
-      .multiply(Transformations.rotateX(Math.PI / 2))
-      .multiply(Transformations.scale(10, 0.01, 10)),
-    material: floor.material,
-  });
-
-  const spherePattern = new StripesPattern({
-    patterns: [SolidPattern.from(0.2, 0, 1), SolidPattern.from(1, 1, 1)],
-    transform: Transformations.rotateZ(Math.PI / 2).multiply(
-      Transformations.scale(0.15, 1, 1),
-    ),
   });
 
   const middle = new Sphere({
     transform: Transformations.translation(-0.5, 1, 0.5),
     material: new Material({
-      pattern: spherePattern,
+      pattern: SolidPattern.from(0.1, 1, 0.5),
       diffuse: 0.7,
       specular: 0.3,
     }),
@@ -63,7 +37,7 @@ export const sceneWithStripes: Scene = () => {
       Transformations.scale(0.5, 0.5, 0.5),
     ),
     material: new Material({
-      pattern: spherePattern,
+      pattern: SolidPattern.from(0.5, 1, 0.1),
       diffuse: 0.7,
       specular: 0.3,
     }),
@@ -74,7 +48,7 @@ export const sceneWithStripes: Scene = () => {
       Transformations.scale(0.33, 0.33, 0.33),
     ),
     material: new Material({
-      pattern: spherePattern,
+      pattern: SolidPattern.from(1, 0.8, 0.1),
       diffuse: 0.7,
       specular: 0.3,
     }),
@@ -86,7 +60,7 @@ export const sceneWithStripes: Scene = () => {
   });
 
   const world = new World({
-    shapes: [floor, leftWall, rightWall, middle, left, right],
+    shapes: [floor, middle, left, right],
     lights: [light],
   });
 

@@ -1,9 +1,6 @@
-export * from "./3d-sphere";
-export * from "./clock";
 export * from "./earth";
 export * from "./hexagon";
 export * from "./index";
-export * from "./projectile";
 export * from "./scene";
 export * from "./scene-with-area-light";
 export * from "./scene-with-blended-pattern";
@@ -22,4 +19,4 @@ export * from "./scene-with-pyramid";
 export * from "./scene-with-reflections";
 export * from "./scene-with-skybox";
 export * from "./scene-with-stripes";
-export * from "./sphere";
+export * from "./types";

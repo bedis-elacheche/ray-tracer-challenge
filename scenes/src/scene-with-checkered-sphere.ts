@@ -2,27 +2,28 @@ import {
   Camera,
   Color,
   Material,
-  Plane,
   Point,
   PointLight,
   SolidPattern,
+  Sphere,
   TextureMapPattern,
   Transformations,
   UVCheckersPattern,
   Vector,
   World,
-} from "../../src";
-import { Scene } from "../types";
+} from "ray-tracer";
 
-export const sceneWithCheckeredPlane: Scene = () => {
-  const plane = new Plane({
+import { Scene } from "./types";
+
+export const sceneWithCheckeredSphere: Scene = () => {
+  const sphere = new Sphere({
     material: new Material({
       pattern: new TextureMapPattern({
-        map: "planar",
+        map: "spherical",
         patterns: {
           main: new UVCheckersPattern({
-            width: 2,
-            height: 2,
+            width: 20,
+            height: 10,
             patterns: [
               SolidPattern.from(0, 0.5, 0),
               SolidPattern.from(1, 1, 1),
@@ -43,7 +44,7 @@ export const sceneWithCheckeredPlane: Scene = () => {
   });
 
   const world = new World({
-    shapes: [plane],
+    shapes: [sphere],
     lights: [light],
   });
 
@@ -52,7 +53,7 @@ export const sceneWithCheckeredPlane: Scene = () => {
     width: 400,
     fieldOfView: 0.5,
     transform: Transformations.viewTransform(
-      new Point(1, 2, -5),
+      new Point(0, 0, -5),
       new Point(0, 0, 0),
       new Vector(0, 1, 0),
     ),

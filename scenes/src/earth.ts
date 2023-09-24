@@ -17,8 +17,9 @@ import {
   UVImagePattern,
   Vector,
   World,
-} from "../../src";
-import { Scene } from "../types";
+} from "ray-tracer";
+
+import { Scene } from "./types";
 
 export const sceneWithMappedEarth: Scene = () => {
   const camera = new Camera({
