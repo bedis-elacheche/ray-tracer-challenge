@@ -1,5 +1,5 @@
 export * from "./constants";
-export * from "./event";
+export * from "./event-emitter";
 export * from "./matrix";
 export * from "./noise";
 export * from "./point";
