@@ -1,0 +1,41 @@
+<html>
+  <head>
+    <title>Ray tracer challenge GUI</title>
+    <meta charset="UTF-8" />
+  </head>
+  <body>
+    <div class="container">
+      <div class="col" style="width: 66%;">
+        <div class="box grow">
+          <canvas id="render-result" class="box" width="800" height="800"></canvas>
+        </div>
+        <div class="box">
+          <div class="progress-bar-text">
+            <span class="text">Progress</span>
+            <span class="text">0%</span>
+          </div>
+          <div class="progress-bar">
+            <div class="progress-bar-progress" style="width: 0%"></div>
+          </div>
+        </div>
+      </div>
+      <form id="form" class="col" style="width: 34%;">
+        <div class="box">
+          <label for="scene" class="text">Select a scene</label>
+          <select id="scene" name="scene" class="select">
+            <option value="">Select a scene</option>
+            <option value="01">Scene 1</option>
+            <option value="02">Scene 2</option>
+            <option value="03">Scene 3</option>
+            <option value="04">Scene 4</option>
+          </select>
+        </div>
+        <textarea id="scene-yml" name="scene-yml" class="box text-area"></textarea>
+        <div class="box">
+          <button type="submit" class="button grow">Render</button>
+        </div>
+      </form>
+    </div>
+    <script src="src/index.ts"></script>
+  </body>
+</html>

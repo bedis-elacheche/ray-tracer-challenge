@@ -2,3 +2,4 @@ packages:
   - ray-tracer
   - scenes
   - cli
+  - gui
