@@ -1,0 +1,27 @@
+{
+  "name": "ray-tracer",
+  "version": "1.0.0",
+  "description": "",
+  "main": "src/index.ts",
+  "scripts": {
+    "test": "cucumber-js",
+    "render": "ts-node ./render/index.ts",
+    "lint": "eslint --ext .ts .",
+    "prettier": "prettier --check \"**/*.ts\""
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "@cucumber/cucumber": "^9.2.0",
+    "@types/chai": "^4.3.5",
+    "chai": "^4.3.7",
+    "ts-node": "^10.9.1"
+  },
+  "lint-staged": {
+    "*.ts": [
+      "prettier --check",
+      "eslint"
+    ]
+  }
+}

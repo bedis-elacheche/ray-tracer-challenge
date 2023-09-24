@@ -2,14 +2,11 @@
   "compilerOptions": {
     "target": "ESNext",
     "module": "commonjs",
-    "rootDir": ".",
     "resolveJsonModule": true,
     "allowSyntheticDefaultImports": true,
     "esModuleInterop": true,
     "forceConsistentCasingInFileNames": true,
     "noImplicitAny": true,
-    "skipLibCheck": true,
-    "moduleResolution": "node",
-    "types": ["node", "./types"]
+    "skipLibCheck": true
   }
 }
