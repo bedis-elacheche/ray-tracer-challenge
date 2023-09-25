@@ -2,7 +2,7 @@ import { readFileSync } from "node:fs";
 import { join } from "node:path";
 
 import {
-  Camera,
+  CameraProps,
   Canvas,
   Color,
   Cube,
@@ -20,7 +20,7 @@ import {
 import { Scene } from "./types";
 
 export const sceneWithSkybox: Scene = () => {
-  const camera = new Camera({
+  const cameraProps: CameraProps = {
     width: 800,
     height: 800,
     fieldOfView: 1.2,
@@ -29,7 +29,7 @@ export const sceneWithSkybox: Scene = () => {
       new Point(0, 0, 5),
       new Vector(0, 1, 0),
     ),
-  });
+  };
 
   const light = new PointLight({
     position: new Point(0, 100, 0),
@@ -88,5 +88,5 @@ export const sceneWithSkybox: Scene = () => {
     shapes: [sphere, skybox],
   });
 
-  return { camera, world };
+  return { cameraProps, world };
 };

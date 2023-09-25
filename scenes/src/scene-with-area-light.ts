@@ -1,6 +1,6 @@
 import {
   AreaLight,
-  Camera,
+  CameraProps,
   Color,
   Cube,
   Material,
@@ -79,7 +79,7 @@ export const sceneWithAreaLight: Scene = () => {
     lights: [light],
   });
 
-  const camera = new Camera({
+  const cameraProps: CameraProps = {
     height: 200,
     width: 400,
     fieldOfView: 0.7854,
@@ -88,7 +88,7 @@ export const sceneWithAreaLight: Scene = () => {
       new Point(0, -0.5, 0.5),
       new Vector(0, 1, 0),
     ),
-  });
+  };
 
-  return { camera, world };
+  return { cameraProps, world };
 };

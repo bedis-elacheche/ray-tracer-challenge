@@ -1,7 +1,6 @@
 import { writeFileSync } from "node:fs";
 import { cpus } from "node:os";
 
-import { Canvas } from "ray-tracer";
 import {
   hexagon,
   Scene,
@@ -28,6 +27,7 @@ import {
   sceneWithStripes,
 } from "scenes";
 
+import { Camera } from "./camera";
 import { ProgressBar } from "./progress";
 import { SceneKey } from "./types";
 
@@ -64,7 +64,8 @@ const renderScene = (sceneName: SceneKey, progress: ProgressBar) =>
     const existingScene = scenes[sceneName];
 
     if (existingScene) {
-      const { camera, world } = existingScene();
+      const { cameraProps, world } = existingScene();
+      const camera = new Camera(cameraProps);
 
       progress.start(sceneName, camera.height * camera.width);
 
@@ -72,7 +73,7 @@ const renderScene = (sceneName: SceneKey, progress: ProgressBar) =>
         progress.increment("current");
       });
 
-      camera.on("image-rendered", (image: Canvas) => {
+      camera.on("image-rendered", (image) => {
         writeFileSync(`./photos/${sceneName}.ppm`, image.toPPM());
         resolve();
       });

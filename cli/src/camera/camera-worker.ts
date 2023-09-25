@@ -1,8 +1,12 @@
 import { parentPort, workerData } from "node:worker_threads";
 
-import { World } from "../world";
-import { Camera } from "./camera";
-import { ColorCalculated, MainThreadMessage, Ready } from "./types";
+import {
+  Camera,
+  ColorCalculated,
+  MainThreadMessage,
+  Ready,
+  World,
+} from "ray-tracer";
 
 const world = World.deserialize(workerData.world);
 const camera = Camera.deserialize(workerData.camera);

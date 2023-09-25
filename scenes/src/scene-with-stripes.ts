@@ -1,5 +1,5 @@
 import {
-  Camera,
+  CameraProps,
   Color,
   Material,
   Point,
@@ -91,7 +91,7 @@ export const sceneWithStripes: Scene = () => {
     lights: [light],
   });
 
-  const camera = new Camera({
+  const cameraProps: CameraProps = {
     height: 800,
     width: 800,
     fieldOfView: Math.PI / 3,
@@ -100,7 +100,7 @@ export const sceneWithStripes: Scene = () => {
       new Point(0, 1, 0),
       new Vector(0, 1, 0),
     ),
-  });
+  };
 
-  return { camera, world };
+  return { cameraProps, world };
 };

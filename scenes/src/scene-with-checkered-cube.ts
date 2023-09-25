@@ -1,5 +1,5 @@
 import {
-  Camera,
+  CameraProps,
   Color,
   Cube,
   Material,
@@ -114,7 +114,7 @@ export const sceneWithCheckeredCube: Scene = () => {
     shapes: cubes,
   });
 
-  const camera = new Camera({
+  const cameraProps: CameraProps = {
     width: 800,
     height: 800,
     fieldOfView: 0.8,
@@ -123,7 +123,7 @@ export const sceneWithCheckeredCube: Scene = () => {
       new Point(0, 0, 0),
       new Vector(0, 1, 0),
     ),
-  });
+  };
 
-  return { world, camera };
+  return { world, cameraProps };
 };

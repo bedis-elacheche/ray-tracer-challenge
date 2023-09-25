@@ -1,5 +1,5 @@
 import {
-  Camera,
+  CameraProps,
   Color,
   Cylinder,
   Material,
@@ -53,7 +53,7 @@ export const sceneWithCheckeredCylinder: Scene = () => {
     lights: [light],
   });
 
-  const camera = new Camera({
+  const cameraProps: CameraProps = {
     height: 400,
     width: 400,
     fieldOfView: 0.5,
@@ -62,7 +62,7 @@ export const sceneWithCheckeredCylinder: Scene = () => {
       new Point(0, 0, 0),
       new Vector(0, 1, 0),
     ),
-  });
+  };
 
-  return { camera, world };
+  return { cameraProps, world };
 };

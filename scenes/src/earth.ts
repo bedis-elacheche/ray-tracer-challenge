@@ -2,7 +2,7 @@ import { readFileSync } from "node:fs";
 import { join } from "node:path";
 
 import {
-  Camera,
+  CameraProps,
   Canvas,
   Color,
   Cylinder,
@@ -22,7 +22,7 @@ import {
 import { Scene } from "./types";
 
 export const sceneWithMappedEarth: Scene = () => {
-  const camera = new Camera({
+  const cameraProps: CameraProps = {
     width: 800,
     height: 800,
     fieldOfView: 0.8,
@@ -31,7 +31,7 @@ export const sceneWithMappedEarth: Scene = () => {
       new Point(0, 1.1, 0),
       new Vector(0, 1, 0),
     ),
-  });
+  };
 
   const light = new PointLight({
     position: new Point(-100, 100, -100),
@@ -89,5 +89,5 @@ export const sceneWithMappedEarth: Scene = () => {
     shapes: [plane, cylinder, sphere],
   });
 
-  return { camera, world };
+  return { cameraProps, world };
 };

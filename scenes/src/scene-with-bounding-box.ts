@@ -1,6 +1,6 @@
 import {
   AreaLight,
-  Camera,
+  CameraProps,
   Color,
   Group,
   Light,
@@ -90,7 +90,7 @@ export const sceneWithBoundingBox: Scene = () => {
     lights,
   });
 
-  const camera = new Camera({
+  const cameraProps: CameraProps = {
     height: 500,
     width: 500,
     fieldOfView: Math.PI / 3,
@@ -99,7 +99,7 @@ export const sceneWithBoundingBox: Scene = () => {
       new Point(0, 0, 0),
       new Vector(0, 1, 0),
     ),
-  });
+  };
 
-  return { camera, world };
+  return { cameraProps, world };
 };

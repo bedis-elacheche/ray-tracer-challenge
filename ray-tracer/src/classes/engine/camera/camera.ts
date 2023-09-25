@@ -1,16 +1,15 @@
-import path from "node:path";
-import { Worker } from "node:worker_threads";
-
 import { EventEmitter, Matrix, Point, Serializable } from "../../core";
 import { Canvas } from "../canvas";
 import { Ray } from "../ray";
 import { World } from "../world";
-import {
-  CalculateColor,
-  CameraEvents,
-  RenderOptions,
-  WorkerMessage,
-} from "./types";
+import { CameraEvents } from "./types";
+
+export type CameraProps = {
+  height: number;
+  width: number;
+  fieldOfView: number;
+  transform?: Matrix;
+};
 
 export class Camera extends EventEmitter<CameraEvents> implements Serializable {
   public static readonly __name__ = "camera";
@@ -27,12 +26,7 @@ export class Camera extends EventEmitter<CameraEvents> implements Serializable {
     width,
     fieldOfView,
     transform = Matrix.identity(4),
-  }: {
-    height: number;
-    width: number;
-    fieldOfView: number;
-    transform?: Matrix;
-  }) {
+  }: CameraProps) {
     super();
     this.height = height;
     this.width = width;
@@ -101,65 +95,7 @@ export class Camera extends EventEmitter<CameraEvents> implements Serializable {
     return world.colorAt(ray);
   }
 
-  private addWorker({
-    world,
-    image,
-    pixelCoordinates,
-    workers,
-  }: {
-    world: World;
-    image: Canvas;
-    pixelCoordinates: { x: number; y: number }[];
-    workers: Set<number>;
-  }) {
-    const worker = new Worker(path.join(__dirname, "camera-worker.js"), {
-      workerData: {
-        world: world.serialize(),
-        camera: this.serialize(),
-      },
-    });
-
-    workers.add(worker.threadId);
-
-    worker.on("message", (message: WorkerMessage) => {
-      switch (message.action) {
-        case "color-calculated": {
-          const { x, y, color } = message.payload;
-
-          image.writePixel(x, y, color);
-          this.emit("pixel-rendered", x, y, color);
-          break;
-        }
-        case "ready": {
-          const coordinates = pixelCoordinates.pop();
-
-          if (coordinates) {
-            const message: CalculateColor = {
-              action: "calculate-color",
-              payload: coordinates,
-            };
-
-            worker.postMessage(message);
-          } else {
-            workers.delete(worker.threadId);
-
-            if (workers.size === 0) {
-              this.emit("image-rendered", image);
-            }
-
-            worker.terminate();
-          }
-          break;
-        }
-
-        default: {
-          throw new TypeError("Unknown message type");
-        }
-      }
-    });
-  }
-
-  private static shufflePixels(height: number, width: number) {
+  protected static shufflePixels(height: number, width: number) {
     return Array.from({ length: height }, (_, y) =>
       Array.from({ length: width }, (__, x) => ({ x, y })),
     )
@@ -167,35 +103,20 @@ export class Camera extends EventEmitter<CameraEvents> implements Serializable {
       .sort((_a, _b) => 0.5 - Math.random());
   }
 
-  render(world: World, options?: RenderOptions) {
+  render(world: World) {
     const image = new Canvas({ width: this.width, height: this.height });
 
-    if (options?.parallel) {
-      const workers = new Set<number>();
-      const image = new Canvas({ width: this.width, height: this.height });
-      const pixelCoordinates = Camera.shufflePixels(image.height, image.width);
+    for (let y = 0; y < this.height; y++) {
+      for (let x = 0; x < this.width; x++) {
+        const color = this.colorAt(world, x, y);
 
-      for (let i = 0; i < options.workers; i++) {
-        this.addWorker({
-          workers,
-          world,
-          image,
-          pixelCoordinates,
-        });
+        image.writePixel(x, y, color);
+
+        this.emit("pixel-rendered", x, y, color);
       }
-    } else {
-      for (let y = 0; y < this.height; y++) {
-        for (let x = 0; x < this.width; x++) {
-          const color = this.colorAt(world, x, y);
-
-          image.writePixel(x, y, color);
-
-          this.emit("pixel-rendered", x, y, color);
-        }
-      }
-
-      this.emit("image-rendered", image);
     }
+
+    this.emit("image-rendered", image);
   }
 
   equals(c: Camera) {

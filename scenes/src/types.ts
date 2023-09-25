@@ -1,3 +1,3 @@
-import { Camera, World } from "ray-tracer";
+import { CameraProps, World } from "ray-tracer";
 
-export type Scene = () => { camera: Camera; world: World };
+export type Scene = () => { cameraProps: CameraProps; world: World };
