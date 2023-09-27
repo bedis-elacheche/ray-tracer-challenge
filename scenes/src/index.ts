@@ -1,4 +1,3 @@
-export * from "./earth";
 export * from "./hexagon";
 export * from "./index";
 export * from "./scene";
@@ -17,6 +16,5 @@ export * from "./scene-with-perturbed-pattern";
 export * from "./scene-with-planes";
 export * from "./scene-with-pyramid";
 export * from "./scene-with-reflections";
-export * from "./scene-with-skybox";
 export * from "./scene-with-stripes";
 export * from "./types";

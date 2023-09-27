@@ -17,15 +17,15 @@ import {
   sceneWithFiniteCones,
   sceneWithFiniteCylinders,
   sceneWithInfiniteCylinders,
-  sceneWithMappedEarth,
   sceneWithPatterns,
   sceneWithPerturbedPattern,
   sceneWithPlanes,
   sceneWithPyramid,
   sceneWithReflections,
-  sceneWithSkybox,
   sceneWithStripes,
 } from "scenes";
+import { sceneWithMappedEarth } from "scenes/src/earth";
+import { sceneWithSkybox } from "scenes/src/scene-with-skybox";
 
 import { Camera } from "./camera";
 import { ProgressBar } from "./progress";
