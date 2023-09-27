@@ -1,5 +1,12 @@
 import "./style.css";
 
-import { initFormEvents } from "./form";
+import { initRenderButton, initSceneSelector } from "./init";
 
-window.onload = initFormEvents;
+window.onload = () => {
+  const sceneSelector = initSceneSelector();
+  const sceneContent = document.getElementById(
+    "scene-yml",
+  ) as HTMLTextAreaElement;
+
+  initRenderButton(sceneContent, sceneSelector);
+};
