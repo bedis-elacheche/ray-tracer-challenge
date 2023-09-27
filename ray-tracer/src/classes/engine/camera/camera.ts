@@ -97,10 +97,14 @@ export class Camera extends EventEmitter<CameraEvents> implements Serializable {
 
   protected static shufflePixels(height: number, width: number) {
     return Array.from({ length: height }, (_, y) =>
-      Array.from({ length: width }, (__, x) => ({ x, y })),
+      Array.from({ length: width }, (__, x) => ({
+        tuple: { x, y },
+        sort: Math.random(),
+      })),
     )
       .flat()
-      .sort((_a, _b) => 0.5 - Math.random());
+      .sort((a, b) => a.sort - b.sort)
+      .map(({ tuple }) => tuple);
   }
 
   render(world: World) {

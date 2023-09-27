@@ -14,6 +14,13 @@ type Action<
 
 export type Ready = Action<"ready">;
 
+export type Online = Action<"online">;
+
+export type InitWorker = Action<
+  "init",
+  { camera: JSONObject; world: JSONObject }
+>;
+
 export type CalculateColor = Action<
   "calculate-color",
   { x: number; y: number }
@@ -24,9 +31,9 @@ export type ColorCalculated = Action<
   { x: number; y: number; color: Color }
 >;
 
-export type WorkerMessage = Ready | ColorCalculated;
+export type WorkerMessage = Online | Ready | ColorCalculated;
 
-export type MainThreadMessage = CalculateColor;
+export type MainThreadMessage = InitWorker | CalculateColor;
 
 export type RenderOptions =
   | {
