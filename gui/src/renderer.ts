@@ -35,5 +35,8 @@ export const renderScene = (cameraProps: CameraProps, world: World) => {
 
   progress.start(cameraProps.width * cameraProps.height);
 
-  camera.render(world, { parallel: true, workers: 8 });
+  camera.render(world, {
+    parallel: true,
+    workers: navigator.hardwareConcurrency,
+  });
 };
