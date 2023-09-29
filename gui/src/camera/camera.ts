@@ -27,7 +27,9 @@ export class Camera extends RTCamera {
     image: Canvas;
     pixelCoordinates: { x: number; y: number }[];
   }) {
-    const worker = new Worker("./camera-worker.ts");
+    const worker = new Worker(new URL("./camera-worker.ts", import.meta.url), {
+      type: "module",
+    });
 
     this.workers.add(worker);
 
