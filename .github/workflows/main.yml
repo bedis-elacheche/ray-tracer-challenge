@@ -38,6 +38,8 @@ jobs:
         run: pnpm --filter ray-tracer test
 
   build:
+    needs: test
+
     runs-on: ubuntu-latest
 
     steps:
